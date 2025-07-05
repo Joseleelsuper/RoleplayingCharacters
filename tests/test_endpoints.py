@@ -7,7 +7,7 @@ funcionan correctamente y devuelven las respuestas esperadas.
 
 from fastapi.testclient import TestClient
 
-from src.main import app
+from index import app
 
 client = TestClient(app)
 

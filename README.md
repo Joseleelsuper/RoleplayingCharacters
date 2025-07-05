@@ -7,6 +7,7 @@ Página web dedicada a la creación de personajes de rol, incluyendo varias raza
 - [Características](#características)
 - [Tecnologías utilizadas](#tecnologías-utilizadas)
 - [Instalación](#instalación)
+- [Estructura del proyecto](#estructura-del-proyecto)
 - [Licencias](#licencias)
 
 ## Descripción
@@ -79,8 +80,6 @@ Permite a los usuarios crear personajes personalizados, ya sea utilizando clases
 
 7. Abre tu navegador y ve a `http://localhost:8000` para ver la aplicación.
 
-8. Para ver la documentación de la API, ve a `http://localhost:8000/docs`.
-
 ## Ejecución de pruebas
 
 Para ejecutar las pruebas:
@@ -106,7 +105,7 @@ RoleplayingCharacters/
 │   ├── infrastructure/      # Implementaciones específicas y endpoints
 │   │   ├── web/            # Controladores HTTP
 │   │   └── config.py       # Configuración de la aplicación
-│   └── main.py             # Punto de entrada de la aplicación
+│   └── index.py             # Punto de entrada de la aplicación
 ├── tests/                  # Pruebas unitarias e integración
 ├── templates/              # Plantillas HTML (futuro)
 ├── requirements.txt        # Dependencias Python
