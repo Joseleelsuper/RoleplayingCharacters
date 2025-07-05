@@ -5,30 +5,34 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 ## Instrucciones de estructura y convenciones
 
-Programamos en python completamente tipado
+1. Tanto nombre de variables, funciones, clases y ficheros deben estar en inglés. Documentación de funciones y clases en español.
 
-Usamos fastapi con postgresql
+2. Cuando te pregunte algo, respondeme en español si no rompe la regla anterior.
 
-Usamos el patrón repositorio para separar lógica de persistencia de nuestra lógica de negocio
+3. Programamos en python completamente tipado
 
-Usamos casos de uso, encapsulamos acciones sobre dominio en clases que tienen un método execute que recibe una dataclass con los argumentos de ejecución. Estos casos de uso reciben inyectadas las dependencias como pueden ser los repositorios.
+4. Usamos fastapi con postgresql
 
-Usamos objetos de dominio separados de las entidades de datos de la base de datos. El mapeo entre ambas entidades ocurre en el repositorio.
+5. Usamos el patrón repositorio para separar lógica de persistencia de nuestra lógica de negocio
 
-Tenemos varias capas:
-Dominio donde creamos las entidades
-Aplicación donde creamos los casos de uso
-Infrastructura donde creamos los endpoints y las implementaciones específicas de las abstracciones como pueden ser los repositorios.
+6. Usamos casos de uso, encapsulamos acciones sobre dominio en clases que tienen un método execute que recibe una dataclass con los argumentos de ejecución. Estos casos de uso reciben inyectadas las dependencias como pueden ser los repositorios.
 
-Para las pruebas unitarias usamos pytest y pytest-asyncio. Las pruebas de integración las hacemos con pytest y httpx.
+7. Usamos objetos de dominio separados de las entidades de datos de la base de datos. El mapeo entre ambas entidades ocurre en el repositorio.
 
-Para la comprobación de la estructura del código, tenemos un fichero .importLinter de la dependencia import-linter para la comprobación de la estructura del código. Este fichero contiene las reglas de importación que queremos aplicar en nuestro proyecto.
+8. Tenemos varias capas:
+    - Dominio donde creamos las entidades
+    - Aplicación donde creamos los casos de uso
+    - Infrastructura donde creamos los endpoints y las implementaciones específicas de las abstracciones como pueden ser los repositorios.
 
-El mensage de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
+9. Para las pruebas unitarias usamos pytest y pytest-asyncio. Las pruebas de integración las hacemos con pytest y httpx.
 
-A la hora de necesitar añadir nuevas dependencias en el fichero requirements, no instalarlas. Suponer que ya están instaladas en el entorno.
+10. Para la comprobación de la estructura del código, tenemos un fichero .importLinter de la dependencia import-linter para la comprobación de la estructura del código. Este fichero contiene las reglas de importación que queremos aplicar en nuestro proyecto.
 
-En caso de necesitar añadir variables de entorno, hacerlos en el .env.example.
+11. El mensage de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
+
+12. A la hora de necesitar añadir nuevas dependencias en el fichero requirements, no instalarlas. Suponer que ya están instaladas en el entorno.
+
+13. En caso de necesitar añadir variables de entorno, hacerlos en el .env.example.
 
 ============================
 ## Commits convencionales

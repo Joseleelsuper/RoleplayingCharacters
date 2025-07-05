@@ -29,6 +29,6 @@ type = layers
 containers =
     src
 layers =
-    src.domain
-    src.application
-    src.adapters
+    domain
+    application
+    adapters
