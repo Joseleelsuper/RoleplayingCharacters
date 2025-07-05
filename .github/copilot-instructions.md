@@ -1,0 +1,35 @@
+Programamos en python completamente tipado
+
+Usamos fastapi con postgresql
+
+Usamos el patrón repositorio para separar lógica de persistencia de nuestra lógica de negocio
+
+Usamos casos de uso, encapsulamos acciones sobre dominio en clases que tienen un método execute que recibe una dataclass con los argumentos de ejecución. Estos casos de uso reciben inyectadas las dependencias como pueden ser los repositorios.
+
+Usamos objetos de dominio separados de las entidades de datos de la base de datos. El mapeo entre ambas entidades ocurre en el repositorio.
+
+Tenemos varias capas:
+Dominio donde creamos las entidades
+Aplicación donde creamos los casos de uso
+Infrastructura donde creamos los endpoints y las implementaciones específicas de las abstracciones como pueden ser los repositorios.
+
+Para las pruebas unitarias usamos pytest y pytest-asyncio. Las pruebas de integración las hacemos con pytest y httpx.
+
+Para la comprobación de la estructura del código, tenemos un fichero .importLinter de la dependencia import-linter para la comprobación de la estructura del código. Este fichero contiene las reglas de importación que queremos aplicar en nuestro proyecto.
+
+El mensage de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
+
+============================
+## Commits convencionales
+- 🔧 feat: Añade una nueva funcionalidad.
+- 🐛 fix: Corrige errores en el código.
+- 📚 docs: Cambios en la documentación.
+- 🎨 style: Cambios en el estilo del código (sin alterar la funcionalidad).
+- 🔄 refactor: Mejora el código sin cambiar la funcionalidad.
+- ⚡ perf: Mejora el rendimiento.
+- 🧪 test: Añade o ajusta pruebas.
+- 🔧 build: Cambios en el sistema de construcción.
+- 🔗 ci: Configuración de integración continua.
+- 🛠️ chore: Tareas de mantenimiento y otros cambios menores.
+- 🖼️ img: Agregar imágenes.
+============================
