@@ -1,0 +1,34 @@
+[importlinter]
+root_package = src
+
+# 1. El dominio no debe depender de nada externo
+[importlinter:contract:1]
+name = Independencia del dominio
+type = independence
+modules =
+    src.domain
+
+# 2. La capa de aplicación (casos de uso) solo puede usar el dominio
+[importlinter:contract:2]
+name = Independencia de la aplicación
+type = independence
+modules =
+    src.application
+
+# 3. Adaptadores (infraestructura, UI, DB…) no deben mezclarse
+[importlinter:contract:3]
+name = Independencia de adaptadores
+type = independence
+modules =
+    src.adapters
+
+# 4. Capas en orden: dominio → aplicación → adaptadores
+[importlinter:contract:4]
+name = Hexagonal (Puertos y Adaptadores)
+type = layers
+containers =
+    src
+layers =
+    src.domain
+    src.application
+    src.adapters
