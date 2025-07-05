@@ -19,6 +19,8 @@ Para la comprobación de la estructura del código, tenemos un fichero .importLi
 
 El mensage de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
 
+A la hora de necesitar añadir nuevas dependencias en el fichero requirements, no instalarlas. Suponer que ya están instaladas en el entorno.
+
 ============================
 ## Commits convencionales
 - 🔧 feat: Añade una nueva funcionalidad.
