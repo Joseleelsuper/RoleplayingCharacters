@@ -34,6 +34,8 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 13. En caso de necesitar añadir variables de entorno, hacerlos en el .env.example.
 
+14. Todo import debe introducirse SIEMPRE al principio del fichero, y no a mitad del código.
+
 ============================
 ## Commits convencionales
 - 🔧 feat: Añade una nueva funcionalidad.
