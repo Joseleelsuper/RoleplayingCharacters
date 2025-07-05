@@ -20,8 +20,8 @@ app = FastAPI(
     title=settings.app_name,
     description="Aplicación web para crear y gestionar personajes de rol",
     version=settings.app_version,
-    #docs_url="/docs",
-    #redoc_url="/redoc",
+    # docs_url="/docs",
+    # redoc_url="/redoc",
 )
 
 # Configuración CORS
@@ -42,10 +42,6 @@ if not os.getenv("VERCEL"):
     app.mount("/css", StaticFiles(directory=str(static_dir / "css")), name="css")
     app.mount("/js", StaticFiles(directory=str(static_dir / "js")), name="js")
     app.mount("/img", StaticFiles(directory=str(static_dir / "img")), name="img")
-
-
-# Handler para Vercel - Exponer la aplicación directamente
-# Vercel manejará automáticamente las requests ASGI
 
 
 if __name__ == "__main__":
