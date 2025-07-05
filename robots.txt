@@ -1,0 +1,39 @@
+# Reglas generales para todos los robots
+User-agent: *
+Allow: /
+
+# Reglas específicas para Google
+User-agent: Googlebot
+Allow: /
+
+# Reglas para Bing
+User-agent: Bingbot
+Allow: /
+
+# Reglas para Yahoo
+User-agent: Slurp
+Allow: /
+
+# Reglas para Facebook
+User-agent: Facebot
+Allow: /
+
+# Reglas para Twitter/X
+User-agent: Twitterbot
+Allow: /
+
+# Bloquear bots agresivos/maliciosos
+User-agent: PetalBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+# Ubicación del sitemap
+Sitemap: https://updateme.dev/sitemap.xml
