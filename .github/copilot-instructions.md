@@ -1,3 +1,10 @@
+## Descripción del proyecto
+
+Página web hosteada en vercel que permite a los usuarios crear y gestionar personajes de rol. Los usuarios pueden registrarse, iniciar sesión, crear personajes, editar sus atributos y habilidades, y compartirlos con otros usuarios. La aplicación está diseñada para ser intuitiva y fácil de usar, con un enfoque en la personalización de los personajes.
+Se utilizan clases y razas de personajes tanto creados por juegos de rol preestablecidos como personalizados por los usuarios.
+
+## Instrucciones de estructura y convenciones
+
 Programamos en python completamente tipado
 
 Usamos fastapi con postgresql
@@ -20,6 +27,8 @@ Para la comprobación de la estructura del código, tenemos un fichero .importLi
 El mensage de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
 
 A la hora de necesitar añadir nuevas dependencias en el fichero requirements, no instalarlas. Suponer que ya están instaladas en el entorno.
+
+En caso de necesitar añadir variables de entorno, hacerlos en el .env.example.
 
 ============================
 ## Commits convencionales
