@@ -34,9 +34,11 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 13. En caso de necesitar añadir variables de entorno, hacerlos en el .env.example.
 
-14. Todo import debe introducirse SIEMPRE al principio del fichero, y no a mitad del código.
+14. Todo import debe introducirse SIEMPRE al principio del fichero, y no a mitad del código. Esto incluye imports de librerías, módulos y paquetes, ya sea con import o empezando con from. No se permiten imports en medio del código.
 
 15. Todo comentario explicativo no lo pongas, es decir, solo quiero comentarios sobre lo que hace una parte en concreto del código si es difícil de entender.
+
+16. Para la traducción, utilizamos Babel y starlette-babel. Queremos hacer las traducciones mantenibles, por lo que habrá distintos ficheros para cada página.
 
 ============================
 ## Commits convencionales
