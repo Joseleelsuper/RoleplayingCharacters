@@ -5,12 +5,11 @@ Este módulo contiene los endpoints HTTP para la funcionalidad básica
 de la aplicación, incluyendo la página de inicio y verificaciones de salud.
 """
 
-import os
 from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from src.infrastructure.translation_service import translation_service
+from src.infrastructure.template_helpers import render_template_with_translations
 
 router = APIRouter()
 
@@ -30,26 +29,10 @@ async def get_home_page(request: Request) -> HTMLResponse:
     Returns:
         HTMLResponse: HTML con la página de inicio traducida
     """
-    # Recargar traducciones en desarrollo para permitir cambios en vivo
-    if not os.getenv("VERCEL"):
-        translation_service.reload_translations()
-
-    language = translation_service.get_language_from_request(request)
-
-    # Crear función de traducción directa para debugging
-    def translate(key: str, domain: str = "home") -> str:
-        result = translation_service.get_translation(key, language, domain)
-        print(f"DEBUG: Traduciendo '{key}' en '{language}/{domain}' -> '{result}'")
-        return result
-
-    return templates.TemplateResponse(
-        "home.html",
-        {
-            "request": request,
-            "language": language,
-            "_": translate,
-            "available_domains": translation_service.get_available_domains(),
-        },
+    return render_template_with_translations(
+        templates=templates,
+        template_name="home.html",
+        request=request
     )
 
 
