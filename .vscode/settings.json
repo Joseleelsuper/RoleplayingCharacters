@@ -1,0 +1,25 @@
+{
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.analysis.extraPaths": [
+        "./src"
+    ],
+    "mcp": {
+        "servers": {
+            "playwright": {
+                "command": "npx",
+                "args": [
+                    "-y",
+                    "@executeautomation/playwright-mcp-server"
+                ]
+            }
+        }
+    }
+}
