@@ -75,7 +75,7 @@ Permite a los usuarios crear personajes personalizados, ya sea utilizando clases
 
    O alternativamente:
    ```bash
-   uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
+   uvicorn src.index:app --reload --host 127.0.0.1 --port 8000
    ```
 
 7. Abre tu navegador y ve a `http://localhost:8000` para ver la aplicación.
