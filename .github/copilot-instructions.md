@@ -40,6 +40,8 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 16. Para la traducción, utilizamos Babel y starlette-babel. Queremos hacer las traducciones mantenibles, por lo que habrá distintos ficheros para cada página.
 
+17. Si no te lo he pedido explicitamente, NO LO HAGAS. No quiero que añadas cosas extra simplememente por la cara. Pregunta antes de programar.
+
 ============================
 ## Commits convencionales
 - 🔧 feat: Añade una nueva funcionalidad.
