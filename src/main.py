@@ -19,8 +19,8 @@ app = FastAPI(
     title=settings.app_name,
     description="Aplicación web para crear y gestionar personajes de rol",
     version=settings.app_version,
-    docs_url="/docs",
-    redoc_url="/redoc",
+    #docs_url="/docs",
+    #redoc_url="/redoc",
 )
 
 # Configuración CORS
