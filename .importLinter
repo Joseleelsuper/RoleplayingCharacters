@@ -15,20 +15,20 @@ type = independence
 modules =
     src.application
 
-# 3. Adaptadores (infraestructura, UI, DB…) no deben mezclarse
+# 3. Infraestructura puede usar aplicación y dominio, pero no al revés
 [importlinter:contract:3]
-name = Independencia de adaptadores
+name = Independencia de infraestructura
 type = independence
 modules =
-    src.adapters
+    src.infrastructure
 
-# 4. Capas en orden: dominio → aplicación → adaptadores
+# 4. Capas en orden: dominio → aplicación → infraestructura
 [importlinter:contract:4]
-name = Hexagonal (Puertos y Adaptadores)
+name = Arquitectura Hexagonal
 type = layers
 containers =
     src
 layers =
-    src.domain
-    src.application
-    src.adapters
+    domain
+    application
+    infrastructure
