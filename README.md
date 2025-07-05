@@ -48,38 +48,71 @@ Permite a los usuarios crear personajes personalizados, ya sea utilizando clases
     - En Windows:
       ```bash
       python -m venv venv
-      ```
-    - En macOS/Linux:
-      ```bash
-      python3 -m venv venv
-      ```
-
-4. Activa el entorno virtual:
-    - En Windows:
-      ```bash
       venv\Scripts\activate
       ```
     - En macOS/Linux:
       ```bash
+      python3 -m venv venv
       source venv/bin/activate
       ```
 
-5. Instala las dependencias:
-    ```bash
-    pip install -r requirements.txt
-    ```
+4. Instala las dependencias:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-6. Modifica el nombre del fichero `.env.example` a `.env` y configura las variables de entorno necesarias, como la conexión a la base de datos. Asegúrate de que el archivo `.env` esté en la raíz del proyecto.
+5. Configura las variables de entorno:
+   ```bash
+   cp .env.example .env
+   # Edita el archivo .env con tus configuraciones
+   ```
 
-7. Ejecuta las migraciones de la base de datos:
-    ```bash
-    alembic upgrade head
-    ```
+6. Ejecuta la aplicación:
+   ```bash
+   python run.py
+   ```
 
-8. Inicia el servidor de desarrollo:
-    ```bash
-    uvicorn app.main:app --reload
-    ```
+   O alternativamente:
+   ```bash
+   uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
+   ```
+
+7. Abre tu navegador y ve a `http://localhost:8000` para ver la aplicación.
+
+8. Para ver la documentación de la API, ve a `http://localhost:8000/docs`.
+
+## Ejecución de pruebas
+
+Para ejecutar las pruebas:
+
+```bash
+# Ejecutar todas las pruebas
+pytest
+
+# Ejecutar pruebas con verbose
+pytest -v
+
+# Ejecutar solo las pruebas de endpoints
+pytest tests/test_endpoints.py
+```
+
+## Estructura del proyecto
+
+```
+RoleplayingCharacters/
+├── src/
+│   ├── domain/              # Entidades y lógica de dominio
+│   ├── application/         # Casos de uso y lógica de aplicación
+│   ├── infrastructure/      # Implementaciones específicas y endpoints
+│   │   ├── web/            # Controladores HTTP
+│   │   └── config.py       # Configuración de la aplicación
+│   └── main.py             # Punto de entrada de la aplicación
+├── tests/                  # Pruebas unitarias e integración
+├── templates/              # Plantillas HTML (futuro)
+├── requirements.txt        # Dependencias Python
+├── run.py                 # Script de inicio
+└── .env.example           # Ejemplo de variables de entorno
+```
 
 ## Licencias
 
