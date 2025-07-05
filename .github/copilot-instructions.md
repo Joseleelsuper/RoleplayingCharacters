@@ -36,6 +36,8 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 14. Todo import debe introducirse SIEMPRE al principio del fichero, y no a mitad del código.
 
+15. Todo comentario explicativo no lo pongas, es decir, solo quiero comentarios sobre lo que hace una parte en concreto del código si es difícil de entender.
+
 ============================
 ## Commits convencionales
 - 🔧 feat: Añade una nueva funcionalidad.
