@@ -58,6 +58,36 @@ p {
     color: #4ecdc4;
 }
 
+.language-selector {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.language-selector a {
+    display: inline-block;
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.language-selector a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.language-selector a.active {
+    background: #4ecdc4;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
 @keyframes gradient {
     0% {
         background-position: 0% 50%;
