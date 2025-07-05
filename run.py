@@ -7,7 +7,13 @@ configuraciones específicas para el entorno de desarrollo.
 
 import uvicorn
 
-if __name__ == "__main__":
+
+def main():
+    """
+    Punto de entrada principal para iniciar el servidor de desarrollo.
+    Configura el host, puerto y opciones de recarga automática.
+    """
+
     uvicorn.run(
         "src.index:app",
         host="127.0.0.1",
@@ -15,3 +21,7 @@ if __name__ == "__main__":
         reload=True,  # Recarga automática en desarrollo
         log_level="info",
     )
+
+
+if __name__ == "__main__":
+    main()
