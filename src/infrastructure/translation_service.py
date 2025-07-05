@@ -144,8 +144,6 @@ class TranslationService:
         # Limpiar traducciones existentes
         self._translations.clear()
 
-        print(f"DEBUG: Dominios encontrados: {self._domains}")
-
         # Cargar traducciones para cada dominio y idioma
         for domain, languages in self._domains.items():
             for lang_code in languages:
@@ -156,22 +154,12 @@ class TranslationService:
                     # Usar el directorio translations directamente como localedir
                     # gettext busca en localedir/lang_code/LC_MESSAGES/domain.mo
                     localedir = str(I18nConfig.TRANSLATIONS_DIR)
-                    print(
-                        f"DEBUG: Intentando cargar {domain} para {lang_code} desde localedir={localedir}"
-                    )
 
                     translation = gettext.translation(
                         domain,
                         localedir=localedir,
                         languages=[lang_code],
                         fallback=True,
-                    )
-
-                    # Probar la traducción
-                    test_key = "page.title"
-                    test_result = translation.gettext(test_key)
-                    print(
-                        f"DEBUG: Prueba de traducción {lang_code}/{domain}: '{test_key}' -> '{test_result}'"
                     )
 
                     self._translations[lang_code][domain] = translation
@@ -214,10 +202,6 @@ class TranslationService:
 
         translation = self._translations[language][domain]
         translated = translation.gettext(key)
-
-        print(
-            f"DEBUG: Traducción obtenida para '{key}' en {language}/{domain}: '{translated}'"
-        )
 
         # Devolver la traducción obtenida (puede ser la clave si no existe traducción)
         return translated
