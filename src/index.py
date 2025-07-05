@@ -6,6 +6,7 @@ middleware y configuraciones necesarias para ejecutar la aplicación web
 de gestión de personajes de rol.
 """
 
+import os
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -35,11 +36,16 @@ app.add_middleware(
 # Registrar rutas
 app.include_router(home_router, prefix="", tags=["Home"])
 
-# Configurar archivos estáticos
-static_dir = Path(__file__).parent.parent / "templates"
-app.mount("/css", StaticFiles(directory=str(static_dir / "css")), name="css")
-app.mount("/js", StaticFiles(directory=str(static_dir / "js")), name="js")
-app.mount("/img", StaticFiles(directory=str(static_dir / "img")), name="img")
+# Configurar archivos estáticos solo en desarrollo
+if not os.getenv("VERCEL"):
+    static_dir = Path(__file__).parent.parent / "templates"
+    app.mount("/css", StaticFiles(directory=str(static_dir / "css")), name="css")
+    app.mount("/js", StaticFiles(directory=str(static_dir / "js")), name="js")
+    app.mount("/img", StaticFiles(directory=str(static_dir / "img")), name="img")
+
+
+# Handler para Vercel - Exponer la aplicación directamente
+# Vercel manejará automáticamente las requests ASGI
 
 
 if __name__ == "__main__":
