@@ -8,40 +8,79 @@ de gestión de personajes de rol.
 
 import os
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 import uvicorn
 
 from src.infrastructure.config import settings
 from src.infrastructure.web.home_controller import router as home_router
 
-app = FastAPI(
-    title=settings.app_name,
-    description="Aplicación web para crear y gestionar personajes de rol",
-    version=settings.app_version,
-    # docs_url="/docs",
-    # redoc_url="/redoc",
-)
 
-# Configuración CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.allowed_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class I18nMiddleware(BaseHTTPMiddleware):
+    """Middleware para configurar el contexto de internacionalización."""
 
-# Registrar rutas
-app.include_router(home_router, prefix="", tags=["Home"])
+    async def dispatch(self, request: Request, call_next) -> Response:
+        """
+        Procesa la petición y configura el contexto de idioma.
 
-# Configurar archivos estáticos solo en desarrollo
-if not os.getenv("VERCEL"):
-    static_dir = Path(__file__).parent.parent / "templates"
-    app.mount("/css", StaticFiles(directory=str(static_dir / "css")), name="css")
-    app.mount("/js", StaticFiles(directory=str(static_dir / "js")), name="js")
-    app.mount("/img", StaticFiles(directory=str(static_dir / "img")), name="img")
+        Args:
+            request: Petición HTTP
+            call_next: Siguiente middleware en la cadena
+
+        Returns:
+            Response: Respuesta HTTP procesada
+        """
+        # El contexto de idioma se maneja directamente en el controlador
+        # Este middleware está disponible para futuras extensiones
+        response = await call_next(request)
+        return response
+
+
+def create_app() -> FastAPI:
+    """
+    Crea y configura la aplicación FastAPI.
+
+    Returns:
+        FastAPI: Aplicación configurada
+    """
+    app = FastAPI(
+        title=settings.app_name,
+        description="Aplicación web para crear y gestionar personajes de rol",
+        version=settings.app_version,
+        # docs_url="/docs",
+        # redoc_url="/redoc",
+    )
+
+    # Configuración CORS
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # Middleware de internacionalización
+    app.add_middleware(I18nMiddleware)
+
+    # Registrar rutas
+    app.include_router(home_router, prefix="", tags=["Home"])
+
+    # Configurar archivos estáticos solo en desarrollo
+    if not os.getenv("VERCEL"):
+        static_dir = Path(__file__).parent.parent / "templates"
+        app.mount("/css", StaticFiles(directory=str(static_dir / "css")), name="css")
+        app.mount("/js", StaticFiles(directory=str(static_dir / "js")), name="js")
+        app.mount("/img", StaticFiles(directory=str(static_dir / "img")), name="img")
+
+    return app
+
+
+# Crear la instancia de la aplicación
+app = create_app()
 
 
 if __name__ == "__main__":

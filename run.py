@@ -5,6 +5,7 @@ Este script inicia el servidor de desarrollo usando uvicorn y proporciona
 configuraciones específicas para el entorno de desarrollo.
 """
 
+import os
 import uvicorn
 
 
@@ -13,6 +14,11 @@ def main():
     Punto de entrada principal para iniciar el servidor de desarrollo.
     Configura el host, puerto y opciones de recarga automática.
     """
+    try:
+        os.system("lint-imports")
+    except Exception as e:
+        print(f"ERROR al ejecutar lint-imports: {e}")
+        print("Continuando con la ejecución...")
 
     uvicorn.run(
         "src.index:app",
