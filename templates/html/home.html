@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ _('page.title') }}</title>
+    <meta name="view-transition" content="same-origin">
     <link rel="stylesheet" href="/css/home.css">
 </head>
 
@@ -34,6 +35,8 @@
             <a href="?lang=en" {% if language == 'en' %}class="active"{% endif %}>English</a>
         </div>
     </div>
+
+    <script src="/js/view-transitions.js"></script>
 </body>
 
 </html>

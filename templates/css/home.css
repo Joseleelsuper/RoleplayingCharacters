@@ -1,3 +1,44 @@
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.5s;
+}
+
+::view-transition-old(root) {
+    animation-name: fade-out, slide-out;
+}
+
+::view-transition-new(root) {
+    animation-name: fade-in, slide-in;
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes slide-out {
+    to {
+        transform: translateX(-20px);
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(20px);
+    }
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,10 +60,12 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
     max-width: 600px;
+    min-height: 500px; /* Altura mínima para consistencia */
+    transition: all 0.3s ease;
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: clamp(2rem, 5vw, 3rem); /* Tamaño responsive */
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
@@ -31,17 +74,28 @@ h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradient 3s ease infinite;
+    line-height: 1.2; /* Línea consistente */
+    min-height: 3.6rem; /* Altura mínima para el título */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 p {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 1.2rem); /* Tamaño responsive */
     opacity: 0.9;
     margin-bottom: 2rem;
+    line-height: 1.5;
+    min-height: 3.6rem; /* Altura mínima para descripción */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .features {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Aumentar mínimo */
     gap: 1rem;
     margin-top: 2rem;
 }
@@ -51,11 +105,33 @@ p {
     padding: 1.5rem;
     border-radius: 10px;
     backdrop-filter: blur(5px);
+    min-height: 120px; /* Altura mínima para consistencia */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .feature h3 {
     margin-top: 0;
     color: #4ecdc4;
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    margin-bottom: 0.5rem;
+    min-height: 1.5rem; /* Altura mínima para títulos */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature p {
+    font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+    margin: 0;
+    opacity: 0.8;
+    min-height: 2.4rem; /* Altura mínima para descripciones */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .language-selector {
