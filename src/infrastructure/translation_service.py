@@ -192,10 +192,13 @@ class TranslationService:
 
     def _load_translations(self) -> None:
         """Carga todas las traducciones disponibles."""
-        # Compilar traducciones en desarrollo local
-        self._discover_and_compile_translations()
+        import os
 
-        # Descubrir traducciones
+        # Solo compilar traducciones en desarrollo local (DEBUG=True)
+        if os.getenv("DEBUG", "True").lower() == "true":
+            self._discover_and_compile_translations()
+
+        # En Vercel/producción solo descubrir y cargar .mo existentes
         self._discover_translations()
 
         # Limpiar traducciones existentes
