@@ -17,17 +17,17 @@ import uvicorn
 
 from src.infrastructure.config import settings
 from src.infrastructure.web.home_controller import router as home_router
-from src.infrastructure.translation_service import compile_po_to_mo
+from src.infrastructure.translation_service import TranslationService
 
 
+# Instancia global del servicio de traducción
+translation_service = TranslationService()
+
+# Compilar automáticamente los .po a .mo si faltan .mo
 try:
-    translations_dir = Path(__file__).parent.parent / "translations"
-    for po_file in translations_dir.rglob("*.po"):
-        mo_file = po_file.parent / (po_file.stem + ".mo")
-        if not mo_file.exists() or po_file.stat().st_mtime > mo_file.stat().st_mtime:
-            compile_po_to_mo(po_file, mo_file)
+    translation_service.reload_translations()
 except Exception as e:
-    print(f"[WARN] Error compilando archivos .po a .mo: {e}")
+    print(f"[WARN] Error recargando traducciones: {e}")
 
 
 class I18nMiddleware(BaseHTTPMiddleware):
