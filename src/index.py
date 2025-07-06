@@ -17,6 +17,8 @@ import uvicorn
 
 from src.infrastructure.config import settings
 from src.infrastructure.web.home_controller import router as home_router
+from src.infrastructure.web.status_controller import router as status_router
+
 
 class I18nMiddleware(BaseHTTPMiddleware):
     """Middleware para configurar el contexto de internacionalización."""
@@ -67,6 +69,7 @@ def create_app() -> FastAPI:
 
     # Registrar rutas
     app.include_router(home_router, prefix="", tags=["Home"])
+    app.include_router(status_router, tags=["Health"])
 
     # Configurar archivos estáticos solo en desarrollo
     if not os.getenv("VERCEL"):
