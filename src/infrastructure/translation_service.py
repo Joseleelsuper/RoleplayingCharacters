@@ -1,17 +1,15 @@
 """
-Servicio de traducción dinámico para la aplicación.
+Servicio de traducción para la aplicación.
 
-Este módulo detecta automáticamente todos los archivos .po disponibles
-y los compila a .mo de forma dinámica.
+Este módulo carga los archivos .mo precompilados para proporcionar
+traducciones dinámicas según el idioma del usuario.
+En desarrollo local, compila automáticamente los archivos .po a .mo.
 """
 import gettext
 from pathlib import Path
 from typing import Any, Dict, Union, List
 from fastapi import Request
 from src.infrastructure.i18n import I18nConfig
-from babel.messages import Catalog
-from babel.messages.pofile import read_po
-from babel.messages.mofile import write_mo
 
 
 def get_absolute_translations_dir() -> Path:
@@ -22,7 +20,6 @@ def get_absolute_translations_dir() -> Path:
     Returns:
         Path: Ruta absoluta al directorio de traducciones
     """
-    # En Vercel, el working directory puede ser diferente
     current_file = Path(__file__).resolve()
     project_root = current_file.parent.parent.parent
     translations_dir = project_root / "translations"
@@ -45,6 +42,7 @@ def get_absolute_translations_dir() -> Path:
 def discover_po_files() -> Dict[str, List[Path]]:
     """
     Descubre dinámicamente todos los archivos .po organizados por idioma.
+    Solo usado en desarrollo local para compilación.
 
     Returns:
         Dict[str, List[Path]]: Diccionario con idioma -> lista de archivos .po
@@ -53,7 +51,6 @@ def discover_po_files() -> Dict[str, List[Path]]:
     translations_dir = get_absolute_translations_dir()
     
     if not translations_dir.exists():
-        print(f"⚠️  Directorio de traducciones no encontrado: {translations_dir}")
         return po_files_by_lang
 
     for lang_dir in translations_dir.iterdir():
@@ -85,7 +82,8 @@ def get_mo_path_for_po(po_file: Path) -> Path:
 
 def compile_po_to_mo(po_file: Path, mo_file: Path) -> bool:
     """
-    Compila un archivo .po a .mo usando Babel exclusivamente.
+    Compila un archivo .po a .mo usando Babel.
+    Solo funciona en desarrollo local.
 
     Args:
         po_file: Ruta al archivo .po
@@ -94,60 +92,65 @@ def compile_po_to_mo(po_file: Path, mo_file: Path) -> bool:
     Returns:
         bool: True si la compilación fue exitosa
     """
-    try:
-        # En Vercel, evitar crear directorios si es read-only
-        if not mo_file.parent.exists():
-            try:
-                mo_file.parent.mkdir(parents=True, exist_ok=True)
-            except (OSError, PermissionError) as e:
-                print(f"⚠️  No se pudo crear directorio {mo_file.parent}: {e}")
-                return False
+    from babel.messages.pofile import read_po
+    from babel.messages.mofile import write_mo
+    
+    # Crear directorio si no existe
+    if not mo_file.parent.exists():
+        mo_file.parent.mkdir(parents=True, exist_ok=True)
 
-        # Usar Babel para leer y escribir
-        with open(po_file, "rb") as f:
-            catalog = read_po(f)
+    # Usar Babel para leer y escribir
+    with open(po_file, "rb") as f:
+        catalog = read_po(f)
 
-        with open(mo_file, "wb") as f:
-            write_mo(f, catalog)
+    with open(mo_file, "wb") as f:
+        write_mo(f, catalog)
 
-        print(f"✓ Compilado {po_file.parent.name}/{po_file.stem}: {po_file.name} -> {mo_file.name}")
-        return True
+    print(f"✓ Compilado {po_file.parent.name}/{po_file.stem}: {po_file.name} -> {mo_file.name}")
+    return True
 
-    except Exception as e:
-        print(f"✗ Error compilando {po_file} -> {mo_file}: {e}")
 
-        # En caso de error, crear archivo .mo vacío como fallback
-        try:
-            if mo_file.parent.exists():
-                empty_catalog = Catalog()
-                with open(mo_file, "wb") as f:
-                    write_mo(f, empty_catalog)
-                print(f"⚠️  Creado archivo .mo vacío como fallback: {mo_file}")
-                return True
-        except Exception:
-            pass
+def discover_mo_files() -> Dict[str, List[Path]]:
+    """
+    Descubre dinámicamente todos los archivos .mo organizados por idioma.
+
+    Returns:
+        Dict[str, List[Path]]: Diccionario con idioma -> lista de archivos .mo
+    """
+    mo_files_by_lang = {}
+    translations_dir = get_absolute_translations_dir()
+    
+    if not translations_dir.exists():
+        print(f"⚠️  Directorio de traducciones no encontrado: {translations_dir}")
+        return mo_files_by_lang
+
+    for lang_dir in translations_dir.iterdir():
+        if lang_dir.is_dir() and lang_dir.name in I18nConfig.SUPPORTED_LANGUAGES:
+            lang_code = lang_dir.name
+            lc_messages_dir = lang_dir / "LC_MESSAGES"
             
-        return False
+            if lc_messages_dir.exists():
+                mo_files = list(lc_messages_dir.glob("*.mo"))
+                if mo_files:
+                    mo_files_by_lang[lang_code] = mo_files
+
+    return mo_files_by_lang
 
 
 class TranslationService:
-    """Servicio dinámico para manejar las traducciones de la aplicación."""
+    """Servicio para manejar las traducciones de la aplicación."""
 
     def __init__(self):
         self._translations: Dict[str, Dict[str, Union[gettext.GNUTranslations, gettext.NullTranslations]]] = {}
-        self._compiled_timestamps: Dict[str, Dict[str, float]] = {}
         self._domains: Dict[str, List[str]] = {}  # domain -> list of languages
         self._translations_dir = get_absolute_translations_dir()
         self._load_translations()
 
     def _discover_and_compile_translations(self) -> None:
-        """Descubre y compila automáticamente todas las traducciones."""
+        """Descubre y compila automáticamente todas las traducciones en desarrollo local."""
         po_files_by_lang = discover_po_files()
 
         for lang_code, po_files in po_files_by_lang.items():
-            if lang_code not in self._compiled_timestamps:
-                self._compiled_timestamps[lang_code] = {}
-
             for po_file in po_files:
                 domain = po_file.stem
                 mo_file = get_mo_path_for_po(po_file)
@@ -159,29 +162,36 @@ class TranslationService:
                     self._domains[domain].append(lang_code)
 
                 # Verificar si necesita compilación
-                try:
+                should_compile = True
+                if mo_file.exists():
                     po_mtime = po_file.stat().st_mtime
-                    should_compile = True
-                    
-                    if mo_file.exists():
-                        mo_mtime = mo_file.stat().st_mtime
-                        cached_mtime = self._compiled_timestamps[lang_code].get(domain, 0)
-                        
-                        # Solo compilar si el .po es más nuevo que el .mo o si no está en caché
-                        if mo_mtime >= po_mtime and cached_mtime == po_mtime:
-                            should_compile = False
-                    
-                    if should_compile:
-                        if compile_po_to_mo(po_file, mo_file):
-                            self._compiled_timestamps[lang_code][domain] = po_mtime
-                        
-                except (OSError, PermissionError) as e:
-                    print(f"⚠️  Error accediendo a archivo {po_file}: {e}")
+                    mo_mtime = mo_file.stat().st_mtime
+                    should_compile = po_mtime > mo_mtime
+                
+                if should_compile:
+                    compile_po_to_mo(po_file, mo_file)
+
+    def _discover_translations(self) -> None:
+        """Descubre automáticamente todas las traducciones disponibles."""
+        mo_files_by_lang = discover_mo_files()
+
+        for lang_code, mo_files in mo_files_by_lang.items():
+            for mo_file in mo_files:
+                domain = mo_file.stem
+                
+                # Registrar dominio
+                if domain not in self._domains:
+                    self._domains[domain] = []
+                if lang_code not in self._domains[domain]:
+                    self._domains[domain].append(lang_code)
 
     def _load_translations(self) -> None:
-        """Carga dinámicamente todas las traducciones disponibles."""
-        # Descubrir y compilar traducciones
+        """Carga todas las traducciones disponibles."""
+        # Compilar traducciones en desarrollo local
         self._discover_and_compile_translations()
+        
+        # Descubrir traducciones
+        self._discover_translations()
 
         # Limpiar traducciones existentes
         self._translations.clear()
