@@ -92,7 +92,10 @@ def render_template_with_translations(
     if context:
         base_context.update(context)
     
-    return templates.TemplateResponse(template_name, base_context)
+    # Generar la respuesta con el template
+    response = templates.TemplateResponse(template_name, base_context)
+    
+    return response
 
 
 def with_translations(templates: Jinja2Templates, template_name: str):

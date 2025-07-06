@@ -1,17 +1,41 @@
+/* View Transitions nativas de CSS */
 @view-transition {
     navigation: auto;
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation-duration: 0.5s;
+/* Controlar la duración de todas las transiciones */
+:root {
+    view-transition-name: none;
 }
 
-::view-transition-old(root) {
+::view-transition-group(*) {
+    animation-duration: 0.3s;
+}
+
+::view-transition-old(*) {
+    animation: fade-out 0.3s ease-out forwards;
+}
+
+::view-transition-new(*) {
+    animation: fade-in 0.3s ease-in forwards;
+}
+
+/* Transiciones específicas para elementos */
+h1, p, .feature h3, .feature p {
+    view-transition-name: fade-slide;
+}
+
+/* Grupo específico para el container principal */
+.container {
+    view-transition-name: container;
+}
+
+/* Animaciones específicas para el container */
+::view-transition-old(container) {
     animation-name: fade-out, slide-out;
 }
 
-::view-transition-new(root) {
+::view-transition-new(container) {
     animation-name: fade-in, slide-in;
 }
 
