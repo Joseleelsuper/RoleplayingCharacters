@@ -1,31 +1,59 @@
 """
-Servicio de traducción dinámico para la aplicación.
+Servicio de traducción para la aplicación.
 
-Este módulo detecta automáticamente todos los archivos .po disponibles
-y los compila a .mo de forma dinámica, permitiendo escalabilidad sin
-modificar el código fuente.
+Este módulo carga los archivos .mo precompilados para proporcionar
+traducciones dinámicas según el idioma del usuario.
+En desarrollo local, compila automáticamente los archivos .po a .mo.
 """
-
 import gettext
 from pathlib import Path
-from typing import Dict, Union, List
+from typing import Any, Dict, Union, List
 from fastapi import Request
 from src.infrastructure.i18n import I18nConfig
-from babel.messages import Catalog
-from babel.messages.pofile import read_po
-from babel.messages.mofile import write_mo
+
+
+def get_absolute_translations_dir() -> Path:
+    """
+    Obtiene la ruta absoluta correcta al directorio de traducciones.
+    Compatible tanto con desarrollo local como con Vercel.
+    
+    Returns:
+        Path: Ruta absoluta al directorio de traducciones
+    """
+    current_file = Path(__file__).resolve()
+    project_root = current_file.parent.parent.parent
+    translations_dir = project_root / "translations"
+    
+    # Si no existe en la ruta esperada, intentar rutas alternativas
+    if not translations_dir.exists():
+        # Intentar desde el directorio raíz actual
+        alt_translations_dir = Path.cwd() / "translations"
+        if alt_translations_dir.exists():
+            return alt_translations_dir
+        
+        # Intentar ruta relativa desde src
+        src_relative = current_file.parent.parent.parent / "translations"
+        if src_relative.exists():
+            return src_relative
+    
+    return translations_dir
 
 
 def discover_po_files() -> Dict[str, List[Path]]:
     """
     Descubre dinámicamente todos los archivos .po organizados por idioma.
+    Solo usado en desarrollo local para compilación.
 
     Returns:
         Dict[str, List[Path]]: Diccionario con idioma -> lista de archivos .po
     """
     po_files_by_lang = {}
+    translations_dir = get_absolute_translations_dir()
+    
+    if not translations_dir.exists():
+        return po_files_by_lang
 
-    for lang_dir in I18nConfig.TRANSLATIONS_DIR.iterdir():
+    for lang_dir in translations_dir.iterdir():
         if lang_dir.is_dir() and lang_dir.name in I18nConfig.SUPPORTED_LANGUAGES:
             lang_code = lang_dir.name
             po_files = list(lang_dir.glob("*.po"))
@@ -54,7 +82,8 @@ def get_mo_path_for_po(po_file: Path) -> Path:
 
 def compile_po_to_mo(po_file: Path, mo_file: Path) -> bool:
     """
-    Compila un archivo .po a .mo usando Babel exclusivamente.
+    Compila un archivo .po a .mo usando Babel.
+    Solo funciona en desarrollo local.
 
     Args:
         po_file: Ruta al archivo .po
@@ -63,73 +92,93 @@ def compile_po_to_mo(po_file: Path, mo_file: Path) -> bool:
     Returns:
         bool: True si la compilación fue exitosa
     """
-    try:
-        # Crear directorio padre si no existe
+    from babel.messages.pofile import read_po
+    from babel.messages.mofile import write_mo
+    
+    # Crear directorio si no existe
+    if not mo_file.parent.exists():
         mo_file.parent.mkdir(parents=True, exist_ok=True)
 
-        # Usar Babel para leer y escribir
-        with open(po_file, "rb") as f:
-            catalog = read_po(f)
+    # Usar Babel para leer y escribir
+    with open(po_file, "rb") as f:
+        catalog = read_po(f)
 
-        with open(mo_file, "wb") as f:
-            write_mo(f, catalog)
+    with open(mo_file, "wb") as f:
+        write_mo(f, catalog)
 
-        print(
-            f"✓ Compilado {po_file.parent.name}/{po_file.stem}: {po_file.name} -> {mo_file.name}"
-        )
-        return True
+    print(f"✓ Compilado {po_file.parent.name}/{po_file.stem}: {po_file.name} -> {mo_file.name}")
+    return True
 
-    except Exception as e:
-        print(f"✗ Error compilando {po_file} -> {mo_file}: {e}")
 
-        # Crear archivo .mo vacío como fallback
-        try:
-            mo_file.parent.mkdir(parents=True, exist_ok=True)
-            empty_catalog = Catalog()
-            with open(mo_file, "wb") as f:
-                write_mo(f, empty_catalog)
-            return True
-        except Exception:
-            return False
+def discover_mo_files() -> Dict[str, List[Path]]:
+    """
+    Descubre dinámicamente todos los archivos .mo organizados por idioma.
+
+    Returns:
+        Dict[str, List[Path]]: Diccionario con idioma -> lista de archivos .mo
+    """
+    mo_files_by_lang = {}
+    translations_dir = get_absolute_translations_dir()
+    
+    if not translations_dir.exists():
+        print(f"⚠️  Directorio de traducciones no encontrado: {translations_dir}")
+        return mo_files_by_lang
+
+    for lang_dir in translations_dir.iterdir():
+        if lang_dir.is_dir() and lang_dir.name in I18nConfig.SUPPORTED_LANGUAGES:
+            lang_code = lang_dir.name
+            lc_messages_dir = lang_dir / "LC_MESSAGES"
+            
+            if lc_messages_dir.exists():
+                mo_files = list(lc_messages_dir.glob("*.mo"))
+                if mo_files:
+                    mo_files_by_lang[lang_code] = mo_files
+
+    return mo_files_by_lang
 
 
 class TranslationService:
-    """Servicio dinámico para manejar las traducciones de la aplicación."""
+    """Servicio para manejar las traducciones de la aplicación."""
 
     def __init__(self):
-        self._translations: Dict[
-            str, Dict[str, Union[gettext.GNUTranslations, gettext.NullTranslations]]
-        ] = {}
-        self._compiled_timestamps: Dict[str, Dict[str, float]] = {}
+        self._translations: Dict[str, Dict[str, Union[gettext.GNUTranslations, gettext.NullTranslations]]] = {}
         self._domains: Dict[str, List[str]] = {}  # domain -> list of languages
+        self._translations_dir = get_absolute_translations_dir()
         self._load_translations()
 
     def _discover_and_compile_translations(self) -> None:
-        """Descubre y compila automáticamente todas las traducciones."""
+        """Descubre y compila automáticamente todas las traducciones en desarrollo local."""
         po_files_by_lang = discover_po_files()
 
         for lang_code, po_files in po_files_by_lang.items():
-            if lang_code not in self._compiled_timestamps:
-                self._compiled_timestamps[lang_code] = {}
-
             for po_file in po_files:
-                domain = po_file.stem  # nombre del archivo sin extensión
+                domain = po_file.stem
                 mo_file = get_mo_path_for_po(po_file)
+                
+                # Registrar dominio
+                if domain not in self._domains:
+                    self._domains[domain] = []
+                if lang_code not in self._domains[domain]:
+                    self._domains[domain].append(lang_code)
 
-                # Verificar si necesita recompilación
-                po_mtime = po_file.stat().st_mtime
-                last_compiled = self._compiled_timestamps[lang_code].get(domain, 0)
+                # Verificar si necesita compilación
+                should_compile = True
+                if mo_file.exists():
+                    po_mtime = po_file.stat().st_mtime
+                    mo_mtime = mo_file.stat().st_mtime
+                    should_compile = po_mtime > mo_mtime
+                
+                if should_compile:
+                    compile_po_to_mo(po_file, mo_file)
 
-                needs_compile = (
-                    not mo_file.exists()
-                    or mo_file.stat().st_mtime < po_mtime
-                    or last_compiled < po_mtime
-                )
+    def _discover_translations(self) -> None:
+        """Descubre automáticamente todas las traducciones disponibles."""
+        mo_files_by_lang = discover_mo_files()
 
-                if needs_compile:
-                    if compile_po_to_mo(po_file, mo_file):
-                        self._compiled_timestamps[lang_code][domain] = po_mtime
-
+        for lang_code, mo_files in mo_files_by_lang.items():
+            for mo_file in mo_files:
+                domain = mo_file.stem
+                
                 # Registrar dominio
                 if domain not in self._domains:
                     self._domains[domain] = []
@@ -137,9 +186,12 @@ class TranslationService:
                     self._domains[domain].append(lang_code)
 
     def _load_translations(self) -> None:
-        """Carga dinámicamente todas las traducciones disponibles."""
-        # Descubrir y compilar traducciones
+        """Carga todas las traducciones disponibles."""
+        # Compilar traducciones en desarrollo local
         self._discover_and_compile_translations()
+        
+        # Descubrir traducciones
+        self._discover_translations()
 
         # Limpiar traducciones existentes
         self._translations.clear()
@@ -150,26 +202,28 @@ class TranslationService:
                 if lang_code not in self._translations:
                     self._translations[lang_code] = {}
 
+                mo_file = self._translations_dir / lang_code / "LC_MESSAGES" / f"{domain}.mo"
+                
                 try:
-                    # Usar el directorio translations directamente como localedir
-                    # gettext busca en localedir/lang_code/LC_MESSAGES/domain.mo
-                    localedir = str(I18nConfig.TRANSLATIONS_DIR)
-
-                    translation = gettext.translation(
-                        domain,
-                        localedir=localedir,
-                        languages=[lang_code],
-                        fallback=True,
-                    )
-
+                    if mo_file.exists():
+                        with open(mo_file, "rb") as f:
+                            translation = gettext.GNUTranslations(f)
+                    else:
+                        print(f"⚠️  Archivo .mo no encontrado: {mo_file}")
+                        translation = gettext.NullTranslations()
+                        
                     self._translations[lang_code][domain] = translation
+                    
                 except Exception as e:
-                    print(f"⚠ Error cargando traducción {lang_code}/{domain}: {e}")
+                    print(f"✗ Error cargando traducción {lang_code}/{domain}: {e}")
                     self._translations[lang_code][domain] = gettext.NullTranslations()
 
     def reload_translations(self) -> None:
         """Recarga todas las traducciones. Útil durante el desarrollo."""
-        self._load_translations()
+        try:
+            self._load_translations()
+        except Exception as e:
+            print(f"[WARN] Error recargando traducciones: {e}")
 
     def get_translation(
         self,
@@ -242,6 +296,31 @@ class TranslationService:
                     return lang
 
         return I18nConfig.DEFAULT_LANGUAGE
+
+    def debug_mo_file_exists(self, lang: str, domain: str) -> bool:
+        """
+        Comprueba si el archivo .mo existe en la ruta esperada (útil para debug en Vercel).
+        """
+        mo_path = self._translations_dir / lang / "LC_MESSAGES" / f"{domain}.mo"
+        exists = mo_path.exists()
+        print(f"🔍 Debug - {lang}/{domain}.mo exists: {exists} (path: {mo_path})")
+        return exists
+
+    def debug_translations_dir(self) -> Dict[str, Any]:
+        """
+        Información de debug sobre el directorio de traducciones.
+        """
+        info = {
+            "translations_dir": str(self._translations_dir),
+            "dir_exists": self._translations_dir.exists(),
+            "available_domains": self.get_available_domains(),
+            "loaded_languages": list(self._translations.keys()),
+        }
+        
+        if self._translations_dir.exists():
+            info["dir_contents"] = [str(p) for p in self._translations_dir.iterdir()]
+        
+        return info
 
 
 # Instancia global del servicio de traducción

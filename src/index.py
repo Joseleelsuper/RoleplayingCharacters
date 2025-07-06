@@ -18,7 +18,6 @@ import uvicorn
 from src.infrastructure.config import settings
 from src.infrastructure.web.home_controller import router as home_router
 
-
 class I18nMiddleware(BaseHTTPMiddleware):
     """Middleware para configurar el contexto de internacionalización."""
 

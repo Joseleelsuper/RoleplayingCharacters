@@ -15,7 +15,31 @@ class I18nConfig:
 
     DEFAULT_LANGUAGE: str = "es"
     SUPPORTED_LANGUAGES: List[str] = ["es", "en"]
-    TRANSLATIONS_DIR: Path = Path(__file__).parent.parent.parent / "translations"
+    
+    @classmethod
+    def get_translations_dir(cls) -> Path:
+        """
+        Obtiene la ruta absoluta correcta al directorio de traducciones.
+        Compatible tanto con desarrollo local como con Vercel.
+        """
+        # En Vercel, el working directory puede ser diferente
+        current_file = Path(__file__).resolve()
+        project_root = current_file.parent.parent.parent
+        translations_dir = project_root / "translations"
+        
+        # Si no existe en la ruta esperada, intentar rutas alternativas
+        if not translations_dir.exists():
+            # Intentar desde el directorio raíz actual
+            alt_translations_dir = Path.cwd() / "translations"
+            if alt_translations_dir.exists():
+                return alt_translations_dir
+            
+            # Intentar ruta relativa desde src
+            src_relative = current_file.parent.parent.parent / "translations"
+            if src_relative.exists():
+                return src_relative
+        
+        return translations_dir
 
     @classmethod
     def get_supported_locales(cls) -> List[Locale]:
@@ -26,3 +50,10 @@ class I18nConfig:
             List[Locale]: Lista de objetos Locale soportados
         """
         return [Locale(lang) for lang in cls.SUPPORTED_LANGUAGES]
+
+    @classmethod
+    def get_mo_path(cls, lang: str, domain: str) -> Path:
+        """
+        Devuelve la ruta absoluta al archivo .mo para un idioma y dominio.
+        """
+        return cls.get_translations_dir() / lang / "LC_MESSAGES" / f"{domain}.mo"

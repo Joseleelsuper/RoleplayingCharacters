@@ -67,6 +67,10 @@ class Settings:
         "LOG_FORMAT", "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
+    # Configuración de idiomas
+    allowed_languages: list[str] = ["es", "en"]
+    default_locale: str = "es"
+
 
 # Instancia global de configuración
 settings = Settings()
