@@ -15,7 +15,7 @@ class I18nConfig:
 
     DEFAULT_LANGUAGE: str = "es"
     SUPPORTED_LANGUAGES: List[str] = ["es", "en"]
-    
+
     @classmethod
     def get_translations_dir(cls) -> Path:
         """
@@ -26,19 +26,19 @@ class I18nConfig:
         current_file = Path(__file__).resolve()
         project_root = current_file.parent.parent.parent
         translations_dir = project_root / "translations"
-        
+
         # Si no existe en la ruta esperada, intentar rutas alternativas
         if not translations_dir.exists():
             # Intentar desde el directorio raíz actual
             alt_translations_dir = Path.cwd() / "translations"
             if alt_translations_dir.exists():
                 return alt_translations_dir
-            
+
             # Intentar ruta relativa desde src
             src_relative = current_file.parent.parent.parent / "translations"
             if src_relative.exists():
                 return src_relative
-        
+
         return translations_dir
 
     @classmethod
