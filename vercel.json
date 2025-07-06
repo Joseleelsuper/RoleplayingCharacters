@@ -45,6 +45,10 @@
     {
       "src": "/(.*)",
       "dest": "/src/index.py"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
     }
   ],
   "env": {
