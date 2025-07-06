@@ -19,6 +19,10 @@
     {
       "src": "templates/**/*",
       "use": "@vercel/static"
+    },
+    {
+      "src": "translations/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -43,8 +47,16 @@
       "dest": "/templates/img/$1"
     },
     {
+      "src": "/translations/(.*)",
+      "dest": "/translations/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/src/index.py"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
     }
   ],
   "env": {

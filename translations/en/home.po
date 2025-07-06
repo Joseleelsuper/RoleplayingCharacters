@@ -1,0 +1,43 @@
+# English translations for home page
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-01 00:00+0000\n"
+"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "page.title"
+msgstr "Roleplaying Characters Manager"
+
+msgid "home.welcome.title"
+msgstr "Hello World!"
+
+msgid "home.welcome.subtitle"
+msgstr "Welcome to the Roleplaying Characters Manager"
+
+msgid "home.welcome.description"
+msgstr "Your adventure begins here. Create, customize and manage your favorite roleplaying characters."
+
+msgid "home.features.create.title"
+msgstr "🎭 Create Characters"
+
+msgid "home.features.create.description"
+msgstr "Design unique characters with customizable attributes"
+
+msgid "home.features.classes.title"
+msgstr "⚔️ Classes & Races"
+
+msgid "home.features.classes.description"
+msgstr "Choose from multiple available classes and races"
+
+msgid "home.features.share.title"
+msgstr "🤝 Share"
+
+msgid "home.features.share.description"
+msgstr "Share your creations with other players"

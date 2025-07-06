@@ -6,9 +6,10 @@ de la aplicación, incluyendo la página de inicio y verificaciones de salud.
 """
 
 from pathlib import Path
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from src.infrastructure.template_helpers import render_template_with_translations
 
 router = APIRouter()
 
@@ -18,15 +19,21 @@ templates = Jinja2Templates(directory=str(templates_dir))
 
 
 @router.get("/", response_class=HTMLResponse, tags=["Home"])
-async def get_home_page() -> str:
+async def get_home_page(request: Request) -> HTMLResponse:
     """
     Endpoint que devuelve la página principal de la aplicación.
 
+    Args:
+        request: Objeto Request de FastAPI para detectar el idioma
+
     Returns:
-        str: HTML con la página de inicio
+        HTMLResponse: HTML con la página de inicio traducida
     """
-    with open(templates_dir / "home.html", "r", encoding="utf-8") as file:
-        return file.read()
+    return render_template_with_translations(
+        templates=templates,
+        template_name="home.html",
+        request=request
+    )
 
 
 @router.get("/health", tags=["Health"])

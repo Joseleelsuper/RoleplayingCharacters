@@ -1,0 +1,43 @@
+# Spanish translations for home page
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-01 00:00+0000\n"
+"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "page.title"
+msgstr "Gestor de Personajes de Rol"
+
+msgid "home.welcome.title"
+msgstr "¡Hola Mundo!"
+
+msgid "home.welcome.subtitle" 
+msgstr "Bienvenido al Gestor de Personajes de Rol"
+
+msgid "home.welcome.description"
+msgstr "Tu aventura comienza aquí. Crea, personaliza y gestiona tus personajes de rol favoritos."
+
+msgid "home.features.create.title"
+msgstr "🎭 Crear Personajes"
+
+msgid "home.features.create.description"
+msgstr "Diseña personajes únicos con atributos personalizables"
+
+msgid "home.features.classes.title"
+msgstr "⚔️ Clases & Razas"
+
+msgid "home.features.classes.description"
+msgstr "Elige entre múltiples clases y razas disponibles"
+
+msgid "home.features.share.title"
+msgstr "🤝 Compartir"
+
+msgid "home.features.share.description"
+msgstr "Comparte tus creaciones con otros jugadores"
