@@ -17,18 +17,6 @@ import uvicorn
 
 from src.infrastructure.config import settings
 from src.infrastructure.web.home_controller import router as home_router
-from src.infrastructure.translation_service import TranslationService
-
-
-# Instancia global del servicio de traducción
-translation_service = TranslationService()
-
-# Compilar automáticamente los .po a .mo si faltan .mo
-try:
-    translation_service.reload_translations()
-except Exception as e:
-    print(f"[WARN] Error recargando traducciones: {e}")
-
 
 class I18nMiddleware(BaseHTTPMiddleware):
     """Middleware para configurar el contexto de internacionalización."""
