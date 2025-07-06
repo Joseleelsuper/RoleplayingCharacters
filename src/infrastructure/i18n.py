@@ -26,3 +26,10 @@ class I18nConfig:
             List[Locale]: Lista de objetos Locale soportados
         """
         return [Locale(lang) for lang in cls.SUPPORTED_LANGUAGES]
+
+    @classmethod
+    def get_mo_path(cls, lang: str, domain: str) -> Path:
+        """
+        Devuelve la ruta absoluta al archivo .mo para un idioma y dominio.
+        """
+        return cls.TRANSLATIONS_DIR / lang / "LC_MESSAGES" / f"{domain}.mo"

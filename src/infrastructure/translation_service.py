@@ -243,6 +243,14 @@ class TranslationService:
 
         return I18nConfig.DEFAULT_LANGUAGE
 
+    def debug_mo_file_exists(self, lang: str, domain: str) -> bool:
+        """
+        Comprueba si el archivo .mo existe en la ruta esperada (útil para debug en Vercel).
+        """
+
+        mo_path = I18nConfig.get_mo_path(lang, domain)
+        return mo_path.exists()
+
 
 # Instancia global del servicio de traducción
 translation_service = TranslationService()
