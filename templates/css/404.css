@@ -1,14 +1,17 @@
+/* Importar paleta de colores global */
+@import '../css/global/colors.css';
+
 /* 404 page styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+    background: linear-gradient(135deg, #D32F2F 0%, #1976D2 100%);
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    color: white;
+    color: #FFFFFF;
 }
 
 .container-404 {
@@ -18,19 +21,27 @@ body {
     justify-content: center;
     min-height: 500px;
     padding: 3rem 2rem;
-    background: rgba(255,255,255,0.13);
+    background: rgba(255,255,255,0.25);
     border-radius: 24px;
-    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.13);
-    border: 1.5px solid rgba(255,255,255,0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1.5px solid rgba(255,255,255,0.3);
 }
 
 .page-404-icon {
     font-size: 6rem;
     margin-bottom: 1.5rem;
-    color: #ff6b6b;
-    text-shadow: 0 2px 16px rgba(255, 107, 107, 0.3);
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 0 5px rgba(231, 76, 60, 0.5);
     animation: bounce404 1.2s infinite alternate;
     user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(231, 76, 60, 0.8) 0%, rgba(52, 152, 219, 0.8) 100%);
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes bounce404 {
@@ -39,56 +50,168 @@ body {
 }
 
 h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-    background-size: 300% 300%;
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    margin-bottom: 1.5rem;
+    text-shadow: 
+                 -2px -2px 0 #000,  
+                 2px -2px 0 #000,
+                 -2px 2px 0 #000,
+                 2px 2px 0 #000,
+                 0 2px 4px rgba(0, 0, 0, 0.3), 
+                 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(45deg, 
+                rgba(231, 76, 60, 1), 
+                rgba(41, 128, 185, 1), 
+                rgba(52, 152, 219, 1));
+    background-size: 200% 200%;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradient 3s ease infinite;
+    animation: gradient 6s ease infinite;
     line-height: 1.2;
-    min-height: 3.6rem;
+    min-height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-align: center;
+    width: 100%;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, sans-serif;
 }
 
 @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% { 
+        background-position: 0% 50%;
+        text-shadow: 
+            -2px -2px 0 #000,  
+            2px -2px 0 #000,
+            -2px 2px 0 #000,
+            2px 2px 0 #000,
+            0 2px 4px rgba(0, 0, 0, 0.3), 
+            0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    50% { 
+        background-position: 100% 50%; 
+        text-shadow: 
+            -2px -2px 0 #000,  
+            2px -2px 0 #000,
+            -2px 2px 0 #000,
+            2px 2px 0 #000,
+            0 2px 5px rgba(0, 0, 0, 0.35), 
+            0 5px 10px rgba(0, 0, 0, 0.25);
+    }
+    100% { 
+        background-position: 0% 50%;
+        text-shadow: 
+            -2px -2px 0 #000,  
+            2px -2px 0 #000,
+            -2px 2px 0 #000,
+            2px 2px 0 #000,
+            0 2px 4px rgba(0, 0, 0, 0.3), 
+            0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* Efecto de resplandor tras el texto que usa un ::before en el contenedor */
+.title-container::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(231, 76, 60, 0.4), rgba(52, 152, 219, 0.4));
+    background-size: 200% 200%;
+    border-radius: 15px;
+    z-index: -1;
+    filter: blur(20px);
+    opacity: 0.7;
+    transform: scale(0.95);
+    animation: gradient 6s ease infinite;
+}
+
+/* Contenedor posicionado relativamente para el título para poder usar el pseudo-elemento */
+.title-container {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
 }
 
 p {
     font-size: clamp(1rem, 2.5vw, 1.2rem);
-    opacity: 0.9;
+    opacity: 1;
     margin-bottom: 2rem;
-    line-height: 1.5;
+    line-height: 1.6;
     min-height: 3.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    color: var(--light);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 500;
+    max-width: 80%;
+    letter-spacing: 0.02em;
 }
 
 .button-404-back {
-    background: linear-gradient(90deg, #ff6b6b 0%, #4ecdc4 100%);
-    color: white;
-    border: none;
+    background-image: linear-gradient(90deg, #E74C3C 0%, #3498DB 100%);
+    background-origin: border-box;
+    background-clip: border-box;
+    background-size: 100% 100%;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    color: #FFFFFF;
+    border: 2px solid rgba(255,255,255,0.3);
     border-radius: 30px;
     padding: 0.9rem 2.2rem;
     font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 16px rgba(76, 205, 196, 0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     margin-top: 2rem;
-    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.button-404-back::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(90deg, #3498DB 0%, #E74C3C 100%);
+    background-origin: border-box;
+    background-clip: padding-box;
+    background-size: 100% 100%;
+    border-radius: 30px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
 .button-404-back:hover {
-    background: linear-gradient(90deg, #4ecdc4 0%, #ff6b6b 100%);
+    background-image: none;
+    background-color: transparent;
     transform: scale(1.05);
-    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.button-404-back:hover::before {
+    opacity: 1;
+}
+
+.button-404-back:focus {
+    outline: 3px solid #FFFFFF;
+    outline-offset: 2px;
 }
