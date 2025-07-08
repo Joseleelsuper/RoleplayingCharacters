@@ -60,7 +60,7 @@ def get_translation_context(language: str, domain: str = "home") -> dict:
     }
 
 
-def get_lang_query(request: Request, default: str = "es") -> str:
+def get_lang_query(request: Request, default: str = I18nConfig.DEFAULT_LANGUAGE) -> str:
     """
     Devuelve el query string de idioma actual para mantenerlo en los enlaces.
     Solo añade el parámetro lang si es diferente al idioma guardado en la cookie

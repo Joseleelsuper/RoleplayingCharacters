@@ -28,7 +28,7 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 10. Para la comprobación de la estructura del código, tenemos un fichero .importLinter de la dependencia import-linter para la comprobación de la estructura del código. Este fichero contiene las reglas de importación que queremos aplicar en nuestro proyecto.
 
-11. El mensage de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
+11. El mensaje de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
 
 12. A la hora de necesitar añadir nuevas dependencias en el fichero requirements, no instalarlas. Suponer que ya están instaladas en el entorno.
 

@@ -9,7 +9,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from infrastructure.i18n import I18nConfig
+from src.infrastructure.i18n import I18nConfig
 from src.infrastructure.template_helpers import render_template_with_translations
 
 router = APIRouter()
