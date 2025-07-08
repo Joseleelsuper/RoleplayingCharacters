@@ -1,0 +1,8 @@
+msgid "404_title"
+msgstr "Página no encontrada"
+
+msgid "404_message"
+msgstr "La página que buscas no existe o ha sido eliminada."
+
+msgid "404_back_button"
+msgstr "Volver"

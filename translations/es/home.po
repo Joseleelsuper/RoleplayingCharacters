@@ -16,7 +16,7 @@ msgid "page.title"
 msgstr "Gestor de Personajes de Rol"
 
 msgid "home.welcome.title"
-msgstr "¡Hola Mundo!"
+msgstr "Gestor de Personajes de Rol"
 
 msgid "home.welcome.subtitle" 
 msgstr "Bienvenido al Gestor de Personajes de Rol"
