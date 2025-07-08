@@ -294,6 +294,11 @@ class TranslationService:
         if lang and lang in I18nConfig.SUPPORTED_LANGUAGES:
             return lang
 
+        # Verificar si hay una cookie de idioma
+        cookie_lang = request.cookies.get(I18nConfig.LANGUAGE_COOKIE_NAME)
+        if cookie_lang and cookie_lang in I18nConfig.SUPPORTED_LANGUAGES:
+            return cookie_lang
+
         # Verificar el header Accept-Language
         accept_language = request.headers.get("accept-language")
         if accept_language:

@@ -15,6 +15,8 @@ class I18nConfig:
 
     DEFAULT_LANGUAGE: str = "es"
     SUPPORTED_LANGUAGES: List[str] = ["es", "en"]
+    LANGUAGE_COOKIE_NAME: str = "preferred_language"
+    LANGUAGE_COOKIE_MAX_AGE: int = 60 * 60 * 24 * 30  # 30 días
 
     @classmethod
     def get_translations_dir(cls) -> Path:
