@@ -42,6 +42,8 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 17. Si no te lo he pedido explicitamente, NO LO HAGAS. No quiero que añadas cosas extra simplememente por la cara. Pregunta antes de programar.
 
+18. En /templates/css/global/base.css y colors.css tenemos todos los estilos por defecto. No utilices estilos no necesarios en los CSS de las páginas. Utiliza los estilos ya creados en estos ficheros.
+
 ============================
 ## Commits convencionales
 - 🔧 feat: Añade una nueva funcionalidad.
