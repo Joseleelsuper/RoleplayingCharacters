@@ -28,19 +28,21 @@ Se utilizan clases y razas de personajes tanto creados por juegos de rol preesta
 
 10. Para la comprobación de la estructura del código, tenemos un fichero .importLinter de la dependencia import-linter para la comprobación de la estructura del código. Este fichero contiene las reglas de importación que queremos aplicar en nuestro proyecto.
 
-11. El mensage de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
+11. El mensaje de los commits debe añadir el prefijo de los commits convencionales junto a su emoji y una explicación detallada pero fácil de leer para su futura revisión.
 
 12. A la hora de necesitar añadir nuevas dependencias en el fichero requirements, no instalarlas. Suponer que ya están instaladas en el entorno.
 
 13. En caso de necesitar añadir variables de entorno, hacerlos en el .env.example.
 
-14. Todo import debe introducirse SIEMPRE al principio del fichero, y no a mitad del código. Esto incluye imports de librerías, módulos y paquetes, ya sea con import o empezando con from. No se permiten imports en medio del código.
+14. No añadas imports ni from x. Supón que ya están importados el nuevo contenido que añadas a un fichero, a no ser que sea un fichero vacío.
 
 15. Todo comentario explicativo no lo pongas, es decir, solo quiero comentarios sobre lo que hace una parte en concreto del código si es difícil de entender.
 
 16. Para la traducción, utilizamos Babel y starlette-babel. Queremos hacer las traducciones mantenibles, por lo que habrá distintos ficheros para cada página.
 
 17. Si no te lo he pedido explicitamente, NO LO HAGAS. No quiero que añadas cosas extra simplememente por la cara. Pregunta antes de programar.
+
+18. En /templates/css/global/base.css y colors.css tenemos todos los estilos por defecto. No utilices estilos no necesarios en los CSS de las páginas. Utiliza los estilos ya creados en estos ficheros.
 
 ============================
 ## Commits convencionales

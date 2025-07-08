@@ -1,0 +1,59 @@
+/**
+ * Paleta de colores global para RoleplayingCharacters
+ * Este archivo debe ser importado por todos los demás CSS
+ */
+
+:root {
+  /* Colores primarios */
+  --primary-dark: #2C3E50;    /* Azul oscuro para fondos y elementos principales */
+  --primary: #3498DB;         /* Azul medio para botones y destacados */
+  --primary-light: #85C1E9;   /* Azul claro para hover y elementos secundarios */
+
+  /* Colores secundarios */
+  --secondary-dark: #784212;  /* Marrón oscuro para detalles */
+  --secondary: #D35400;       /* Naranja para acentos y llamadas a la acción */
+  --secondary-light: #F39C12; /* Naranja claro/amarillo para hover */
+
+  /* Colores neutros */
+  --dark: #1A1A1A;            /* Negro para textos principales */
+  --gray-dark: #555555;       /* Gris oscuro para subtítulos */
+  --gray: #95A5A6;            /* Gris medio para bordes y separadores */
+  --gray-light: #ECF0F1;      /* Gris claro para fondos alternativos */
+  --light: #FFFFFF;           /* Blanco para fondos y textos sobre fondos oscuros */
+
+  /* Colores de estado */
+  --success: #27AE60;         /* Verde para mensajes de éxito */
+  --warning: #F39C12;         /* Amarillo para advertencias */
+  --danger: #E74C3C;          /* Rojo para errores y alertas */
+  --info: #3498DB;            /* Azul para información */
+
+  /* Colores específicos de rol */
+  --warrior: #E74C3C;         /* Rojo para guerreros */
+  --mage: #9B59B6;            /* Morado para magos */
+  --rogue: #2ECC71;           /* Verde para pícaros */
+  --cleric: #F1C40F;          /* Amarillo para clérigos */
+  --ranger: #16A085;          /* Verde azulado para exploradores */
+  --paladin: #E67E22;         /* Naranja para paladines */
+}
+
+/* Utilidades para texto con los colores definidos */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-dark { color: var(--dark); }
+.text-light { color: var(--light); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+.text-info { color: var(--info); }
+
+/* Utilidades para fondos con los colores definidos */
+.bg-primary { background-color: var(--primary); }
+.bg-primary-dark { background-color: var(--primary-dark); }
+.bg-primary-light { background-color: var(--primary-light); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-secondary-dark { background-color: var(--secondary-dark); }
+.bg-secondary-light { background-color: var(--secondary-light); }
+.bg-dark { background-color: var(--dark); }
+.bg-gray { background-color: var(--gray); }
+.bg-gray-light { background-color: var(--gray-light); }
+.bg-light { background-color: var(--light); }

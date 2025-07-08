@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ _('404_title') }}</title>
+    <link rel="stylesheet" href="/css/404.css">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container-404">
+        <div class="page-404-icon">🧭</div>
+        <div class="title-container">
+            <h1 data-text="{{ _('404_title') }}">{{ _('404_title') }}</h1>
+        </div>
+        <p>{{ _('404_message') }}</p>
+        <button class="btn button-404-back" onclick="goBack()">{{ _('404_back_button') }}</button>
+    </div>
+    <script>
+        function goBack() {
+            const langQuery = "{{ lang_query }}";
+            if (document.referrer && document.referrer !== window.location.href) {
+                window.history.back();
+            } else {
+                window.location.href = '/' + langQuery;
+            }
+        }
+    </script>
+</body>
+</html>

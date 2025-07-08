@@ -16,7 +16,7 @@ msgid "page.title"
 msgstr "Roleplaying Characters Manager"
 
 msgid "home.welcome.title"
-msgstr "Hello World!"
+msgstr "Roleplaying Characters Manager"
 
 msgid "home.welcome.subtitle"
 msgstr "Welcome to the Roleplaying Characters Manager"
