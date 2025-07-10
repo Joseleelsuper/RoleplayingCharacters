@@ -494,44 +494,76 @@ label {
 
 /* Secciones y layouts */
 .form-section {
-  background: linear-gradient(135deg, rgba(45, 45, 55, 0.8), rgba(35, 35, 45, 0.8));
-  border-radius: 16px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgba(45, 45, 55, 0.9), rgba(35, 35, 45, 0.9));
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 3.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(52, 152, 219, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   width: 100%;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  backdrop-filter: blur(15px);
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.form-section::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), var(--primary-light));
+  border-radius: 22px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .form-section:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(52, 152, 219, 0.4);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.form-section:hover::before {
+  opacity: 0.3;
 }
 
 .form-section h2 {
   color: var(--light);
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 800;
   margin-top: 0;
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid rgba(52, 152, 219, 0.4);
-  padding-bottom: 0.8rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+  border-bottom: 3px solid rgba(52, 152, 219, 0.5);
+  padding-bottom: 1rem;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
   background: linear-gradient(45deg, var(--primary-light), var(--primary));
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-align: center;
+  position: relative;
+}
+
+.form-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(45deg, var(--primary), var(--primary-light));
+  border-radius: 2px;
 }
 
 .two-column-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
+  gap: 3rem;
+  margin-bottom: 2rem;
   width: 100%;
 }
 
