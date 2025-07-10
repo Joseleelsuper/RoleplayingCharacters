@@ -35,9 +35,11 @@ const state = {
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicializar los controladores de eventos
     initAttributeHandlers();
+    initNumberInputHandlers();
     initFormResetHandler();
     initFormSubmitHandler();
     initCustomSelectHandlers();
+    initCheckboxItemHandlers();
     
     // Cargar datos iniciales
     await Promise.all([
@@ -50,130 +52,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetchSpells(),
         fetchItems()
     ]);
+    
+    // Inicializar el estado de todos los controles numéricos
+    initializeAllNumberControls();
 });
 
 // Inicializar los selectores personalizados
 function initCustomSelectHandlers() {
-    // Configurar los selectores para Raza, Background y Alignment
-    setupCustomSelect('race');
-    setupCustomSelect('background');
-    setupCustomSelect('alignment');
-
-    // Configurar los botones para añadir opciones personalizadas
-    setupCustomOptionAdders();
+    // Configurar los manejadores de eventos para las nuevas opciones tipo radio
+    setupBasicOptionHandlers('race');
+    setupBasicOptionHandlers('background');
+    setupBasicOptionHandlers('alignment');
 }
 
-function setupCustomSelect(type) {
+function setupBasicOptionHandlers(type) {
     const container = document.getElementById(`${type}-container`);
-    const display = document.getElementById(`${type}-display`);
-    const options = document.getElementById(`${type}-options`);
-    const search = document.getElementById(`${type}-search`);
-    const hiddenInput = document.getElementById(`character-${type}`);
     
-    // Abrir/cerrar al hacer clic en el display
-    display.addEventListener('click', () => {
-        container.classList.toggle('active');
-        if (container.classList.contains('active')) {
-            search.focus();
-        }
-    });
-    
-    // Cerrar al hacer clic fuera
-    document.addEventListener('click', (e) => {
-        if (!container.contains(e.target)) {
-            container.classList.remove('active');
-        }
-    });
-    
-    // Filtrar opciones al escribir en el buscador
-    search.addEventListener('input', () => {
-        const filter = search.value.toLowerCase();
-        const optionElements = options.querySelectorAll('.select-option');
-        
-        optionElements.forEach(option => {
-            const text = option.textContent.toLowerCase();
-            option.style.display = text.includes(filter) ? 'flex' : 'none';
+    if (container) {
+        container.addEventListener('click', (e) => {
+            const optionItem = e.target.closest('.basic-option-item');
+            if (optionItem) {
+                const radioInput = optionItem.querySelector('input[type="radio"]');
+                const hiddenInput = document.getElementById(`selected-${type}`);
+                
+                if (radioInput && hiddenInput) {
+                    // Seleccionar este radio button
+                    radioInput.checked = true;
+                    
+                    // Actualizar el input oculto
+                    hiddenInput.value = radioInput.value;
+                    
+                    // Actualizar las clases visuales
+                    container.querySelectorAll('.basic-option-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    optionItem.classList.add('selected');
+                    
+                    // Actualizar el estado
+                    const optionName = optionItem.querySelector('label').textContent;
+                    state[`selected${type.charAt(0).toUpperCase() + type.slice(1)}`] = {
+                        id: radioInput.value,
+                        name: optionName
+                    };
+                }
+            }
         });
-    });
-}
-
-function setupCustomOptionAdders() {
-    setupCustomOptionAdder('race');
-    setupCustomOptionAdder('background');
-    setupCustomOptionAdder('alignment');
-}
-
-function setupCustomOptionAdder(type) {
-    const addButton = document.getElementById(`add-custom-${type}`);
-    const customInput = document.getElementById(`custom-${type}`);
-    const optionsContainer = document.getElementById(`${type}-options`);
-    
-    addButton.addEventListener('click', () => {
-        const customValue = customInput.value.trim();
-        if (customValue) {
-            // Generar un ID único para esta opción personalizada
-            const customId = `custom_${type}_${Date.now()}`;
-            
-            // Añadir a la lista de opciones personalizadas
-            state.customOptions[type + 's'].push({
-                id: customId,
-                name: customValue
-            });
-            
-            // Crear y añadir elemento de opción
-            const optionElement = createOptionElement(customId, customValue, type);
-            optionsContainer.appendChild(optionElement);
-            
-            // Limpiar el campo de entrada
-            customInput.value = '';
-            
-            // Seleccionar automáticamente la opción recién creada
-            optionElement.click();
-        }
-    });
-}
-
-function createOptionElement(id, name, type) {
-    const option = document.createElement('div');
-    option.className = 'select-option';
-    option.dataset.id = id;
-    option.textContent = name;
-    
-    // Añadir evento de clic para seleccionar esta opción
-    option.addEventListener('click', () => {
-        selectOption(type, id, name);
-    });
-    
-    return option;
-}
-
-function selectOption(type, id, name) {
-    // Actualizar el valor mostrado
-    const display = document.getElementById(`${type}-display`);
-    display.querySelector('span').textContent = name;
-    
-    // Actualizar el input oculto con el valor seleccionado
-    const hiddenInput = document.getElementById(`character-${type}`);
-    hiddenInput.value = id;
-    
-    // Actualizar el estado
-    state[`selected${type.charAt(0).toUpperCase() + type.slice(1)}`] = {
-        id: id,
-        name: name
-    };
-    
-    // Marcar esta opción como seleccionada
-    const container = document.getElementById(`${type}-container`);
-    const options = container.querySelectorAll('.select-option');
-    
-    options.forEach(opt => {
-        opt.classList.remove('selected');
-    });
-    
-    container.querySelector(`.select-option[data-id="${id}"]`).classList.add('selected');
-    
-    // Cerrar el menú
-    container.classList.remove('active');
+    }
 }
 
 // Manejadores de eventos
@@ -182,6 +106,10 @@ function initAttributeHandlers() {
         const input = document.getElementById(`attribute-${attr}`);
         const modifier = document.getElementById(`modifier-${attr}`);
         
+        // Inicializar estado de botones
+        updateNumberButtonStates(input);
+        
+        // Manejar cambios directos en el input (aunque esté readonly)
         input.addEventListener('input', () => {
             const value = parseInt(input.value) || 10;
             
@@ -193,7 +121,84 @@ function initAttributeHandlers() {
             const newValue = parseInt(input.value);
             updateAttributeValue(attr, newValue);
             updateModifierDisplay(attr);
+            updateNumberButtonStates(input);
         });
+    });
+    
+    // Inicializar todos los estados
+    updateAttributePointsDisplay();
+}
+
+function initNumberInputHandlers() {
+    // Manejar todos los botones de número
+    document.querySelectorAll('.number-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = button.dataset.target;
+            const step = parseInt(button.dataset.step);
+            const input = document.getElementById(targetId);
+            
+            if (input) {
+                changeNumberValue(input, step);
+                
+                // Si es un atributo, actualizar el modificador
+                if (targetId.startsWith('attribute-')) {
+                    const attr = targetId.replace('attribute-', '');
+                    updateModifierDisplay(attr);
+                }
+            }
+        });
+    });
+}
+
+function changeNumberValue(input, step) {
+    const currentValue = parseInt(input.value) || 0;
+    const min = parseInt(input.min) || 0;
+    const max = parseInt(input.max) || 100;
+    
+    let newValue = currentValue + step;
+    
+    // Aplicar límites
+    if (newValue < min) newValue = min;
+    if (newValue > max) newValue = max;
+    
+    // Actualizar el valor
+    input.value = newValue;
+    
+    // Disparar evento de cambio para mantener compatibilidad
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    
+    // Actualizar botones de estado
+    updateNumberButtonStates(input);
+    
+    // Si es un atributo, manejar el sistema de puntos
+    if (input.id.startsWith('attribute-')) {
+        const attr = input.id.replace('attribute-', '');
+        const oldValue = state.attributes[attr];
+        updateAttributeValue(attr, newValue);
+    }
+}
+
+function updateNumberButtonStates(input) {
+    const container = input.closest('.number-input-container');
+    if (!container) return;
+    
+    const currentValue = parseInt(input.value);
+    const min = parseInt(input.min);
+    const max = parseInt(input.max);
+    
+    // Actualizar botones de decremento
+    const decreaseButtons = container.querySelectorAll('.decrease-1, .decrease-5');
+    decreaseButtons.forEach(btn => {
+        const step = Math.abs(parseInt(btn.dataset.step));
+        btn.disabled = (currentValue - step) < min;
+    });
+    
+    // Actualizar botones de incremento
+    const increaseButtons = container.querySelectorAll('.increase-1, .increase-5');
+    increaseButtons.forEach(btn => {
+        const step = parseInt(btn.dataset.step);
+        btn.disabled = (currentValue + step) > max;
     });
 }
 
@@ -368,16 +373,56 @@ async function fetchItems() {
 
 // Funciones de utilidad
 function populateCustomSelect(type, items) {
-    const optionsContainer = document.getElementById(`${type}-options`);
+    const container = document.getElementById(`${type}-container`);
+    
+    if (!container) {
+        console.error(`Container ${type}-container not found`);
+        return;
+    }
     
     // Limpiar opciones existentes
-    optionsContainer.innerHTML = '';
+    container.innerHTML = '';
     
-    // Añadir nuevas opciones
-    items.forEach(item => {
-        const optionElement = createOptionElement(item.id, item.name, type);
-        optionsContainer.appendChild(optionElement);
+    // Añadir nuevas opciones como radio buttons
+    items.forEach((item, index) => {
+        const optionElement = createBasicOptionElement(item.id, item.name, type, index === 0);
+        container.appendChild(optionElement);
     });
+}
+
+function createBasicOptionElement(id, name, type, isDefault = false) {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'basic-option-item';
+    
+    const radioInput = document.createElement('input');
+    radioInput.type = 'radio';
+    radioInput.id = `${type}-${id}`;
+    radioInput.name = `${type}`;
+    radioInput.value = id;
+    
+    const label = document.createElement('label');
+    label.htmlFor = `${type}-${id}`;
+    label.textContent = name;
+    
+    itemDiv.appendChild(radioInput);
+    itemDiv.appendChild(label);
+    
+    // Si es la primera opción (por defecto), seleccionarla
+    if (isDefault) {
+        radioInput.checked = true;
+        itemDiv.classList.add('selected');
+        const hiddenInput = document.getElementById(`selected-${type}`);
+        if (hiddenInput) {
+            hiddenInput.value = id;
+        }
+        // Actualizar el estado
+        state[`selected${type.charAt(0).toUpperCase() + type.slice(1)}`] = {
+            id: id,
+            name: name
+        };
+    }
+    
+    return itemDiv;
 }
 
 function populateSelect(selectId, items) {
@@ -444,34 +489,96 @@ function populateCheckboxList(containerId, items, itemType) {
     });
 }
 
-function updateAttributeValue(attribute, newValue) {
-    const oldValue = state.attributes[attribute];
-    const oldCost = getPointCost(oldValue);
-    const newCost = getPointCost(newValue);
-    const pointDifference = newCost - oldCost;
+// Función para manejar los clics en los elementos seleccionables tipo checkbox
+function initCheckboxItemHandlers() {
+    // Manejador para habilidades, idiomas, competencias, hechizos e items
+    const containers = [
+        'skills-container',
+        'languages-container',
+        'proficiencies-container',
+        'spells-container',
+        'items-container'
+    ];
     
-    // Verificar si hay suficientes puntos
-    if (state.remainingPoints - pointDifference < 0 && newValue > oldValue) {
-        // Restaurar el valor anterior si no hay suficientes puntos
-        document.getElementById(`attribute-${attribute}`).value = oldValue;
-        alert(getTranslation('create.character.error.not.enough.points'));
-        return;
+    containers.forEach(containerId => {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.addEventListener('click', (e) => {
+                const itemElement = e.target.closest('.skill-item, .language-item, .proficiency-item, .spell-item, .item-item');
+                if (!itemElement) return;
+                
+                const checkbox = itemElement.querySelector('input[type="checkbox"]');
+                if (!checkbox) return;
+                
+                // Alternar el estado del checkbox
+                checkbox.checked = !checkbox.checked;
+                
+                // Disparar el evento change para activar los listeners
+                checkbox.dispatchEvent(new Event('change'));
+                
+                // Actualizar la clase visual
+                if (checkbox.checked) {
+                    itemElement.classList.add('selected');
+                } else {
+                    itemElement.classList.remove('selected');
+                }
+            });
+        }
+    });
+}
+
+function updateAttributeValue(attr, newValue) {
+    const oldValue = state.attributes[attr];
+    
+    // Si es el mismo valor, no hacemos nada
+    if (oldValue === newValue) return;
+    
+    // Calcular el costo en puntos del cambio
+    let pointDiff = 0;
+    
+    // Si estamos usando el sistema de point buy para los atributos
+    if (document.getElementById('attribute-points-container')) {
+        // Solo aplicar el sistema de point buy para valores entre 8 y 15
+        if (oldValue >= 8 && oldValue <= 15) {
+            pointDiff -= POINT_BUY_COSTS[oldValue];
+        }
+        
+        if (newValue >= 8 && newValue <= 15) {
+            pointDiff += POINT_BUY_COSTS[newValue];
+        }
+        
+        // Verificar si tenemos suficientes puntos
+        if (state.remainingPoints - pointDiff < 0) {
+            // No hay suficientes puntos, revertir al valor anterior
+            document.getElementById(`attribute-${attr}`).value = oldValue;
+            return;
+        }
+        
+        // Actualizar los puntos restantes
+        state.remainingPoints -= pointDiff;
+        updateAttributePointsDisplay();
     }
     
     // Actualizar el estado
-    state.attributes[attribute] = newValue;
-    state.remainingPoints -= pointDifference;
-    
-    // Actualizar la UI
-    document.getElementById('points-remaining').textContent = state.remainingPoints;
+    state.attributes[attr] = newValue;
 }
 
-function updateModifierDisplay(attribute) {
-    const value = state.attributes[attribute];
+function updateModifierDisplay(attr) {
+    const value = state.attributes[attr];
     const modifier = Math.floor((value - 10) / 2);
-    const modifierElement = document.getElementById(`modifier-${attribute}`);
+    const modifierDisplay = document.getElementById(`modifier-${attr}`);
     
-    modifierElement.textContent = modifier >= 0 ? `+${modifier}` : modifier;
+    if (modifierDisplay) {
+        modifierDisplay.textContent = modifier >= 0 ? `+${modifier}` : `${modifier}`;
+        
+        // Añadir clases de color según el valor del modificador
+        modifierDisplay.className = 'attribute-modifier';
+        if (modifier > 0) {
+            modifierDisplay.classList.add('positive');
+        } else if (modifier < 0) {
+            modifierDisplay.classList.add('negative');
+        }
+    }
 }
 
 function getPointCost(attributeValue) {
@@ -611,4 +718,45 @@ function getTranslation(key) {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Inicializar el estado de todos los controles numéricos
+function initializeAllNumberControls() {
+    // Inicializar nivel
+    const levelInput = document.getElementById('character-level');
+    if (levelInput) {
+        updateNumberButtonStates(levelInput);
+    }
+    
+    // Inicializar atributos
+    ATTRIBUTES.forEach(attr => {
+        const input = document.getElementById(`attribute-${attr}`);
+        if (input) {
+            updateNumberButtonStates(input);
+            updateModifierDisplay(attr);
+        }
+    });
+    
+    // Actualizar display de puntos disponibles
+    updateAttributePointsDisplay();
+}
+
+// Función para actualizar la visualización de puntos de atributos restantes
+function updateAttributePointsDisplay() {
+    const pointsDisplay = document.getElementById('points-remaining');
+    if (pointsDisplay) {
+        pointsDisplay.textContent = state.remainingPoints;
+        
+        const container = document.getElementById('attribute-points-container');
+        if (container) {
+            // Aplicar clases según la cantidad de puntos restantes
+            container.className = 'attribute-points-display';
+            
+            if (state.remainingPoints <= 5) {
+                container.classList.add('low-points');
+            } else if (state.remainingPoints >= 20) {
+                container.classList.add('high-points');
+            }
+        }
+    }
 }

@@ -7,65 +7,88 @@
     margin: 0 auto;
 }
 
+/* Mejorar la separación entre secciones principales del formulario */
+.form-section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(30, 30, 45, 0.7);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.form-section:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.form-section h2 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid rgba(52, 152, 219, 0.3);
+    font-size: 1.8rem;
+    text-align: center;
+    color: var(--primary-light);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 /* Estilos específicos para atributos */
 .attributes-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
 .attribute-item {
     text-align: center;
-    padding: 1.5rem 1rem;
-    background: rgba(40, 40, 60, 0.7);
+    padding: 1.8rem 1.2rem;
+    background: linear-gradient(145deg, rgba(45, 45, 65, 0.8), rgba(35, 35, 45, 0.8));
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.attribute-item::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--primary-dark), transparent, var(--primary));
+    border-radius: 14px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
 
 .attribute-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
     border-color: rgba(255, 255, 255, 0.25);
 }
 
+.attribute-item:hover::before {
+    opacity: 0.2;
+}
+
 .attribute-item label {
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: 800;
+    font-size: 1.1rem;
     margin-bottom: 0;
     color: var(--light);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     text-align: center;
-}
-
-.attribute-item input[type="number"] {
-    font-size: 1.6rem;
-    font-weight: 800;
-    width: 70px;
-    height: 70px;
-    line-height: 1;
-    text-align: center;
-    border-radius: 50%;
-    background: rgba(25, 25, 35, 0.9);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    color: var(--light);
-    margin: 0;
-    padding: 0;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-}
-
-.attribute-item input[type="number"]:focus {
-    border-color: var(--primary);
-    background: rgba(35, 35, 45, 0.9);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
-    transform: scale(1.1);
+    letter-spacing: 0.5px;
 }
 
 .attribute-modifier {
@@ -78,206 +101,554 @@
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: var(--light);
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     text-align: center;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    margin-top: 0.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.attribute-item:hover .attribute-modifier {
+    transform: scale(1.1);
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para los modificadores de atributos */
+.attribute-modifier.positive {
+    background: linear-gradient(135deg, var(--success), var(--primary-dark));
+    border-color: rgba(39, 174, 96, 0.4);
+}
+
+.attribute-modifier.negative {
+    background: linear-gradient(135deg, var(--danger), var(--primary-dark));
+    border-color: rgba(231, 76, 60, 0.4);
 }
 
 /* Estilos específicos para la sección de información básica */
-.basic-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.character-name-group {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: rgba(40, 40, 60, 0.7);
+.basic-info-subsection {
+    margin-bottom: 2.5rem;
+    padding: 1rem;
+    background: rgba(40, 40, 60, 0.5);
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
 }
 
-.character-name-group:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-    border-color: rgba(255, 255, 255, 0.25);
+.basic-info-subsection:hover {
+    background: rgba(45, 45, 65, 0.6);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.character-name-group label {
-    font-size: 1.1rem;
+.basic-info-subsection h3 {
+    font-size: 1.3rem;
     font-weight: 700;
-    margin-bottom: 0.8rem;
-    text-align: center;
-    display: block;
+    margin-bottom: 1.2rem;
     color: var(--light);
+    text-align: center;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    background: rgba(52, 152, 219, 0.15);
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid rgba(52, 152, 219, 0.3);
 }
 
-.character-name-group input {
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 1.2rem;
-    text-align: center;
-    background: rgba(30, 30, 40, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    color: var(--light);
-    width: 100%;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+.basic-options-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
 }
 
-.character-name-group input:focus {
-    border-color: var(--primary);
-    background: rgba(40, 40, 50, 0.9);
-    transform: scale(1.02);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Mejorar estilos de los grupos de formulario en básica */
-.basic-info-grid .form-group {
-    padding: 1.5rem;
+.basic-option-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.2rem;
     background: rgba(40, 40, 60, 0.7);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
     margin-bottom: 0;
 }
 
-.basic-info-grid .form-group:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+.basic-option-item:hover {
+    background: rgba(50, 50, 70, 0.8);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     border-color: rgba(255, 255, 255, 0.25);
 }
 
-.basic-info-grid .form-group label {
+.basic-option-item.selected {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: var(--primary-light);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+}
+
+.basic-option-item input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 1rem;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.basic-option-item input[type="radio"]:checked {
+    border-color: var(--primary-light);
+    background: var(--primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+.basic-option-item input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--light);
+}
+
+.basic-option-item label {
+    margin-left: 0;
+    margin-bottom: 0;
+    flex: 1;
+    cursor: pointer;
+    font-weight: 500;
     font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.8rem;
-    text-align: center;
-    display: block;
     color: var(--light);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.basic-info-grid .form-group input[type="number"] {
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-align: center;
-    padding: 1rem;
-    background: rgba(30, 30, 40, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    color: var(--light);
-    width: 100%;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.basic-info-grid .form-group input[type="number"]:focus {
-    border-color: var(--primary);
-    background: rgba(40, 40, 50, 0.9);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.character-description-group {
-    margin-top: 2rem;
-    padding: 1.5rem;
+/* Actualizando estilos del nivel para los nuevos controles */
+.character-level-group {
+    margin-bottom: 2rem;
+    padding: 2rem 1.5rem;
     background: rgba(40, 40, 60, 0.7);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    text-align: center;
 }
 
-.character-description-group:hover {
+.character-level-group:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.character-level-group label {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-light);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para los controles numéricos personalizados */
+.number-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.number-input-container input[type="number"] {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: rgba(30, 30, 45, 0.8);
+    color: var(--light);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    border-radius: 6px;
+    padding: 0.3rem;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.number-input-container input[type="number"]::-webkit-outer-spin-button,
+.number-input-container input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.number-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--light);
+    background: linear-gradient(145deg, rgba(52, 152, 219, 0.5), rgba(40, 100, 160, 0.5));
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.number-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, rgba(52, 152, 219, 0.7), rgba(40, 100, 160, 0.7));
+    border-color: rgba(52, 152, 219, 0.6);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.number-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.number-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.number-btn.decrease-5,
+.number-btn.increase-5 {
+    background: linear-gradient(145deg, rgba(41, 128, 185, 0.6), rgba(30, 80, 130, 0.6));
+}
+
+.number-btn.decrease-5:hover:not(:disabled),
+.number-btn.increase-5:hover:not(:disabled) {
+    background: linear-gradient(145deg, rgba(41, 128, 185, 0.8), rgba(30, 80, 130, 0.8));
+}
+
+/* Ajustar el input numérico para que no tenga controles nativos */
+.number-input-container input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+    width: 80px;
+    height: 80px;
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-align: center;
+    border-radius: 50%;
+    background: rgba(30, 30, 40, 0.9);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    color: var(--light);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.number-input-container input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+/* Ocultar los spinners nativos de los inputs numéricos */
+.number-input-container input[type="number"]::-webkit-outer-spin-button,
+.number-input-container input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Estilos específicos para el nivel */
+.character-level-group .number-input-container {
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.character-level-group .number-input-container input[type="number"] {
+    width: 100px;
+    height: 100px;
+    font-size: 2.2rem;
+}
+
+/* Estilos específicos para atributos */
+.attribute-item .number-input-container {
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.attribute-item .number-input-container .number-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+}
+
+.attribute-item .number-input-container input[type="number"] {
+    width: 70px;
+    height: 70px;
+    font-size: 1.6rem;
+    margin: 0.5rem 0;
+}
+
+/* Layout horizontal para los botones en atributos */
+.attribute-item .number-input-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.attribute-item .number-input-container .decrease-5,
+.attribute-item .number-input-container .decrease-1 {
+    order: 1;
+}
+
+.attribute-item .number-input-container input[type="number"] {
+    order: 2;
+    margin: 0 0.5rem;
+}
+
+.attribute-item .number-input-container .increase-1,
+.attribute-item .number-input-container .increase-5 {
+    order: 3;
+}
+
+/* Estilos para mostrar los puntos restantes */
+.attribute-points-display {
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(40, 40, 60, 0.7);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.attribute-points-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-light);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para estados de puntos de atributos */
+.attribute-points-display.low-points {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.4);
+    animation: pulse-warning 1.5s infinite alternate;
+}
+
+.attribute-points-display.high-points {
+    background: rgba(39, 174, 96, 0.2);
+    border-color: rgba(39, 174, 96, 0.4);
+}
+
+.attribute-points-display.low-points .attribute-points-value {
+    color: var(--danger);
+}
+
+.attribute-points-display.high-points .attribute-points-value {
+    color: var(--success);
+}
+
+@keyframes pulse-warning {
+    0% {
+        box-shadow: 0 0 5px rgba(231, 76, 60, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+    }
+}
+
+/* Estilos para los botones de acción */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding: 1rem 0;
+    gap: 1rem;
+}
+
+.primary-button, .secondary-button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    min-width: 160px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.primary-button {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--light);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.primary-button:hover {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.primary-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.secondary-button {
+    background: rgba(40, 40, 60, 0.7);
+    color: var(--light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.secondary-button:hover {
+    background: rgba(50, 50, 70, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.secondary-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para la sección de habilidades */
+.skills-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.skill-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    background: rgba(40, 40, 60, 0.7);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.skill-item:hover {
+    background: rgba(50, 50, 70, 0.8);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     border-color: rgba(255, 255, 255, 0.25);
 }
 
-.character-description-group label {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.8rem;
-    text-align: center;
-    display: block;
-    color: var(--light);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+.skill-item.selected {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: var(--primary-light);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
 }
 
-.character-description-group textarea {
-    min-height: 140px;
-    resize: vertical;
-    font-family: inherit;
-    line-height: 1.6;
-    background: rgba(30, 30, 40, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    color: var(--light);
-    padding: 1.2rem;
-    font-size: 1rem;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+.skill-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
     transition: all 0.3s ease;
+    margin-right: 1rem;
+    position: relative;
+    flex-shrink: 0;
 }
 
-.character-description-group textarea:focus {
-    border-color: var(--primary);
-    background: rgba(40, 40, 50, 0.9);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+.skill-item input[type="checkbox"]:checked {
+    border-color: var(--primary-light);
+    background: var(--primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
 
-.character-description-group textarea::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-    font-style: italic;
+.skill-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--light);
+    font-size: 14px;
+    font-weight: bold;
 }
 
-/* Estilos para subtítulo */
-.subtitle {
-    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-    opacity: 0.9;
-    margin-bottom: 2.5rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+.skill-item label {
+    margin-left: 0;
+    margin-bottom: 0;
+    flex: 1;
+    cursor: pointer;
     font-weight: 500;
-    text-align: center;
+    font-size: 1rem;
+    color: var(--light);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilos para habilidades, idiomas, competencias y hechizos */
-.skills-container,
+.skill-item.selected {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: var(--primary-light);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+}
+
+/* Layout de dos columnas para secciones */
+.two-column-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Estilos para los contenedores adicionales (idiomas, competencias, hechizos e items) */
 .languages-container,
 .proficiencies-container,
 .spells-container,
 .items-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
+    margin-top: 1.5rem;
 }
 
-.skill-item,
+/* Estilos para los elementos dentro de los contenedores anteriores */
 .language-item,
 .proficiency-item,
 .spell-item,
 .item-item {
     display: flex;
     align-items: center;
-    padding: 1.2rem 1.5rem;
+    padding: 1rem 1.2rem;
     background: rgba(40, 40, 60, 0.7);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    margin-bottom: 0;
     cursor: pointer;
 }
 
-.skill-item:hover,
 .language-item:hover,
 .proficiency-item:hover,
 .spell-item:hover,
@@ -288,22 +659,52 @@
     border-color: rgba(255, 255, 255, 0.25);
 }
 
-.skill-item.selected,
-.language-item.selected,
-.proficiency-item.selected,
-.spell-item.selected,
-.item-item.selected {
-    background: rgba(52, 152, 219, 0.3);
-    border-color: var(--primary-light);
-    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+.language-item input[type="checkbox"],
+.proficiency-item input[type="checkbox"],
+.spell-item input[type="checkbox"],
+.item-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 1rem;
+    position: relative;
+    flex-shrink: 0;
 }
 
-.skill-item label,
+.language-item input[type="checkbox"]:checked,
+.proficiency-item input[type="checkbox"]:checked,
+.spell-item input[type="checkbox"]:checked,
+.item-item input[type="checkbox"]:checked {
+    border-color: var(--primary-light);
+    background: var(--primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+.language-item input[type="checkbox"]:checked::after,
+.proficiency-item input[type="checkbox"]:checked::after,
+.spell-item input[type="checkbox"]:checked::after,
+.item-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--light);
+    font-size: 14px;
+    font-weight: bold;
+}
+
 .language-item label,
 .proficiency-item label,
 .spell-item label,
 .item-item label {
-    margin-left: 1rem;
+    margin-left: 0;
     margin-bottom: 0;
     flex: 1;
     cursor: pointer;
@@ -311,139 +712,6 @@
     font-size: 1rem;
     color: var(--light);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Mejorar los checkbox */
-input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    background: rgba(25, 25, 35, 0.9);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-input[type="checkbox"]:hover {
-    border-color: var(--primary-light);
-    transform: scale(1.05);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-input[type="checkbox"]:checked {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    border-color: var(--primary-light);
-    transform: scale(1.05);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-input[type="checkbox"]:checked::after {
-    content: "✓";
-    position: absolute;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* Estilos para el pool de puntos */
-.points-pool {
-    background: linear-gradient(135deg, rgba(45, 45, 65, 0.9), rgba(35, 35, 55, 0.9));
-    padding: 1.5rem;
-    border-radius: 12px;
-    text-align: center;
-    font-weight: 600;
-    margin-top: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--light);
-    backdrop-filter: blur(10px);
-}
-
-.points-pool p {
-    margin: 0;
-    font-size: 1.1rem;
-    color: var(--light);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-#points-remaining {
-    font-weight: 700;
-    color: var(--primary-light);
-    font-size: 1.4rem;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    display: inline-block;
-    padding: 0.2rem 0.8rem;
-    background: rgba(52, 152, 219, 0.2);
-    border-radius: 8px;
-    border: 1px solid rgba(52, 152, 219, 0.3);
-    margin-left: 0.5rem;
-}
-
-/* Estilos para botones de acción */
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    gap: 1.5rem;
-}
-
-.primary-button,
-.secondary-button {
-    padding: 0.9rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
-    min-width: 180px;
-}
-
-.primary-button {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: var(--light);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.primary-button:hover {
-    background: linear-gradient(135deg, var(--primary-light), var(--primary));
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-}
-
-.secondary-button {
-    background: rgba(45, 45, 60, 0.6);
-    color: var(--light);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.secondary-button:hover {
-    background: rgba(55, 55, 70, 0.7);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-}
-
-.primary-button:active,
-.secondary-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive */
@@ -460,9 +728,13 @@ input[type="checkbox"]:checked::after {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .basic-info-grid {
+
+}
+
+@media (max-width: 1024px) {
+    .basic-options-container {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.2rem;
+        gap: 0.6rem;
     }
 }
 
@@ -504,12 +776,6 @@ input[type="checkbox"]:checked::after {
         gap: 0.8rem;
     }
     
-    .basic-info-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .basic-info-grid .form-group,
     .character-name-group {
         padding: 1.2rem;
     }
@@ -539,6 +805,57 @@ input[type="checkbox"]:checked::after {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
+
+    .basic-options-container {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .basic-info-subsection h3 {
+        font-size: 1.1rem;
+        padding: 0.6rem;
+    }
+    
+    .character-level-group input {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .basic-option-item {
+        padding: 0.8rem 1rem;
+    }
+    
+    .basic-option-item label {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-section {
+        padding: 1.5rem 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .primary-button, .secondary-button {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .skills-container,
+    .languages-container,
+    .proficiencies-container,
+    .spells-container,
+    .items-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .basic-options-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
@@ -562,11 +879,6 @@ input[type="checkbox"]:checked::after {
     .character-name-group input {
         font-size: 1.1rem;
         padding: 1rem;
-    }
-
-    .basic-info-grid .form-group input[type="number"] {
-        font-size: 1.3rem;
-        padding: 0.8rem;
     }
 
     .skill-item,
@@ -594,4 +906,29 @@ input[type="checkbox"]:checked::after {
         line-height: 40px;
         font-size: 1rem;
     }
+}
+
+/* Estilos para elementos seleccionados */
+.skill-item.selected,
+.language-item.selected,
+.proficiency-item.selected,
+.spell-item.selected,
+.item-item.selected {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: var(--primary-light);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+}
+
+/* Transiciones suaves para todos los elementos interactivos */
+.skill-item, 
+.language-item,
+.proficiency-item,
+.spell-item,
+.item-item,
+.basic-option-item,
+.attribute-item,
+.number-btn,
+.primary-button,
+.secondary-button {
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }

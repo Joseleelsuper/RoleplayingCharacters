@@ -27,74 +27,42 @@
                     <input type="text" id="character-name" name="name" required>
                 </div>
 
-                <!-- Layout de cuadrícula para los selectores -->
-                <div class="basic-info-grid">
-                    <div class="form-group">
-                        <label for="character-race">{{ _('create.character.basic.race') }}</label>
-                        <div class="select-container" id="race-container">
-                            <div class="select-display" id="race-display">
-                                <span>{{ _('create.character.select.option') }}</span>
-                                <span class="icon">▼</span>
-                            </div>
-                            <div class="select-options">
-                                <input type="text" class="select-search" id="race-search" placeholder="{{ _('create.character.search') }}">
-                                <div class="select-options-list" id="race-options">
-                                    <!-- Se llenará con JavaScript -->
-                                </div>
-                                <div class="custom-option-form">
-                                    <input type="text" id="custom-race" placeholder="{{ _('create.character.custom.race') }}">
-                                    <button type="button" id="add-custom-race" class="secondary-button">{{ _('create.character.custom.add') }}</button>
-                                </div>
-                            </div>
-                            <input type="hidden" id="character-race" name="race_id" required>
-                        </div>
+                <!-- Subsección: Raza -->
+                <div class="basic-info-subsection">
+                    <h3>{{ _('create.character.basic.race') }}</h3>
+                    <div class="basic-options-container" id="race-container">
+                        <!-- Se llenará con JavaScript -->
                     </div>
+                    <input type="hidden" id="selected-race" name="race_id" required>
+                </div>
 
-                    <div class="form-group">
-                        <label for="character-background">{{ _('create.character.basic.background') }}</label>
-                        <div class="select-container" id="background-container">
-                            <div class="select-display" id="background-display">
-                                <span>{{ _('create.character.select.option') }}</span>
-                                <span class="icon">▼</span>
-                            </div>
-                            <div class="select-options">
-                                <input type="text" class="select-search" id="background-search" placeholder="{{ _('create.character.search') }}">
-                                <div class="select-options-list" id="background-options">
-                                    <!-- Se llenará con JavaScript -->
-                                </div>
-                                <div class="custom-option-form">
-                                    <input type="text" id="custom-background" placeholder="{{ _('create.character.custom.background') }}">
-                                    <button type="button" id="add-custom-background" class="secondary-button">{{ _('create.character.custom.add') }}</button>
-                                </div>
-                            </div>
-                            <input type="hidden" id="character-background" name="background_id" required>
-                        </div>
+                <!-- Subsección: Trasfondo -->
+                <div class="basic-info-subsection">
+                    <h3>{{ _('create.character.basic.background') }}</h3>
+                    <div class="basic-options-container" id="background-container">
+                        <!-- Se llenará con JavaScript -->
                     </div>
+                    <input type="hidden" id="selected-background" name="background_id" required>
+                </div>
 
-                    <div class="form-group">
-                        <label for="character-alignment">{{ _('create.character.basic.alignment') }}</label>
-                        <div class="select-container" id="alignment-container">
-                            <div class="select-display" id="alignment-display">
-                                <span>{{ _('create.character.select.option') }}</span>
-                                <span class="icon">▼</span>
-                            </div>
-                            <div class="select-options">
-                                <input type="text" class="select-search" id="alignment-search" placeholder="{{ _('create.character.search') }}">
-                                <div class="select-options-list" id="alignment-options">
-                                    <!-- Se llenará con JavaScript -->
-                                </div>
-                                <div class="custom-option-form">
-                                    <input type="text" id="custom-alignment" placeholder="{{ _('create.character.custom.alignment') }}">
-                                    <button type="button" id="add-custom-alignment" class="secondary-button">{{ _('create.character.custom.add') }}</button>
-                                </div>
-                            </div>
-                            <input type="hidden" id="character-alignment" name="alignment_id" required>
-                        </div>
+                <!-- Subsección: Alineamiento -->
+                <div class="basic-info-subsection">
+                    <h3>{{ _('create.character.basic.alignment') }}</h3>
+                    <div class="basic-options-container" id="alignment-container">
+                        <!-- Se llenará con JavaScript -->
                     </div>
+                    <input type="hidden" id="selected-alignment" name="alignment_id" required>
+                </div>
 
-                    <div class="form-group">
-                        <label for="character-level">{{ _('create.character.basic.level') }}</label>
-                        <input type="number" id="character-level" name="level" min="1" max="20" value="1" required>
+                <!-- Nivel en una sección separada con estilo especial -->
+                <div class="form-group character-level-group">
+                    <label for="character-level">{{ _('create.character.basic.level') }}</label>
+                    <div class="number-input-container">
+                        <button type="button" class="number-btn decrease-5" data-target="character-level" data-step="-5">-5</button>
+                        <button type="button" class="number-btn decrease-1" data-target="character-level" data-step="-1">-1</button>
+                        <input type="number" id="character-level" name="level" min="1" max="20" value="1" required readonly>
+                        <button type="button" class="number-btn increase-1" data-target="character-level" data-step="1">+1</button>
+                        <button type="button" class="number-btn increase-5" data-target="character-level" data-step="5">+5</button>
                     </div>
                 </div>
 
@@ -111,37 +79,73 @@
                 <div class="attributes-container">
                     <div class="attribute-item">
                         <label for="attribute-strength">{{ _('create.character.attributes.strength') }}</label>
-                        <input type="number" id="attribute-strength" name="attributes[strength]" min="3" max="20" value="10" required>
+                        <div class="number-input-container">
+                            <button type="button" class="number-btn decrease-5" data-target="attribute-strength" data-step="-5">-5</button>
+                            <button type="button" class="number-btn decrease-1" data-target="attribute-strength" data-step="-1">-1</button>
+                            <input type="number" id="attribute-strength" name="attributes[strength]" min="3" max="20" value="10" required readonly>
+                            <button type="button" class="number-btn increase-1" data-target="attribute-strength" data-step="1">+1</button>
+                            <button type="button" class="number-btn increase-5" data-target="attribute-strength" data-step="5">+5</button>
+                        </div>
                         <span class="attribute-modifier" id="modifier-strength">+0</span>
                     </div>
                     <div class="attribute-item">
                         <label for="attribute-dexterity">{{ _('create.character.attributes.dexterity') }}</label>
-                        <input type="number" id="attribute-dexterity" name="attributes[dexterity]" min="3" max="20" value="10" required>
+                        <div class="number-input-container">
+                            <button type="button" class="number-btn decrease-5" data-target="attribute-dexterity" data-step="-5">-5</button>
+                            <button type="button" class="number-btn decrease-1" data-target="attribute-dexterity" data-step="-1">-1</button>
+                            <input type="number" id="attribute-dexterity" name="attributes[dexterity]" min="3" max="20" value="10" required readonly>
+                            <button type="button" class="number-btn increase-1" data-target="attribute-dexterity" data-step="1">+1</button>
+                            <button type="button" class="number-btn increase-5" data-target="attribute-dexterity" data-step="5">+5</button>
+                        </div>
                         <span class="attribute-modifier" id="modifier-dexterity">+0</span>
                     </div>
                     <div class="attribute-item">
                         <label for="attribute-constitution">{{ _('create.character.attributes.constitution') }}</label>
-                        <input type="number" id="attribute-constitution" name="attributes[constitution]" min="3" max="20" value="10" required>
+                        <div class="number-input-container">
+                            <button type="button" class="number-btn decrease-5" data-target="attribute-constitution" data-step="-5">-5</button>
+                            <button type="button" class="number-btn decrease-1" data-target="attribute-constitution" data-step="-1">-1</button>
+                            <input type="number" id="attribute-constitution" name="attributes[constitution]" min="3" max="20" value="10" required readonly>
+                            <button type="button" class="number-btn increase-1" data-target="attribute-constitution" data-step="1">+1</button>
+                            <button type="button" class="number-btn increase-5" data-target="attribute-constitution" data-step="5">+5</button>
+                        </div>
                         <span class="attribute-modifier" id="modifier-constitution">+0</span>
                     </div>
                     <div class="attribute-item">
                         <label for="attribute-intelligence">{{ _('create.character.attributes.intelligence') }}</label>
-                        <input type="number" id="attribute-intelligence" name="attributes[intelligence]" min="3" max="20" value="10" required>
+                        <div class="number-input-container">
+                            <button type="button" class="number-btn decrease-5" data-target="attribute-intelligence" data-step="-5">-5</button>
+                            <button type="button" class="number-btn decrease-1" data-target="attribute-intelligence" data-step="-1">-1</button>
+                            <input type="number" id="attribute-intelligence" name="attributes[intelligence]" min="3" max="20" value="10" required readonly>
+                            <button type="button" class="number-btn increase-1" data-target="attribute-intelligence" data-step="1">+1</button>
+                            <button type="button" class="number-btn increase-5" data-target="attribute-intelligence" data-step="5">+5</button>
+                        </div>
                         <span class="attribute-modifier" id="modifier-intelligence">+0</span>
                     </div>
                     <div class="attribute-item">
                         <label for="attribute-wisdom">{{ _('create.character.attributes.wisdom') }}</label>
-                        <input type="number" id="attribute-wisdom" name="attributes[wisdom]" min="3" max="20" value="10" required>
+                        <div class="number-input-container">
+                            <button type="button" class="number-btn decrease-5" data-target="attribute-wisdom" data-step="-5">-5</button>
+                            <button type="button" class="number-btn decrease-1" data-target="attribute-wisdom" data-step="-1">-1</button>
+                            <input type="number" id="attribute-wisdom" name="attributes[wisdom]" min="3" max="20" value="10" required readonly>
+                            <button type="button" class="number-btn increase-1" data-target="attribute-wisdom" data-step="1">+1</button>
+                            <button type="button" class="number-btn increase-5" data-target="attribute-wisdom" data-step="5">+5</button>
+                        </div>
                         <span class="attribute-modifier" id="modifier-wisdom">+0</span>
                     </div>
                     <div class="attribute-item">
                         <label for="attribute-charisma">{{ _('create.character.attributes.charisma') }}</label>
-                        <input type="number" id="attribute-charisma" name="attributes[charisma]" min="3" max="20" value="10" required>
+                        <div class="number-input-container">
+                            <button type="button" class="number-btn decrease-5" data-target="attribute-charisma" data-step="-5">-5</button>
+                            <button type="button" class="number-btn decrease-1" data-target="attribute-charisma" data-step="-1">-1</button>
+                            <input type="number" id="attribute-charisma" name="attributes[charisma]" min="3" max="20" value="10" required readonly>
+                            <button type="button" class="number-btn increase-1" data-target="attribute-charisma" data-step="1">+1</button>
+                            <button type="button" class="number-btn increase-5" data-target="attribute-charisma" data-step="5">+5</button>
+                        </div>
                         <span class="attribute-modifier" id="modifier-charisma">+0</span>
                     </div>
                 </div>
-                <div class="points-pool" id="attribute-points">
-                    <p>{{ _('create.character.attributes.points.remaining') }}: <span id="points-remaining">27</span></p>
+                <div class="attribute-points-display" id="attribute-points-container">
+                    <p>{{ _('create.character.attributes.points.remaining') }}: <span id="points-remaining" class="attribute-points-value">27</span></p>
                 </div>
             </section>
 
