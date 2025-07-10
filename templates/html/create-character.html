@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _('create.character.page.title') }}</title>
+    <link rel="stylesheet" href="/css/create-character.css">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <div class="container">
+        <div class="title-container">
+            <h1>{{ _('create.character.title') }}</h1>
+        </div>
+        <p class="subtitle">{{ _('create.character.subtitle') }}</p>
+
+        <form id="character-form" class="character-form">
+            <!-- Sección de información básica -->
+            <section class="form-section">
+                <h2>{{ _('create.character.basic.title') }}</h2>
+                
+                <!-- Nombre del personaje en una fila separada para darle más importancia -->
+                <div class="form-group character-name-group">
+                    <label for="character-name">{{ _('create.character.basic.name') }}</label>
+                    <input type="text" id="character-name" name="name" required>
+                </div>
+
+                <!-- Layout de cuadrícula para los selectores -->
+                <div class="basic-info-grid">
+                    <div class="form-group">
+                        <label for="character-race">{{ _('create.character.basic.race') }}</label>
+                        <div class="select-container" id="race-container">
+                            <div class="select-display" id="race-display">
+                                <span>{{ _('create.character.select.option') }}</span>
+                                <span class="icon">▼</span>
+                            </div>
+                            <div class="select-options">
+                                <input type="text" class="select-search" id="race-search" placeholder="{{ _('create.character.search') }}">
+                                <div class="select-options-list" id="race-options">
+                                    <!-- Se llenará con JavaScript -->
+                                </div>
+                                <div class="custom-option-form">
+                                    <input type="text" id="custom-race" placeholder="{{ _('create.character.custom.race') }}">
+                                    <button type="button" id="add-custom-race" class="secondary-button">{{ _('create.character.custom.add') }}</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="character-race" name="race_id" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="character-background">{{ _('create.character.basic.background') }}</label>
+                        <div class="select-container" id="background-container">
+                            <div class="select-display" id="background-display">
+                                <span>{{ _('create.character.select.option') }}</span>
+                                <span class="icon">▼</span>
+                            </div>
+                            <div class="select-options">
+                                <input type="text" class="select-search" id="background-search" placeholder="{{ _('create.character.search') }}">
+                                <div class="select-options-list" id="background-options">
+                                    <!-- Se llenará con JavaScript -->
+                                </div>
+                                <div class="custom-option-form">
+                                    <input type="text" id="custom-background" placeholder="{{ _('create.character.custom.background') }}">
+                                    <button type="button" id="add-custom-background" class="secondary-button">{{ _('create.character.custom.add') }}</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="character-background" name="background_id" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="character-alignment">{{ _('create.character.basic.alignment') }}</label>
+                        <div class="select-container" id="alignment-container">
+                            <div class="select-display" id="alignment-display">
+                                <span>{{ _('create.character.select.option') }}</span>
+                                <span class="icon">▼</span>
+                            </div>
+                            <div class="select-options">
+                                <input type="text" class="select-search" id="alignment-search" placeholder="{{ _('create.character.search') }}">
+                                <div class="select-options-list" id="alignment-options">
+                                    <!-- Se llenará con JavaScript -->
+                                </div>
+                                <div class="custom-option-form">
+                                    <input type="text" id="custom-alignment" placeholder="{{ _('create.character.custom.alignment') }}">
+                                    <button type="button" id="add-custom-alignment" class="secondary-button">{{ _('create.character.custom.add') }}</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="character-alignment" name="alignment_id" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="character-level">{{ _('create.character.basic.level') }}</label>
+                        <input type="number" id="character-level" name="level" min="1" max="20" value="1" required>
+                    </div>
+                </div>
+
+                <!-- Descripción en una fila separada -->
+                <div class="form-group character-description-group">
+                    <label for="character-description">{{ _('create.character.basic.description') }}</label>
+                    <textarea id="character-description" name="description" rows="3"></textarea>
+                </div>
+            </section>
+
+            <!-- Sección de atributos -->
+            <section class="form-section">
+                <h2>{{ _('create.character.attributes.title') }}</h2>
+                <div class="attributes-container">
+                    <div class="attribute-item">
+                        <label for="attribute-strength">{{ _('create.character.attributes.strength') }}</label>
+                        <input type="number" id="attribute-strength" name="attributes[strength]" min="3" max="20" value="10" required>
+                        <span class="attribute-modifier" id="modifier-strength">+0</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label for="attribute-dexterity">{{ _('create.character.attributes.dexterity') }}</label>
+                        <input type="number" id="attribute-dexterity" name="attributes[dexterity]" min="3" max="20" value="10" required>
+                        <span class="attribute-modifier" id="modifier-dexterity">+0</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label for="attribute-constitution">{{ _('create.character.attributes.constitution') }}</label>
+                        <input type="number" id="attribute-constitution" name="attributes[constitution]" min="3" max="20" value="10" required>
+                        <span class="attribute-modifier" id="modifier-constitution">+0</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label for="attribute-intelligence">{{ _('create.character.attributes.intelligence') }}</label>
+                        <input type="number" id="attribute-intelligence" name="attributes[intelligence]" min="3" max="20" value="10" required>
+                        <span class="attribute-modifier" id="modifier-intelligence">+0</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label for="attribute-wisdom">{{ _('create.character.attributes.wisdom') }}</label>
+                        <input type="number" id="attribute-wisdom" name="attributes[wisdom]" min="3" max="20" value="10" required>
+                        <span class="attribute-modifier" id="modifier-wisdom">+0</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label for="attribute-charisma">{{ _('create.character.attributes.charisma') }}</label>
+                        <input type="number" id="attribute-charisma" name="attributes[charisma]" min="3" max="20" value="10" required>
+                        <span class="attribute-modifier" id="modifier-charisma">+0</span>
+                    </div>
+                </div>
+                <div class="points-pool" id="attribute-points">
+                    <p>{{ _('create.character.attributes.points.remaining') }}: <span id="points-remaining">27</span></p>
+                </div>
+            </section>
+
+            <!-- Sección de habilidades y idiomas (dos columnas) -->
+            <div class="two-column-layout">
+                <section class="form-section">
+                    <h2>{{ _('create.character.skills.title') }}</h2>
+                    <div class="skills-container" id="skills-container">
+                        <!-- Se llenará con JavaScript -->
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h2>{{ _('create.character.languages.title') }}</h2>
+                    <div class="languages-container" id="languages-container">
+                        <!-- Se llenará con JavaScript -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sección de competencias y hechizos (dos columnas) -->
+            <div class="two-column-layout">
+                <section class="form-section">
+                    <h2>{{ _('create.character.proficiencies.title') }}</h2>
+                    <div class="proficiencies-container" id="proficiencies-container">
+                        <!-- Se llenará con JavaScript -->
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h2>{{ _('create.character.spells.title') }}</h2>
+                    <div class="spells-container" id="spells-container">
+                        <!-- Se llenará con JavaScript -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sección de equipamiento -->
+            <section class="form-section">
+                <h2>{{ _('create.character.items.title') }}</h2>
+                <div class="items-container" id="items-container">
+                    <!-- Se llenará con JavaScript -->
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="button" class="secondary-button" id="reset-form">{{ _('create.character.buttons.reset') }}</button>
+                <button type="submit" class="primary-button" id="save-character">{{ _('create.character.buttons.save') }}</button>
+            </div>
+        </form>
+
+        <div class="language-selector">
+            <a href="?lang=es" {% if language=='es' %}class="active" {% endif %} aria-label="Cambiar a español">
+                <span class="lang-icon">🇪🇸</span> Español
+            </a>
+            <a href="?lang=en" {% if language=='en' %}class="active" {% endif %} aria-label="Switch to English">
+                <span class="lang-icon">🇬🇧</span> English
+            </a>
+        </div>
+    </div>
+
+    <script src="/js/create-character.js" defer></script>
+</body>
+
+</html>
