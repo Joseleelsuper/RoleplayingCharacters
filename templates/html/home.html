@@ -11,22 +11,34 @@
 
 <body>
     <div class="container">
-        <h1>{{ _('home.welcome.title') }}</h1>
-        <p>{{ _('home.welcome.subtitle') }}</p>
-        <p>{{ _('home.welcome.description') }}</p>
+        <div class="title-container">
+            <h1>{{ _('home.welcome.title') }}</h1>
+        </div>
+        
+        <div class="form-section welcome-section">
+            <p>{{ _('home.welcome.subtitle') }}</p>
+            <p>{{ _('home.welcome.description') }}</p>
+            
+            <div class="form-actions">
+                <a href="/character/create" class="btn primary-button">{{ _('home.create_character') }}</a>
+            </div>
+        </div>
 
-        <div class="features">
-            <div class="feature">
-                <h3>{{ _('home.features.create.title') }}</h3>
-                <p>{{ _('home.features.create.description') }}</p>
-            </div>
-            <div class="feature">
-                <h3>{{ _('home.features.classes.title') }}</h3>
-                <p>{{ _('home.features.classes.description') }}</p>
-            </div>
-            <div class="feature">
-                <h3>{{ _('home.features.share.title') }}</h3>
-                <p>{{ _('home.features.share.description') }}</p>
+        <div class="form-section">
+            <h2>{{ _('home.features.section_title') }}</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>{{ _('home.features.create.title') }}</h3>
+                    <p>{{ _('home.features.create.description') }}</p>
+                </div>
+                <div class="feature">
+                    <h3>{{ _('home.features.classes.title') }}</h3>
+                    <p>{{ _('home.features.classes.description') }}</p>
+                </div>
+                <div class="feature">
+                    <h3>{{ _('home.features.share.title') }}</h3>
+                    <p>{{ _('home.features.share.description') }}</p>
+                </div>
             </div>
         </div>
 
