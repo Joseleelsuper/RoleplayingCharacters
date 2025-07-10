@@ -23,6 +23,7 @@ from src.infrastructure.config import settings
 from src.infrastructure.web.home_controller import router as home_router
 from src.infrastructure.web.status_controller import router as status_router
 from src.infrastructure.web.not_found_controller import router as not_found_router
+from src.infrastructure.web.character_controller import router as character_router
 
 
 class I18nMiddleware(BaseHTTPMiddleware):
@@ -88,6 +89,7 @@ def create_app() -> FastAPI:
     app.include_router(home_router, prefix="", tags=["Home"])
     app.include_router(status_router, tags=["Health"])
     app.include_router(not_found_router, tags=["NotFound"])
+    app.include_router(character_router, tags=["Characters"])
 
     # Configurar archivos estáticos solo en desarrollo
     if not os.getenv("VERCEL"):
