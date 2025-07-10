@@ -41,3 +41,9 @@ msgstr "🤝 Share"
 
 msgid "home.features.share.description"
 msgstr "Share your creations with other players"
+
+msgid "home.create_character"
+msgstr "Create Character"
+
+msgid "home.features.section_title"
+msgstr "Features"
