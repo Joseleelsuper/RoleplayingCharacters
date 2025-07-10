@@ -19,6 +19,10 @@
                     "-y",
                     "@executeautomation/playwright-mcp-server"
                 ]
+            },
+            "github": {
+                "type": "http",
+                "url": "https://api.githubcopilot.com/mcp/"
             }
         }
     }
