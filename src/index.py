@@ -94,9 +94,9 @@ def create_app() -> FastAPI:
     # Configurar archivos estáticos solo en desarrollo
     if not os.getenv("VERCEL"):
         static_dir = Path(__file__).parent.parent / "templates"
-        app.mount("/css", StaticFiles(directory=str(static_dir / "css")), name="css")
-        app.mount("/js", StaticFiles(directory=str(static_dir / "js")), name="js")
-        app.mount("/img", StaticFiles(directory=str(static_dir / "img")), name="img")
+        app.mount("/templates/css", StaticFiles(directory=str(static_dir / "css")), name="css")
+        app.mount("/templates/js", StaticFiles(directory=str(static_dir / "js")), name="js")
+        app.mount("/templates/img", StaticFiles(directory=str(static_dir / "img")), name="img")
 
     return app
 

@@ -7,10 +7,10 @@ incluyendo creación, edición y visualización de personajes.
 
 from pathlib import Path
 from fastapi import APIRouter, Request, Body, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from src.infrastructure.template_helpers import render_template_with_translations
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 
 router = APIRouter()
 
@@ -19,7 +19,7 @@ templates_dir = Path(__file__).parent.parent.parent.parent / "templates" / "html
 templates = Jinja2Templates(directory=str(templates_dir))
 
 
-@router.get("/characters/create", response_class=HTMLResponse, tags=["Characters"])
+@router.get("/create-character", response_class=HTMLResponse, tags=["Characters"])
 async def get_create_character_page(request: Request) -> HTMLResponse:
     """
     Endpoint que devuelve la página de creación de personajes.
@@ -202,6 +202,18 @@ async def get_items() -> List[Dict[str, Any]]:
     """
     # Simulamos datos de objetos para la interfaz
     return [
+        {"id": 1, "name": "Potion of Healing", "type": "consumable", "rarity": "common"},
+        {"id": 2, "name": "Longsword", "type": "weapon", "rarity": "common"},
+        {"id": 3, "name": "Shield", "type": "armor", "rarity": "common"},
+        {"id": 4, "name": "Rope", "type": "gear", "rarity": "common"},
+        {"id": 5, "name": "Lantern", "type": "gear", "rarity": "common"},
+        {"id": 6, "name": "Spellbook", "type": "gear", "rarity": "uncommon"},
+        {"id": 7, "name": "Studded Leather", "type": "armor", "rarity": "common"},
+        {"id": 8, "name": "Wand of Magic Missiles", "type": "magic", "rarity": "uncommon"},
+        {"id": 9, "name": "Amulet of Health", "type": "magic", "rarity": "rare"},
+        {"id": 10, "name": "Bag of Holding", "type": "magic", "rarity": "uncommon"}
+    ]
+    return [
         {"id": 1, "name": "Sword", "type": "weapon", "weight": 3},
         {"id": 2, "name": "Bow", "type": "weapon", "weight": 2},
         {"id": 3, "name": "Dagger", "type": "weapon", "weight": 1},
@@ -217,6 +229,24 @@ async def get_items() -> List[Dict[str, Any]]:
 
 @router.post("/api/characters", tags=["Characters API"])
 async def create_character(character_data: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
+    """
+    Endpoint para crear un nuevo personaje.
+
+    Args:
+        character_data: Datos del personaje a crear
+
+    Returns:
+        Dict[str, Any]: El personaje creado con su ID
+    """
+    # Simulamos la creación de un personaje
+    # En una implementación real, usaríamos los casos de uso y repositorios
+    character_id = 1  # En un caso real, este ID vendría de la base de datos
+    
+    return {
+        "id": character_id,
+        **character_data,
+        "created_at": "2025-07-11T12:00:00Z"
+    }
     """
     Endpoint para crear un nuevo personaje.
 

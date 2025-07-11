@@ -192,11 +192,11 @@ class TranslationService:
 
     def _load_translations(self) -> None:
         """Carga todas las traducciones disponibles."""
-        import os
-
-        # Solo compilar traducciones en desarrollo local (DEBUG=True)
-        if os.getenv("DEBUG", "True").lower() == "true":
-            self._discover_and_compile_translations()
+        # Compilar traducciones siempre, para asegurar que estén actualizadas
+        # Esto es crítico tanto en desarrollo como en producción
+        self._discover_and_compile_translations()
+        
+        print(f"📚 Cargando traducciones desde: {self._translations_dir}")
 
         # En Vercel/producción solo descubrir y cargar .mo existentes
         self._discover_translations()
@@ -252,23 +252,38 @@ class TranslationService:
         Returns:
             str: Texto traducido
         """
-        if language not in self._translations:
-            language = I18nConfig.DEFAULT_LANGUAGE
+        try:
+            if language not in self._translations:
+                language = I18nConfig.DEFAULT_LANGUAGE
 
-        if language not in self._translations:
-            return key
-
-        if domain not in self._translations[language]:
-            # Intentar con el dominio 'home' como fallback
-            domain = "home"
-            if domain not in self._translations[language]:
+            if language not in self._translations:
+                print(f"⚠️ No hay traducciones cargadas para el idioma: {language}")
                 return key
 
-        translation = self._translations[language][domain]
-        translated = translation.gettext(key)
+            if domain not in self._translations[language]:
+                # Intentar con el dominio 'home' como fallback
+                print(f"⚠️ Dominio '{domain}' no disponible para {language}, usando 'home'")
+                domain = "home"
+                if domain not in self._translations[language]:
+                    print(f"⚠️ Dominio fallback 'home' no disponible para {language}")
+                    return key
 
-        # Devolver la traducción obtenida (puede ser la clave si no existe traducción)
-        return translated
+            translation = self._translations[language][domain]
+            translated = translation.gettext(key)
+            
+            # Si la traducción es igual a la clave, intentar con dominio fallback
+            if translated == key and domain != "home":
+                fallback_translation = self._translations[language].get("home")
+                if fallback_translation:
+                    fallback_result = fallback_translation.gettext(key)
+                    if fallback_result != key:
+                        return fallback_result
+            
+            # Devolver la traducción obtenida (puede ser la clave si no existe traducción)
+            return translated
+        except Exception as e:
+            print(f"🚨 Error al traducir '{key}': {e}")
+            return key
 
     def get_available_domains(self) -> List[str]:
         """

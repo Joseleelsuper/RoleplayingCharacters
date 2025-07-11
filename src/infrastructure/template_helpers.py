@@ -32,12 +32,20 @@ def create_translation_function(language: str, domain: str = "home") -> Callable
 
         Args:
             key: Clave de traducción
-            domain: Dominio de traducción (por defecto 'home')
+            forced_domain: Dominio de traducción específico para esta traducción (opcional)
 
         Returns:
             str: Texto traducido
         """
-        return translation_service.get_translation(key, language, forced_domain or domain)
+        # Asegurarnos de que translation_service esté completamente inicializado
+        if not hasattr(translation_service, '_translations') or not translation_service._translations:
+            translation_service.reload_translations()
+            
+        result = translation_service.get_translation(key, language, forced_domain or domain)
+        # Si la traducción falló (devolvió la misma clave), registrar para debug
+        if result == key:
+            print(f"❌ Traducción fallida para '{key}' en {language}/{forced_domain or domain}")
+        return result
 
     return translate
 
