@@ -39,15 +39,15 @@
       "dest": "/sitemap.xml"
     },
     {
-      "src": "/css/(.*)",
+      "src": "/templates/css/(.*)",
       "dest": "/templates/css/$1"
     },
     {
-      "src": "/js/(.*)",
+      "src": "/templates/js/(.*)",
       "dest": "/templates/js/$1"
     },
     {
-      "src": "/img/(.*)",
+      "src": "/templates/img/(.*)",
       "dest": "/templates/img/$1"
     },
     {
