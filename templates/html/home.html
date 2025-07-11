@@ -5,52 +5,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ _('page.title') }}</title>
-    <link rel="stylesheet" href="/css/home.css">
-    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/templates/css/global/colors.css">
+    <link rel="stylesheet" href="/templates/css/global/global.css">
+    <link rel="stylesheet" href="/templates/css/home.css">
+    <link rel="icon" href="/templates/img/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
-    <div class="container">
-        <div class="title-container">
-            <h1>{{ _('home.welcome.title') }}</h1>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">RoleplayingCharacters</a>
+            <nav>
+                <ul>
+                    <li><a href="/">{{ _('home.menu.home') }}</a></li>
+                    <li><a href="/create-character">{{ _('home.menu.create_character') }}</a></li>
+                    <li>
+                        <div class="language-selector">
+                            <a href="?lang=es" {% if language=='es' %}class="active" {% endif %} aria-label="Cambiar a español">
+                                <span class="lang-icon">🇪🇸</span> Español
+                            </a>
+                            <a href="?lang=en" {% if language=='en' %}class="active" {% endif %} aria-label="Switch to English">
+                                <span class="lang-icon">🇬🇧</span> English
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        
-        <div class="form-section welcome-section">
-            <p>{{ _('home.welcome.subtitle') }}</p>
-            <p>{{ _('home.welcome.description') }}</p>
-            
-            <div class="form-actions">
-                <a href="/character/create" class="btn primary-button">{{ _('home.create_character') }}</a>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">{{ _('home.welcome.title') }}</h1>
+                <p class="hero-description">{{ _('home.welcome.subtitle') }}</p>
+                <p class="hero-description">{{ _('home.welcome.description') }}</p>
+                <a href="/create-character" class="btn-cta">{{ _('home.create_character') }}</a>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="container">
+                <h2 class="features-title">{{ _('home.features.section_title') }}</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧙‍♂️</div>
+                        <h3 class="feature-title">{{ _('home.features.create.title') }}</h3>
+                        <p>{{ _('home.features.create.description') }}</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">{{ _('home.features.classes.title') }}</h3>
+                        <p>{{ _('home.features.classes.description') }}</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3 class="feature-title">{{ _('home.features.share.title') }}</h3>
+                        <p>{{ _('home.features.share.description') }}</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3 class="feature-title">{{ _('home.features.update.title') }}</h3>
+                        <p>{{ _('home.features.update.description') }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <p>&copy; 2025 RoleplayingCharacters</p>
+            </div>
+            <div>
+                <nav>
+                    <ul class="flex gap-2">
+                        <li><a href="#">{{ _('home.footer.privacy') }}</a></li>
+                        <li><a href="#">{{ _('home.footer.terms') }}</a></li>
+                        <li><a href="#">{{ _('home.footer.contact') }}</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
-
-        <div class="form-section">
-            <h2>{{ _('home.features.section_title') }}</h2>
-            <div class="features">
-                <div class="feature">
-                    <h3>{{ _('home.features.create.title') }}</h3>
-                    <p>{{ _('home.features.create.description') }}</p>
-                </div>
-                <div class="feature">
-                    <h3>{{ _('home.features.classes.title') }}</h3>
-                    <p>{{ _('home.features.classes.description') }}</p>
-                </div>
-                <div class="feature">
-                    <h3>{{ _('home.features.share.title') }}</h3>
-                    <p>{{ _('home.features.share.description') }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="language-selector">
-            <a href="?lang=es" {% if language=='es' %}class="active" {% endif %} aria-label="Cambiar a español">
-                <span class="lang-icon">🇪🇸</span> Español
-            </a>
-            <a href="?lang=en" {% if language=='en' %}class="active" {% endif %} aria-label="Switch to English">
-                <span class="lang-icon">🇬🇧</span> English
-            </a>
-        </div>
-    </div>
+    </footer>
 </body>
 
 </html>
