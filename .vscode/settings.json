@@ -10,20 +10,5 @@
     "python.testing.unittestEnabled": false,
     "python.analysis.extraPaths": [
         "./src"
-    ],
-    "mcp": {
-        "servers": {
-            "playwright": {
-                "command": "npx",
-                "args": [
-                    "-y",
-                    "@executeautomation/playwright-mcp-server"
-                ]
-            },
-            "github": {
-                "type": "http",
-                "url": "https://api.githubcopilot.com/mcp/"
-            }
-        }
-    }
+    ]
 }
