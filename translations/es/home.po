@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-01 00:00+0000\n"
-"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"POT-Creation-Date: 2025-07-11 00:00+0000\n"
+"PO-Revision-Date: 2025-07-11 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -15,6 +15,14 @@ msgstr ""
 msgid "page.title"
 msgstr "Gestor de Personajes de Rol"
 
+# Menú de navegación
+msgid "home.menu.home"
+msgstr "Inicio"
+
+msgid "home.menu.create_character"
+msgstr "Crear Personaje"
+
+# Sección de bienvenida
 msgid "home.welcome.title"
 msgstr "Gestor de Personajes de Rol"
 
@@ -23,6 +31,10 @@ msgstr "Bienvenido al Gestor de Personajes de Rol"
 
 msgid "home.welcome.description"
 msgstr "Tu aventura comienza aquí. Crea, personaliza y gestiona tus personajes de rol favoritos."
+
+# Características
+msgid "home.features.section_title"
+msgstr "Características"
 
 msgid "home.features.create.title"
 msgstr "🎭 Crear Personajes"
@@ -42,8 +54,22 @@ msgstr "🤝 Compartir"
 msgid "home.features.share.description"
 msgstr "Comparte tus creaciones con otros jugadores"
 
+msgid "home.features.update.title"
+msgstr "🔄 Actualizaciones en Tiempo Real"
+
+msgid "home.features.update.description"
+msgstr "Actualiza tu hoja de personaje en tiempo real durante las sesiones de juego"
+
+# Botones
 msgid "home.create_character"
 msgstr "Crear Personaje"
 
-msgid "home.features.section_title"
-msgstr "Características"
+# Pie de página
+msgid "home.footer.privacy"
+msgstr "Política de Privacidad"
+
+msgid "home.footer.terms"
+msgstr "Términos de Servicio"
+
+msgid "home.footer.contact"
+msgstr "Contacto"

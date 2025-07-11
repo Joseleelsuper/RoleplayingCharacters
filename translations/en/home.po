@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-01 00:00+0000\n"
-"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"POT-Creation-Date: 2025-07-11 00:00+0000\n"
+"PO-Revision-Date: 2025-07-11 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -15,6 +15,14 @@ msgstr ""
 msgid "page.title"
 msgstr "Roleplaying Characters Manager"
 
+# Navigation menu
+msgid "home.menu.home"
+msgstr "Home"
+
+msgid "home.menu.create_character"
+msgstr "Create Character"
+
+# Welcome section
 msgid "home.welcome.title"
 msgstr "Roleplaying Characters Manager"
 
@@ -23,6 +31,10 @@ msgstr "Welcome to the Roleplaying Characters Manager"
 
 msgid "home.welcome.description"
 msgstr "Your adventure begins here. Create, customize and manage your favorite roleplaying characters."
+
+# Features
+msgid "home.features.section_title"
+msgstr "Features"
 
 msgid "home.features.create.title"
 msgstr "🎭 Create Characters"
@@ -42,8 +54,22 @@ msgstr "🤝 Share"
 msgid "home.features.share.description"
 msgstr "Share your creations with other players"
 
+msgid "home.features.update.title"
+msgstr "🔄 Real-time Updates"
+
+msgid "home.features.update.description"
+msgstr "Update your character sheet in real-time during gaming sessions"
+
+# Buttons
 msgid "home.create_character"
 msgstr "Create Character"
 
-msgid "home.features.section_title"
-msgstr "Features"
+# Footer
+msgid "home.footer.privacy"
+msgstr "Privacy Policy"
+
+msgid "home.footer.terms"
+msgstr "Terms of Service"
+
+msgid "home.footer.contact"
+msgstr "Contact"
