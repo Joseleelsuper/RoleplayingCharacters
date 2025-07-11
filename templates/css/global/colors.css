@@ -1,39 +1,76 @@
 /**
- * Paleta de colores global para RoleplayingCharacters
+ * Paleta de colores global cyberpunk/sci-fi para RoleplayingCharacters
  * Este archivo debe ser importado por todos los demás CSS
  */
 
 :root {
-  /* Colores primarios */
-  --primary-dark: #2C3E50;    /* Azul oscuro para fondos y elementos principales */
-  --primary: #3498DB;         /* Azul medio para botones y destacados */
-  --primary-light: #85C1E9;   /* Azul claro para hover y elementos secundarios */
-
-  /* Colores secundarios */
-  --secondary-dark: #784212;  /* Marrón oscuro para detalles */
-  --secondary: #D35400;       /* Naranja para acentos y llamadas a la acción */
-  --secondary-light: #F39C12; /* Naranja claro/amarillo para hover */
-
+  /* Colores primarios - Tonos de azul sci-fi */
+  --primary-dark: #040B1D;    /* Azul oscuro profundo para fondos */
+  --primary: #0A2647;         /* Azul medio para elementos de fondo */
+  --primary-light: #5CE1E6;   /* Azul cian brillante para elementos destacados */
+  
+  /* Colores secundarios - Acentos neón */
+  --secondary-dark: #063970;  /* Azul acero para elementos secundarios */
+  --secondary: #5CE1E6;       /* Cian neón para acentos y llamadas a la acción */
+  --secondary-light: #8DE8F0; /* Cian más claro para hover */
+  
   /* Colores neutros */
-  --dark: #1A1A1A;            /* Negro para textos principales */
-  --gray-dark: #555555;       /* Gris oscuro para subtítulos */
-  --gray: #95A5A6;            /* Gris medio para bordes y separadores */
-  --gray-light: #ECF0F1;      /* Gris claro para fondos alternativos */
-  --light: #FFFFFF;           /* Blanco para fondos y textos sobre fondos oscuros */
-
+  --dark: #040B1D;            /* Casi negro con matiz azul para fondos principales */
+  --gray-dark: #1F4068;       /* Azul oscuro para elementos secundarios */
+  --gray: #506D90;            /* Azul grisáceo medio para bordes y separadores */
+  --gray-light: #A6E3E9;      /* Azul muy claro con matiz cian para acentos ligeros */
+  --light: #FFFFFF;           /* Blanco para textos sobre fondos oscuros */
+  
+  /* Gradientes predefinidos para elementos principales */
+  --gradient-primary: linear-gradient(135deg, #040B1D 0%, #093D89 100%);
+  --gradient-secondary: linear-gradient(135deg, #5CE1E6 0%, #093D89 100%);
+  --gradient-dark: linear-gradient(135deg, #040B1D 0%, #0A2647 100%);
+  
+  /* Efectos neón para destacados */
+  --neon-shadow-primary: 0 0 10px rgba(92, 225, 230, 0.5), 0 0 20px rgba(92, 225, 230, 0.3);
+  --neon-shadow-secondary: 0 0 10px rgba(92, 225, 230, 0.6), 0 0 25px rgba(92, 225, 230, 0.4);
+  
   /* Colores de estado */
-  --success: #27AE60;         /* Verde para mensajes de éxito */
-  --warning: #F39C12;         /* Amarillo para advertencias */
-  --danger: #E74C3C;          /* Rojo para errores y alertas */
-  --info: #3498DB;            /* Azul para información */
-
-  /* Colores específicos de rol */
-  --warrior: #E74C3C;         /* Rojo para guerreros */
-  --mage: #9B59B6;            /* Morado para magos */
-  --rogue: #2ECC71;           /* Verde para pícaros */
-  --cleric: #F1C40F;          /* Amarillo para clérigos */
-  --ranger: #16A085;          /* Verde azulado para exploradores */
-  --paladin: #E67E22;         /* Naranja para paladines */
+  --success: #00FFB7;         /* Verde neón para mensajes de éxito */
+  --warning: #FFE74C;         /* Amarillo brillante para advertencias */
+  --danger: #FF5F5F;          /* Rojo neón para errores y alertas */
+  --info: #5CE1E6;            /* Azul cian para información */
+  
+  /* Colores específicos de rol - Versión sci-fi */
+  --warrior: #FF5F5F;         /* Rojo neón para guerreros */
+  --mage: #C792EA;            /* Morado futurista para magos */
+  --rogue: #00FFB7;           /* Verde neón para pícaros */
+  --cleric: #FFE74C;          /* Amarillo brillante para clérigos */
+  --ranger: #5CE1E6;          /* Cian eléctrico para exploradores */
+  --paladin: #FFB347;         /* Naranja brillante para paladines */
+  
+  /* Variables de diseño */
+  --border-radius: 5px;       /* Radio de borde más cuadrado para aspecto sci-fi */
+  --box-shadow: 0 0 20px rgba(92, 225, 230, 0.15); /* Sombra con efecto neón */
+  --transition: all 0.3s ease; /* Transición estándar */
+  
+  /* Variables adicionales para utilizar en el CSS */
+  --accent: var(--secondary);
+  --accent-hover: var(--secondary-light);
+  --bg-primary: var(--dark);
+  --bg-secondary: var(--primary);
+  --text-primary: var(--light);
+  --text-secondary: var(--secondary);
+  --border-color: var(--secondary);
+  --input-bg: var(--primary);
+  
+  /* Variables RGB para uso en rgba() */
+  --primary-rgb: 10, 38, 71;
+  --secondary-rgb: 92, 225, 230;
+  --dark-rgb: 4, 11, 29;
+  
+  /* Bordes especiales sci-fi */
+  --border-glow: 1px solid var(--secondary);
+  --border-angle: 0;
+  
+  /* Elementos de interfaz futurista */
+  --panel-border: 1px solid var(--secondary);
+  --panel-bg: linear-gradient(135deg, rgba(4, 11, 29, 0.9) 0%, rgba(10, 38, 71, 0.8) 100%);
 }
 
 /* Utilidades para texto con los colores definidos */
