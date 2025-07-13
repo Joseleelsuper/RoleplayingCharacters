@@ -1,0 +1,182 @@
+@import url(../global/global.css);
+
+/* Site Header */
+.site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background-color: rgb(255 255 255 / 0.95);
+}
+
+@media (prefers-color-scheme: dark) {
+    .site-header {
+        background-color: rgba(38, 38, 38, 0.95); /* neutral-800 with opacity */
+    }
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) 0;
+    gap: var(--spacing-lg);
+}
+
+/* Brand */
+.nav-brand {
+    flex-shrink: 0;
+}
+
+.brand-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: var(--font-size-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.brand-text {
+    background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-link:hover .brand-text {
+    background: linear-gradient(135deg, var(--primary-700), var(--secondary-700));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius);
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--primary-600);
+    background-color: var(--primary-50);
+}
+
+.nav-link-active {
+    color: var(--primary-600);
+    background-color: var(--primary-100);
+}
+
+.nav-link-active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 2px;
+    background: var(--primary-500);
+    border-radius: var(--radius-full);
+}
+
+/* Navigation Actions */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    min-height: 2rem;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    .header-nav {
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
+    
+    .nav-menu {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: center;
+        gap: var(--spacing-md);
+        padding-top: var(--spacing-md);
+        border-top: 1px solid var(--border);
+    }
+    
+    .nav-actions {
+        order: 2;
+    }
+    
+    .nav-link {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-menu {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .nav-actions {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        width: 100%;
+    }
+    
+    .nav-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Dark theme adaptations */
+@media (prefers-color-scheme: dark) {
+    .site-header {
+        background-color: rgb(38 38 38 / 0.95);
+        border-bottom-color: var(--neutral-600);
+    }
+    
+    .nav-link {
+        color: var(--neutral-300);
+    }
+    
+    .nav-link:hover {
+        color: var(--primary-400);
+        background-color: rgba(14, 165, 233, 0.1);
+    }
+    
+    .nav-link-active {
+        color: var(--primary-400);
+        background-color: rgba(14, 165, 233, 0.15);
+    }
+}
+
+/* Additional contrast adjustments for navigation */
+.nav-link-active {
+    font-weight: 600;
+}
