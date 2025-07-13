@@ -99,6 +99,8 @@ def get_translation_context(language: str, domain: str = "home") -> dict:
     
     return {
         "_": create_translation_function(language, domain),
+        "_header": create_translation_function(language, "header"),
+        "_footer": create_translation_function(language, "footer"),
         "language": language,
         "available_domains": translation_service.get_available_domains(),
         "get_locale": lambda: language,
