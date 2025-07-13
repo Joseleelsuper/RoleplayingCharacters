@@ -12,17 +12,146 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "page.title"
-msgstr "Gestor de Personajes de Rol"
+# Page metadata
+msgid "home.page.title"
+msgstr "Personajes de Rol - Crea Tu Personaje Perfecto"
 
-# Menú de navegación
+msgid "home.page.description"
+msgstr "Crea, personaliza y gestiona tus personajes de rol con nuestro creador intuitivo. Perfecto para D&D, Pathfinder y sistemas de RPG personalizados."
+
+msgid "home.page.keywords"
+msgstr "personajes rpg, creador personajes d&d, pathfinder, rol, hoja personaje, constructor personajes"
+
+# Navigation menu
 msgid "home.menu.home"
 msgstr "Inicio"
 
 msgid "home.menu.create_character"
 msgstr "Crear Personaje"
 
-# Sección de bienvenida
+# Hero section
+msgid "home.hero.title"
+msgstr "Crea Personajes Épicos"
+
+msgid "home.hero.subtitle"
+msgstr "para Tus Aventuras"
+
+msgid "home.hero.description"
+msgstr "Da vida a tu imaginación con nuestro potente creador de personajes. Diseña héroes únicos, villanos y todo lo que esté en el medio para tu próxima aventura de rol."
+
+msgid "home.hero.btn.start"
+msgstr "Empezar a Crear"
+
+msgid "home.hero.btn.learn"
+msgstr "Saber Más"
+
+msgid "home.hero.btn.create_aria"
+msgstr "Navegar a la página de creación de personajes"
+
+# Character cards
+msgid "home.characters.warrior.name"
+msgstr "Guerrero"
+
+msgid "home.characters.warrior.description"
+msgstr "Valiente y Fuerte"
+
+msgid "home.characters.mage.name"
+msgstr "Mago"
+
+msgid "home.characters.mage.description"
+msgstr "Sabio y Mágico"
+
+msgid "home.characters.rogue.name"
+msgstr "Pícaro"
+
+msgid "home.characters.rogue.description"
+msgstr "Ágil y Astuto"
+
+# Features section
+msgid "home.features.title"
+msgstr "Todo Lo Que Necesitas"
+
+msgid "home.features.subtitle"
+msgstr "Herramientas poderosas para crear y gestionar tus personajes perfectos"
+
+msgid "home.features.creation.title"
+msgstr "Creación Fácil de Personajes"
+
+msgid "home.features.creation.description"
+msgstr "Proceso intuitivo paso a paso para crear personajes en minutos, no horas."
+
+msgid "home.features.systems.title"
+msgstr "Múltiples Sistemas de Juego"
+
+msgid "home.features.systems.description"
+msgstr "Soporte para D&D 5e, Pathfinder y sistemas RPG personalizados."
+
+msgid "home.features.management.title"
+msgstr "Gestión de Personajes"
+
+msgid "home.features.management.description"
+msgstr "Guarda, edita y organiza todos tus personajes en un solo lugar."
+
+msgid "home.features.sheets.title"
+msgstr "Hojas de Personaje"
+
+msgid "home.features.sheets.description"
+msgstr "Genera hermosas hojas de personaje imprimibles para tu mesa."
+
+msgid "home.features.import.title"
+msgstr "Importar y Exportar"
+
+msgid "home.features.import.description"
+msgstr "Importa desde otras herramientas o exporta tus personajes a varios formatos."
+
+msgid "home.features.advanced.title"
+msgstr "Características Avanzadas"
+
+msgid "home.features.advanced.description"
+msgstr "Seguimiento de hechizos, gestión de inventario y herramientas de progresión de personajes."
+
+# Getting started section
+msgid "home.getting_started.title"
+msgstr "Comienza en 3 Pasos Fáciles"
+
+msgid "home.getting_started.subtitle"
+msgstr "Crear tu personaje perfecto nunca ha sido tan fácil"
+
+msgid "home.getting_started.step1.title"
+msgstr "Elige Tu Base"
+
+msgid "home.getting_started.step1.description"
+msgstr "Selecciona la raza, clase y trasfondo de tu personaje para establecer su identidad principal."
+
+msgid "home.getting_started.step2.title"
+msgstr "Personaliza Habilidades"
+
+msgid "home.getting_started.step2.description"
+msgstr "Establece atributos, elige habilidades y selecciona hechizos para que coincidan con tu visión."
+
+msgid "home.getting_started.step3.title"
+msgstr "Listo para Jugar"
+
+msgid "home.getting_started.step3.description"
+msgstr "Guarda tu personaje y comienza tu aventura con una hoja de personaje completa."
+
+msgid "home.getting_started.btn.create"
+msgstr "Crea Tu Primer Personaje"
+
+# Footer
+msgid "home.footer.privacy"
+msgstr "Política de Privacidad"
+
+msgid "home.footer.terms"
+msgstr "Términos de Servicio"
+
+msgid "home.footer.contact"
+msgstr "Contacto"
+
+# Legacy support (mantener por compatibilidad)
+msgid "page.title"
+msgstr "Gestor de Personajes de Rol"
+
 msgid "home.welcome.title"
 msgstr "Gestor de Personajes de Rol"
 
@@ -32,7 +161,6 @@ msgstr "Bienvenido al Gestor de Personajes de Rol"
 msgid "home.welcome.description"
 msgstr "Tu aventura comienza aquí. Crea, personaliza y gestiona tus personajes de rol favoritos."
 
-# Características
 msgid "home.features.section_title"
 msgstr "Características"
 
@@ -60,16 +188,5 @@ msgstr "🔄 Actualizaciones en Tiempo Real"
 msgid "home.features.update.description"
 msgstr "Actualiza tu hoja de personaje en tiempo real durante las sesiones de juego"
 
-# Botones
 msgid "home.create_character"
 msgstr "Crear Personaje"
-
-# Pie de página
-msgid "home.footer.privacy"
-msgstr "Política de Privacidad"
-
-msgid "home.footer.terms"
-msgstr "Términos de Servicio"
-
-msgid "home.footer.contact"
-msgstr "Contacto"

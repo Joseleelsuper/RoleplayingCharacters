@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ _('Roleplaying Characters - Create Your Perfect Character') }}</title>
-    <meta name="description" content="{{ _('Create, customize and manage your roleplaying characters with our intuitive character creator. Perfect for D&D, Pathfinder and custom RPG systems.') }}">
-    <meta name="keywords" content="{{ _('rpg characters, d&d character creator, pathfinder, roleplaying, character sheet, character builder') }}">
+    <title>{{ _('home.page.title') }}</title>
+    <meta name="description" content="{{ _('home.page.description') }}">
+    <meta name="keywords" content="{{ _('home.page.keywords') }}">
     <link rel="stylesheet" href="/templates/css/home.css">
     <link rel="canonical" href="{{ url_for('home') }}">
 </head>
@@ -13,50 +13,50 @@
     {% include 'objects/header.html' %}
     
     <!-- Hero Section -->
-    <section class="hero" aria-label="{{ _('Welcome section') }}">
+    <section class="hero" aria-label="{{ _('home.hero.section_label') }}">
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title text-on-dark text-high-contrast">
-                    {{ _('Create Epic Characters') }}
-                    <span class="hero-highlight">{{ _('for Your Adventures') }}</span>
+                    {{ _('home.hero.title') }}
+                    <span class="hero-highlight">{{ _('home.hero.subtitle') }}</span>
                 </h1>
                 <p class="hero-description text-on-dark">
-                    {{ _('Bring your imagination to life with our powerful character creator. Design unique heroes, villains, and everything in between for your next roleplaying adventure.') }}
+                    {{ _('home.hero.description') }}
                 </p>
                 <div class="hero-actions">
                     <a href="{{ url_for('create_character') }}" class="btn btn-primary btn-hero" aria-describedby="create-char-desc">
-                        <span>{{ _('Start Creating') }}</span>
+                        <span>{{ _('home.hero.btn.start') }}</span>
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="m9 18 6-6-6-6"/>
                         </svg>
                     </a>
                     <button class="btn btn-secondary btn-hero" id="learn-more-btn">
-                        {{ _('Learn More') }}
+                        {{ _('home.hero.btn.learn') }}
                     </button>
                 </div>
-                <small id="create-char-desc" class="sr-only">{{ _('Navigate to character creation page') }}</small>
+                <small id="create-char-desc" class="sr-only">{{ _('home.hero.btn.create_aria') }}</small>
             </div>
             <div class="hero-visual">
                 <div class="character-showcase">
                     <div class="character-card character-card-1">
                         <div class="character-avatar warrior"></div>
                         <div class="character-info">
-                            <h3 class="text-on-light">{{ _('Warrior') }}</h3>
-                            <p class="text-on-light">{{ _('Brave & Strong') }}</p>
+                            <h3 class="text-on-light">{{ _('home.characters.warrior.name') }}</h3>
+                            <p class="text-on-light">{{ _('home.characters.warrior.description') }}</p>
                         </div>
                     </div>
                     <div class="character-card character-card-2">
                         <div class="character-avatar mage"></div>
                         <div class="character-info">
-                            <h3 class="text-on-light">{{ _('Mage') }}</h3>
-                            <p class="text-on-light">{{ _('Wise & Magical') }}</p>
+                            <h3 class="text-on-light">{{ _('home.characters.mage.name') }}</h3>
+                            <p class="text-on-light">{{ _('home.characters.mage.description') }}</p>
                         </div>
                     </div>
                     <div class="character-card character-card-3">
                         <div class="character-avatar rogue"></div>
                         <div class="character-info">
-                            <h3 class="text-on-light">{{ _('Rogue') }}</h3>
-                            <p class="text-on-light">{{ _('Swift & Cunning') }}</p>
+                            <h3 class="text-on-light">{{ _('home.characters.rogue.name') }}</h3>
+                            <p class="text-on-light">{{ _('home.characters.rogue.description') }}</p>
                         </div>
                     </div>
                 </div>
@@ -65,11 +65,11 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features" aria-label="{{ _('Features section') }}">
+    <section class="features" aria-label="{{ _('home.features.section_label') }}">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title text-auto-contrast">{{ _('Everything You Need') }}</h2>
-                <p class="section-subtitle text-auto-contrast">{{ _('Powerful tools to create and manage your perfect characters') }}</p>
+                <h2 class="section-title text-auto-contrast">{{ _('home.features.title') }}</h2>
+                <p class="section-subtitle text-auto-contrast">{{ _('home.features.subtitle') }}</p>
             </div>
             
             <div class="features-grid">
@@ -81,8 +81,8 @@
                             <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
                         </svg>
                     </div>
-                    <h3 class="feature-title text-auto-contrast">{{ _('Easy Character Creation') }}</h3>
-                    <p class="feature-description text-auto-contrast">{{ _('Intuitive step-by-step process to create characters in minutes, not hours.') }}</p>
+                    <h3 class="feature-title text-auto-contrast">{{ _('home.features.creation.title') }}</h3>
+                    <p class="feature-description text-auto-contrast">{{ _('home.features.creation.description') }}</p>
                 </div>
                 
                 <div class="feature-card">
@@ -94,8 +94,8 @@
                             <line x1="3" y1="10" x2="21" y2="10"/>
                         </svg>
                     </div>
-                    <h3 class="feature-title text-auto-contrast">{{ _('Multiple Game Systems') }}</h3>
-                    <p class="feature-description text-auto-contrast">{{ _('Support for D&D 5e, Pathfinder, and custom RPG systems.') }}</p>
+                    <h3 class="feature-title text-auto-contrast">{{ _('home.features.systems.title') }}</h3>
+                    <p class="feature-description text-auto-contrast">{{ _('home.features.systems.description') }}</p>
                 </div>
                 
                 <div class="feature-card">
@@ -107,8 +107,8 @@
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
                     </div>
-                    <h3 class="feature-title text-auto-contrast">{{ _('Character Management') }}</h3>
-                    <p class="feature-description text-auto-contrast">{{ _('Save, edit, and organize all your characters in one place.') }}</p>
+                    <h3 class="feature-title text-auto-contrast">{{ _('home.features.management.title') }}</h3>
+                    <p class="feature-description text-auto-contrast">{{ _('home.features.management.description') }}</p>
                 </div>
                 
                 <div class="feature-card">
@@ -121,8 +121,8 @@
                             <polyline points="10,9 9,9 8,9"/>
                         </svg>
                     </div>
-                    <h3 class="feature-title text-auto-contrast">{{ _('Character Sheets') }}</h3>
-                    <p class="feature-description text-auto-contrast">{{ _('Generate beautiful, printable character sheets for your table.') }}</p>
+                    <h3 class="feature-title text-auto-contrast">{{ _('home.features.sheets.title') }}</h3>
+                    <p class="feature-description text-auto-contrast">{{ _('home.features.sheets.description') }}</p>
                 </div>
                 
                 <div class="feature-card">
@@ -132,8 +132,8 @@
                             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
                         </svg>
                     </div>
-                    <h3 class="feature-title text-auto-contrast">{{ _('Import & Export') }}</h3>
-                    <p class="feature-description text-auto-contrast">{{ _('Import from other tools or export your characters to various formats.') }}</p>
+                    <h3 class="feature-title text-auto-contrast">{{ _('home.features.import.title') }}</h3>
+                    <p class="feature-description text-auto-contrast">{{ _('home.features.import.description') }}</p>
                 </div>
                 
                 <div class="feature-card">
@@ -142,50 +142,50 @@
                             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                         </svg>
                     </div>
-                    <h3 class="feature-title text-auto-contrast">{{ _('Advanced Features') }}</h3>
-                    <p class="feature-description text-auto-contrast">{{ _('Spell tracking, inventory management, and character progression tools.') }}</p>
+                    <h3 class="feature-title text-auto-contrast">{{ _('home.features.advanced.title') }}</h3>
+                    <p class="feature-description text-auto-contrast">{{ _('home.features.advanced.description') }}</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Getting Started Section -->
-    <section class="getting-started" aria-label="{{ _('Getting started guide') }}">
+    <section class="getting-started" aria-label="{{ _('home.getting_started.section_label') }}">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title text-auto-contrast">{{ _('Get Started in 3 Easy Steps') }}</h2>
-                <p class="section-subtitle text-auto-contrast">{{ _('Creating your perfect character has never been easier') }}</p>
+                <h2 class="section-title text-auto-contrast">{{ _('home.getting_started.title') }}</h2>
+                <p class="section-subtitle text-auto-contrast">{{ _('home.getting_started.subtitle') }}</p>
             </div>
             
             <div class="steps-container">
                 <div class="step">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                        <h3 class="step-title text-auto-contrast">{{ _('Choose Your Foundation') }}</h3>
-                        <p class="step-description text-auto-contrast">{{ _('Select your character\'s race, class, and background to establish their core identity.') }}</p>
+                        <h3 class="step-title text-auto-contrast">{{ _('home.getting_started.step1.title') }}</h3>
+                        <p class="step-description text-auto-contrast">{{ _('home.getting_started.step1.description') }}</p>
                     </div>
                 </div>
                 
                 <div class="step">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <h3 class="step-title text-auto-contrast">{{ _('Customize Abilities') }}</h3>
-                        <p class="step-description text-auto-contrast">{{ _('Set attributes, choose skills, and select spells to match your vision.') }}</p>
+                        <h3 class="step-title text-auto-contrast">{{ _('home.getting_started.step2.title') }}</h3>
+                        <p class="step-description text-auto-contrast">{{ _('home.getting_started.step2.description') }}</p>
                     </div>
                 </div>
                 
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3 class="step-title text-auto-contrast">{{ _('Ready to Play') }}</h3>
-                        <p class="step-description text-auto-contrast">{{ _('Save your character and start your adventure with a complete character sheet.') }}</p>
+                        <h3 class="step-title text-auto-contrast">{{ _('home.getting_started.step3.title') }}</h3>
+                        <p class="step-description text-auto-contrast">{{ _('home.getting_started.step3.description') }}</p>
                     </div>
                 </div>
             </div>
             
             <div class="cta-section">
                 <a href="{{ url_for('create_character') }}" class="btn btn-primary btn-large">
-                    {{ _('Create Your First Character') }}
+                    {{ _('home.getting_started.btn.create') }}
                 </a>
             </div>
         </div>

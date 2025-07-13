@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ _('Create Character') }} | {{ _('Roleplaying Characters') }}</title>
-    <meta name="description" content="{{ _('Create and customize your roleplaying character with our intuitive character creator. Choose race, class, background and more.') }}">
-    <meta name="keywords" content="{{ _('character creator, rpg character, d&d character, pathfinder character, character builder') }}">
+    <title>{{ _('create_character.page.title') }} | {{ _('create_character.page.site_name') }}</title>
+    <meta name="description" content="{{ _('create_character.page.description') }}">
+    <meta name="keywords" content="{{ _('create_character.page.keywords') }}">
     <link rel="stylesheet" href="/templates/css/create-character.css">
     <link rel="canonical" href="{{ url_for('create_character') }}">
 </head>
@@ -16,77 +16,77 @@
         <div class="character-form">
             <!-- Form Header -->
             <header class="form-header">
-                <h1 class="form-title">{{ _('Create Your Character') }}</h1>
-                <p class="form-subtitle">{{ _('Bring your imagination to life by creating a unique character for your next adventure') }}</p>
+                <h1 class="form-title">{{ _('create_character.form.title') }}</h1>
+                <p class="form-subtitle">{{ _('create_character.form.subtitle') }}</p>
                 
                 <!-- Progress Indicator -->
-                <div class="progress-container" aria-label="{{ _('Character creation progress') }}">
+                <div class="progress-container" aria-label="{{ _('create_character.progress.label') }}">
                     <div class="progress-bar">
                         <div class="progress-fill" id="progress-fill"></div>
                     </div>
-                    <span class="progress-text" id="progress-text">{{ _('Step 1 of 5') }}</span>
+                    <span class="progress-text" id="progress-text">{{ _('create_character.progress.step1') }}</span>
                 </div>
             </header>
 
             <!-- Tab Navigation -->
-            <nav class="tab-navigation" role="tablist" aria-label="{{ _('Character creation steps') }}">
+            <nav class="tab-navigation" role="tablist" aria-label="{{ _('create_character.tabs.label') }}">
                 <button class="tab-button active" role="tab" aria-selected="true" aria-controls="basic-info-panel" id="basic-info-tab" data-step="1">
                     <span class="tab-icon">👤</span>
-                    <span class="tab-text">{{ _('Basic Info') }}</span>
+                    <span class="tab-text">{{ _('create_character.tabs.basic_info') }}</span>
                 </button>
                 <button class="tab-button" role="tab" aria-selected="false" aria-controls="attributes-panel" id="attributes-tab" data-step="2">
                     <span class="tab-icon">💪</span>
-                    <span class="tab-text">{{ _('Attributes') }}</span>
+                    <span class="tab-text">{{ _('create_character.tabs.attributes') }}</span>
                 </button>
                 <button class="tab-button" role="tab" aria-selected="false" aria-controls="skills-panel" id="skills-tab" data-step="3">
                     <span class="tab-icon">🎯</span>
-                    <span class="tab-text">{{ _('Skills') }}</span>
+                    <span class="tab-text">{{ _('create_character.tabs.skills') }}</span>
                 </button>
                 <button class="tab-button" role="tab" aria-selected="false" aria-controls="equipment-panel" id="equipment-tab" data-step="4">
                     <span class="tab-icon">⚔️</span>
-                    <span class="tab-text">{{ _('Equipment') }}</span>
+                    <span class="tab-text">{{ _('create_character.tabs.equipment') }}</span>
                 </button>
                 <button class="tab-button" role="tab" aria-selected="false" aria-controls="spells-panel" id="spells-tab" data-step="5">
                     <span class="tab-icon">✨</span>
-                    <span class="tab-text">{{ _('Spells') }}</span>
+                    <span class="tab-text">{{ _('create_character.tabs.spells') }}</span>
                 </button>
             </nav>
 
-            <form id="character-form" class="character-creation-form" aria-label="{{ _('Character creation form') }}" novalidate>
+            <form id="character-form" class="character-creation-form" aria-label="{{ _('create_character.form.label') }}" novalidate>
                 <!-- Basic Information Panel -->
                 <div id="basic-info-panel" class="form-section" role="tabpanel" aria-labelledby="basic-info-tab">
                     <h2 class="section-title">
                         <span class="section-icon">1</span>
-                        {{ _('Basic Information') }}
+                        {{ _('create_character.basic.title') }}
                     </h2>
                     
                     <div class="grid grid-cols-2">
                         <div class="form-group-enhanced">
                             <label for="character-name" class="form-label-enhanced">
-                                {{ _('Character Name') }} *
-                                <span class="label-tooltip" title="{{ _('The name your character will be known by') }}">ℹ️</span>
+                                {{ _('create_character.basic.character_name') }} *
+                                <span class="label-tooltip" title="{{ _('create_character.basic.character_name_tooltip') }}">ℹ️</span>
                             </label>
                             <input type="text" id="character-name" name="character_name" class="form-control-enhanced" 
-                                   placeholder="{{ _('Enter character name') }}" required 
+                                   placeholder="{{ _('create_character.basic.character_name_placeholder') }}" required 
                                    aria-describedby="name-error" autocomplete="off" maxlength="50">
                             <div class="form-error" id="name-error" role="alert" aria-live="polite"></div>
                         </div>
 
                         <div class="form-group-enhanced">
-                            <label for="player-name" class="form-label-enhanced">{{ _('Player Name') }}</label>
+                            <label for="player-name" class="form-label-enhanced">{{ _('create_character.basic.player_name') }}</label>
                             <input type="text" id="player-name" name="player_name" class="form-control-enhanced" 
-                                   placeholder="{{ _('Enter your name') }}" maxlength="50">
+                                   placeholder="{{ _('create_character.basic.player_name_placeholder') }}" maxlength="50">
                         </div>
 
                         <div class="form-group-enhanced">
                             <label for="race" class="form-label-enhanced">
-                                {{ _('Race') }} *
-                                <span class="label-tooltip" title="{{ _('Your character\'s species or ancestry') }}">ℹ️</span>
+                                {{ _('create_character.basic.race') }} *
+                                <span class="label-tooltip" title="{{ _('create_character.basic.race_tooltip') }}">ℹ️</span>
                             </label>
                             <div class="select-wrapper">
                                 <select id="race" name="race_id" class="form-control-enhanced select-enhanced" required 
                                         aria-describedby="race-error">
-                                    <option value="">{{ _('Select a race') }}</option>
+                                    <option value="">{{ _('create_character.basic.race_placeholder') }}</option>
                                     <!-- Options will be loaded dynamically -->
                                 </select>
                                 <div class="form-error" id="race-error" role="alert" aria-live="polite"></div>
@@ -95,13 +95,13 @@
 
                         <div class="form-group-enhanced">
                             <label for="character-class" class="form-label-enhanced">
-                                {{ _('Class') }} *
-                                <span class="label-tooltip" title="{{ _('Your character\'s profession or calling') }}">ℹ️</span>
+                                {{ _('create_character.basic.class') }} *
+                                <span class="label-tooltip" title="{{ _('create_character.basic.class_tooltip') }}">ℹ️</span>
                             </label>
                             <div class="select-wrapper">
                                 <select id="character-class" name="class_id" class="form-control-enhanced select-enhanced" required
                                         aria-describedby="class-error">
-                                    <option value="">{{ _('Select a class') }}</option>
+                                    <option value="">{{ _('create_character.basic.class_placeholder') }}</option>
                                     <!-- Options will be loaded dynamically -->
                                 </select>
                                 <div class="form-error" id="class-error" role="alert" aria-live="polite"></div>
@@ -110,12 +110,12 @@
 
                         <div class="form-group-enhanced">
                             <label for="background" class="form-label-enhanced">
-                                {{ _('Background') }}
-                                <span class="label-tooltip" title="{{ _('Your character\'s life before becoming an adventurer') }}">ℹ️</span>
+                                {{ _('create_character.basic.background') }}
+                                <span class="label-tooltip" title="{{ _('create_character.basic.background_tooltip') }}">ℹ️</span>
                             </label>
                             <div class="select-wrapper">
                                 <select id="background" name="background_id" class="form-control-enhanced select-enhanced">
-                                    <option value="">{{ _('Select a background') }}</option>
+                                    <option value="">{{ _('create_character.basic.background_placeholder') }}</option>
                                     <!-- Options will be loaded dynamically -->
                                 </select>
                             </div>
@@ -123,26 +123,26 @@
 
                         <div class="form-group-enhanced">
                             <label for="alignment" class="form-label-enhanced">
-                                {{ _('Alignment') }}
-                                <span class="label-tooltip" title="{{ _('Your character\'s moral and ethical outlook') }}">ℹ️</span>
+                                {{ _('create_character.basic.alignment') }}
+                                <span class="label-tooltip" title="{{ _('create_character.basic.alignment_tooltip') }}">ℹ️</span>
                             </label>
                             <div class="select-wrapper">
                                 <select id="alignment" name="alignment_id" class="form-control-enhanced select-enhanced">
-                                    <option value="">{{ _('Select an alignment') }}</option>
+                                    <option value="">{{ _('create_character.basic.alignment_placeholder') }}</option>
                                     <!-- Options will be loaded dynamically -->
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group-enhanced">
-                            <label for="level" class="form-label-enhanced">{{ _('Level') }} *</label>
+                            <label for="level" class="form-label-enhanced">{{ _('create_character.basic.level') }} *</label>
                             <input type="number" id="level" name="level" class="form-control-enhanced" 
                                    value="1" min="1" max="20" required aria-describedby="level-error">
                             <div class="form-error" id="level-error" role="alert" aria-live="polite"></div>
                         </div>
 
                         <div class="form-group-enhanced">
-                            <label for="experience" class="form-label-enhanced">{{ _('Experience Points') }}</label>
+                            <label for="experience" class="form-label-enhanced">{{ _('create_character.basic.experience') }}</label>
                             <input type="number" id="experience" name="experience" class="form-control-enhanced" 
                                    value="0" min="0" max="999999">
                         </div>
@@ -153,18 +153,18 @@
                 <div id="attributes-panel" class="form-section hidden" role="tabpanel" aria-labelledby="attributes-tab">
                     <h2 class="section-title">
                         <span class="section-icon">2</span>
-                        {{ _('Attributes') }}
+                        {{ _('create_character.attributes.title') }}
                     </h2>
                     
                     <div class="attributes-info">
-                        <p class="mb-lg">{{ _('Set your character\'s core attributes. Each attribute affects different aspects of gameplay.') }}</p>
+                        <p class="mb-lg">{{ _('create_character.attributes.description') }}</p>
                         <div class="point-buy-info">
-                            <span class="points-remaining">{{ _('Points Remaining:') }} <strong id="points-remaining">27</strong></span>
+                            <span class="points-remaining">{{ _('create_character.attributes.points_remaining') }} <strong id="points-remaining">27</strong></span>
                             <button type="button" class="btn btn-secondary btn-sm" id="roll-stats-btn">
-                                🎲 {{ _('Roll for Stats') }}
+                                🎲 {{ _('create_character.attributes.roll_stats') }}
                             </button>
                             <button type="button" class="btn btn-secondary btn-sm" id="standard-array-btn">
-                                📊 {{ _('Standard Array') }}
+                                📊 {{ _('create_character.attributes.standard_array') }}
                             </button>
                         </div>
                     </div>
@@ -172,8 +172,8 @@
                     <div class="attributes-grid">
                         <div class="attribute-item">
                             <label for="strength" class="attribute-label">
-                                {{ _('Strength') }}
-                                <span class="attribute-description">{{ _('Physical power') }}</span>
+                                {{ _('create_character.attributes.strength') }}
+                                <span class="attribute-description">{{ _('create_character.attributes.strength_desc') }}</span>
                             </label>
                             <div class="attribute-controls">
                                 <button type="button" class="attribute-btn decrease" data-attribute="strength">−</button>
@@ -182,13 +182,13 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="strength">+</button>
                             </div>
                             <div class="attribute-modifier" id="strength-modifier">-1</div>
-                            <small id="strength-help" class="sr-only">{{ _('Physical power and athletic ability') }}</small>
+                            <small id="strength-help" class="sr-only">{{ _('create_character.attributes.strength_help') }}</small>
                         </div>
 
                         <div class="attribute-item">
                             <label for="dexterity" class="attribute-label">
-                                {{ _('Dexterity') }}
-                                <span class="attribute-description">{{ _('Agility & reflexes') }}</span>
+                                {{ _('create_character.attributes.dexterity') }}
+                                <span class="attribute-description">{{ _('create_character.attributes.dexterity_desc') }}</span>
                             </label>
                             <div class="attribute-controls">
                                 <button type="button" class="attribute-btn decrease" data-attribute="dexterity">−</button>
@@ -197,13 +197,13 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="dexterity">+</button>
                             </div>
                             <div class="attribute-modifier" id="dexterity-modifier">-1</div>
-                            <small id="dexterity-help" class="sr-only">{{ _('Agility, reflexes, and balance') }}</small>
+                            <small id="dexterity-help" class="sr-only">{{ _('create_character.attributes.dexterity_help') }}</small>
                         </div>
 
                         <div class="attribute-item">
                             <label for="constitution" class="attribute-label">
-                                {{ _('Constitution') }}
-                                <span class="attribute-description">{{ _('Health & stamina') }}</span>
+                                {{ _('create_character.attributes.constitution') }}
+                                <span class="attribute-description">{{ _('create_character.attributes.constitution_desc') }}</span>
                             </label>
                             <div class="attribute-controls">
                                 <button type="button" class="attribute-btn decrease" data-attribute="constitution">−</button>
@@ -212,13 +212,13 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="constitution">+</button>
                             </div>
                             <div class="attribute-modifier" id="constitution-modifier">-1</div>
-                            <small id="constitution-help" class="sr-only">{{ _('Health, stamina, and vital force') }}</small>
+                            <small id="constitution-help" class="sr-only">{{ _('create_character.attributes.constitution_help') }}</small>
                         </div>
 
                         <div class="attribute-item">
                             <label for="intelligence" class="attribute-label">
-                                {{ _('Intelligence') }}
-                                <span class="attribute-description">{{ _('Reasoning ability') }}</span>
+                                {{ _('create_character.attributes.intelligence') }}
+                                <span class="attribute-description">{{ _('create_character.attributes.intelligence_desc') }}</span>
                             </label>
                             <div class="attribute-controls">
                                 <button type="button" class="attribute-btn decrease" data-attribute="intelligence">−</button>
@@ -227,13 +227,13 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="intelligence">+</button>
                             </div>
                             <div class="attribute-modifier" id="intelligence-modifier">-1</div>
-                            <small id="intelligence-help" class="sr-only">{{ _('Reasoning ability, memory, and analytical skill') }}</small>
+                            <small id="intelligence-help" class="sr-only">{{ _('create_character.attributes.intelligence_help') }}</small>
                         </div>
 
                         <div class="attribute-item">
                             <label for="wisdom" class="attribute-label">
-                                {{ _('Wisdom') }}
-                                <span class="attribute-description">{{ _('Awareness & insight') }}</span>
+                                {{ _('create_character.attributes.wisdom') }}
+                                <span class="attribute-description">{{ _('create_character.attributes.wisdom_desc') }}</span>
                             </label>
                             <div class="attribute-controls">
                                 <button type="button" class="attribute-btn decrease" data-attribute="wisdom">−</button>
@@ -242,13 +242,13 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="wisdom">+</button>
                             </div>
                             <div class="attribute-modifier" id="wisdom-modifier">-1</div>
-                            <small id="wisdom-help" class="sr-only">{{ _('Awareness, intuition, and insight') }}</small>
+                            <small id="wisdom-help" class="sr-only">{{ _('create_character.attributes.wisdom_help') }}</small>
                         </div>
 
                         <div class="attribute-item">
                             <label for="charisma" class="attribute-label">
-                                {{ _('Charisma') }}
-                                <span class="attribute-description">{{ _('Force of personality') }}</span>
+                                {{ _('create_character.attributes.charisma') }}
+                                <span class="attribute-description">{{ _('create_character.attributes.charisma_desc') }}</span>
                             </label>
                             <div class="attribute-controls">
                                 <button type="button" class="attribute-btn decrease" data-attribute="charisma">−</button>
@@ -257,7 +257,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="charisma">+</button>
                             </div>
                             <div class="attribute-modifier" id="charisma-modifier">-1</div>
-                            <small id="charisma-help" class="sr-only">{{ _('Force of personality, persuasiveness, and leadership') }}</small>
+                            <small id="charisma-help" class="sr-only">{{ _('create_character.attributes.charisma_help') }}</small>
                         </div>
                     </div>
                 </div>
@@ -266,14 +266,14 @@
                 <div id="skills-panel" class="form-section hidden" role="tabpanel" aria-labelledby="skills-tab">
                     <h2 class="section-title">
                         <span class="section-icon">3</span>
-                        {{ _('Skills & Proficiencies') }}
+                        {{ _('create_character.skills.title') }}
                     </h2>
                     
                     <div class="skills-layout">
                         <div class="skills-section">
                             <h3 class="subsection-title">
-                                🎯 {{ _('Skills') }}
-                                <span class="skill-points">{{ _('Skill Points:') }} <strong id="skill-points-remaining">4</strong></span>
+                                🎯 {{ _('create_character.skills.skills') }}
+                                <span class="skill-points">{{ _('create_character.skills.skill_points') }} <strong id="skill-points-remaining">4</strong></span>
                             </h3>
                             <div id="skills-container" class="skills-grid">
                                 <!-- Skills will be loaded dynamically -->
@@ -281,12 +281,12 @@
                         </div>
                         
                         <div class="proficiencies-section">
-                            <h3 class="subsection-title">🗣️ {{ _('Languages') }}</h3>
+                            <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
                             <div id="languages-container" class="checkbox-grid">
                                 <!-- Languages will be loaded dynamically -->
                             </div>
                             
-                            <h3 class="subsection-title">⚔️ {{ _('Proficiencies') }}</h3>
+                            <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
                             <div id="proficiencies-container" class="checkbox-grid">
                                 <!-- Proficiencies will be loaded dynamically -->
                             </div>
@@ -298,19 +298,19 @@
                 <div id="equipment-panel" class="form-section hidden" role="tabpanel" aria-labelledby="equipment-tab">
                     <h2 class="section-title">
                         <span class="section-icon">4</span>
-                        {{ _('Equipment & Items') }}
+                        {{ _('create_character.equipment.title') }}
                     </h2>
                     
                     <div class="equipment-layout">
                         <div class="starting-equipment">
-                            <h3 class="subsection-title">🎒 {{ _('Starting Equipment') }}</h3>
+                            <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
                             <div id="starting-equipment-container" class="equipment-grid">
                                 <!-- Starting equipment will be loaded dynamically -->
                             </div>
                         </div>
                         
                         <div class="additional-equipment">
-                            <h3 class="subsection-title">💰 {{ _('Additional Equipment') }}</h3>
+                            <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
                             <div id="additional-equipment-container" class="equipment-selection">
                                 <!-- Additional equipment will be loaded dynamically -->
                             </div>
@@ -322,19 +322,19 @@
                 <div id="spells-panel" class="form-section hidden" role="tabpanel" aria-labelledby="spells-tab">
                     <h2 class="section-title">
                         <span class="section-icon">5</span>
-                        {{ _('Spells & Magic') }}
+                        {{ _('create_character.spells.title') }}
                     </h2>
                     
                     <div id="spells-content" class="spells-layout">
                         <div class="spell-slots-info">
-                            <h3 class="subsection-title">📜 {{ _('Spellcasting Information') }}</h3>
+                            <h3 class="subsection-title">📜 {{ _('create_character.spells.info') }}</h3>
                             <div id="spell-slots-container" class="spell-slots-grid">
                                 <!-- Spell slots will be shown if class is a spellcaster -->
                             </div>
                         </div>
                         
                         <div class="spell-selection">
-                            <h3 class="subsection-title">✨ {{ _('Known Spells') }}</h3>
+                            <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
                             <div id="spells-container" class="spells-grid">
                                 <!-- Spells will be loaded dynamically -->
                             </div>
@@ -344,88 +344,88 @@
             </form>
 
             <!-- Character Preview (Sidebar) -->
-            <aside class="character-preview" aria-label="{{ _('Character preview') }}">
-                <h3 class="preview-title">{{ _('Character Preview') }}</h3>
+            <aside class="character-preview" aria-label="{{ _('create_character.preview.label') }}">
+                <h3 class="preview-title">{{ _('create_character.preview.title') }}</h3>
                 <div class="character-avatar-preview">
                     <div class="avatar-placeholder" id="avatar-placeholder">
                         <span class="avatar-icon">👤</span>
-                        <small>{{ _('Character Portrait') }}</small>
+                        <small>{{ _('create_character.preview.portrait') }}</small>
                     </div>
                 </div>
                 
                 <div class="character-summary" id="character-summary">
                     <div class="summary-section">
-                        <h4>{{ _('Basic Info') }}</h4>
+                        <h4>{{ _('create_character.preview.basic_info') }}</h4>
                         <div class="summary-item">
-                            <span class="summary-label">{{ _('Name:') }}</span>
-                            <span class="summary-value" id="preview-name">{{ _('Not set') }}</span>
+                            <span class="summary-label">{{ _('create_character.preview.name') }}</span>
+                            <span class="summary-value" id="preview-name">{{ _('create_character.preview.not_set') }}</span>
                         </div>
                         <div class="summary-item">
-                            <span class="summary-label">{{ _('Race:') }}</span>
-                            <span class="summary-value" id="preview-race">{{ _('Not set') }}</span>
+                            <span class="summary-label">{{ _('create_character.preview.race') }}</span>
+                            <span class="summary-value" id="preview-race">{{ _('create_character.preview.not_set') }}</span>
                         </div>
                         <div class="summary-item">
-                            <span class="summary-label">{{ _('Class:') }}</span>
-                            <span class="summary-value" id="preview-class">{{ _('Not set') }}</span>
+                            <span class="summary-label">{{ _('create_character.preview.class') }}</span>
+                            <span class="summary-value" id="preview-class">{{ _('create_character.preview.not_set') }}</span>
                         </div>
                         <div class="summary-item">
-                            <span class="summary-label">{{ _('Level:') }}</span>
+                            <span class="summary-label">{{ _('create_character.preview.level') }}</span>
                             <span class="summary-value" id="preview-level">1</span>
                         </div>
                     </div>
                     
                     <div class="summary-section">
-                        <h4>{{ _('Attributes') }}</h4>
+                        <h4>{{ _('create_character.preview.attributes') }}</h4>
                         <div class="attributes-preview" id="attributes-preview">
                             <div class="attr-preview">
-                                <span class="attr-name">{{ _('STR') }}</span>
+                                <span class="attr-name">{{ _('create_character.preview.str') }}</span>
                                 <span class="attr-value" id="preview-str">8 (-1)</span>
                             </div>
                             <div class="attr-preview">
-                                <span class="attr-name">{{ _('DEX') }}</span>
+                                <span class="attr-name">{{ _('create_character.preview.dex') }}</span>
                                 <span class="attr-value" id="preview-dex">8 (-1)</span>
                             </div>
                             <div class="attr-preview">
-                                <span class="attr-name">{{ _('CON') }}</span>
+                                <span class="attr-name">{{ _('create_character.preview.con') }}</span>
                                 <span class="attr-value" id="preview-con">8 (-1)</span>
                             </div>
                             <div class="attr-preview">
-                                <span class="attr-name">{{ _('INT') }}</span>
+                                <span class="attr-name">{{ _('create_character.preview.int') }}</span>
                                 <span class="attr-value" id="preview-int">8 (-1)</span>
                             </div>
                             <div class="attr-preview">
-                                <span class="attr-name">{{ _('WIS') }}</span>
+                                <span class="attr-name">{{ _('create_character.preview.wis') }}</span>
                                 <span class="attr-value" id="preview-wis">8 (-1)</span>
                             </div>
                             <div class="attr-preview">
-                                <span class="attr-name">{{ _('CHA') }}</span>
+                                <span class="attr-name">{{ _('create_character.preview.cha') }}</span>
                                 <span class="attr-value" id="preview-cha">8 (-1)</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="summary-section">
-                        <h4>{{ _('Progress') }}</h4>
+                        <h4>{{ _('create_character.preview.progress') }}</h4>
                         <div class="completion-indicators">
                             <div class="completion-item">
                                 <span class="completion-icon" id="basic-completion">❌</span>
-                                <span class="completion-text">{{ _('Basic Info') }}</span>
+                                <span class="completion-text">{{ _('create_character.preview.basic_info') }}</span>
                             </div>
                             <div class="completion-item">
                                 <span class="completion-icon" id="attributes-completion">❌</span>
-                                <span class="completion-text">{{ _('Attributes') }}</span>
+                                <span class="completion-text">{{ _('create_character.preview.attributes') }}</span>
                             </div>
                             <div class="completion-item">
                                 <span class="completion-icon" id="skills-completion">❌</span>
-                                <span class="completion-text">{{ _('Skills') }}</span>
+                                <span class="completion-text">{{ _('create_character.preview.skills') }}</span>
                             </div>
                             <div class="completion-item">
                                 <span class="completion-icon" id="equipment-completion">❌</span>
-                                <span class="completion-text">{{ _('Equipment') }}</span>
+                                <span class="completion-text">{{ _('create_character.preview.equipment') }}</span>
                             </div>
                             <div class="completion-item">
                                 <span class="completion-icon" id="spells-completion">❌</span>
-                                <span class="completion-text">{{ _('Spells') }}</span>
+                                <span class="completion-text">{{ _('create_character.preview.spells') }}</span>
                             </div>
                         </div>
                     </div>
@@ -435,16 +435,16 @@
             <!-- Form Actions -->
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary btn-large" id="prev-step-btn" disabled>
-                    ← {{ _('Previous') }}
+                    ← {{ _('create_character.buttons.previous') }}
                 </button>
                 <button type="button" class="btn btn-secondary btn-large" id="save-draft-btn">
-                    💾 {{ _('Save Draft') }}
+                    💾 {{ _('create_character.buttons.save_draft') }}
                 </button>
                 <button type="button" class="btn btn-primary btn-large" id="next-step-btn">
-                    {{ _('Next') }} →
+                    {{ _('create_character.buttons.next') }} →
                 </button>
                 <button type="submit" form="character-form" class="btn btn-success btn-large hidden" id="create-character-btn">
-                    ✅ {{ _('Create Character') }}
+                    ✅ {{ _('create_character.buttons.create') }}
                 </button>
             </div>
         </div>

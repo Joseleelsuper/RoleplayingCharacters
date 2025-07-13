@@ -12,8 +12,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "page.title"
-msgstr "Roleplaying Characters Manager"
+# Page metadata
+msgid "home.page.title"
+msgstr "Roleplaying Characters - Create Your Perfect Character"
+
+msgid "home.page.description"
+msgstr "Create, customize and manage your roleplaying characters with our intuitive character creator. Perfect for D&D, Pathfinder and custom RPG systems."
+
+msgid "home.page.keywords"
+msgstr "rpg characters, d&d character creator, pathfinder, roleplaying, character sheet, character builder"
 
 # Navigation menu
 msgid "home.menu.home"
@@ -22,7 +29,129 @@ msgstr "Home"
 msgid "home.menu.create_character"
 msgstr "Create Character"
 
-# Welcome section
+# Hero section
+msgid "home.hero.title"
+msgstr "Create Epic Characters"
+
+msgid "home.hero.subtitle"
+msgstr "for Your Adventures"
+
+msgid "home.hero.description"
+msgstr "Bring your imagination to life with our powerful character creator. Design unique heroes, villains, and everything in between for your next roleplaying adventure."
+
+msgid "home.hero.btn.start"
+msgstr "Start Creating"
+
+msgid "home.hero.btn.learn"
+msgstr "Learn More"
+
+msgid "home.hero.btn.create_aria"
+msgstr "Navigate to character creation page"
+
+# Character cards
+msgid "home.characters.warrior.name"
+msgstr "Warrior"
+
+msgid "home.characters.warrior.description"
+msgstr "Brave & Strong"
+
+msgid "home.characters.mage.name"
+msgstr "Mage"
+
+msgid "home.characters.mage.description"
+msgstr "Wise & Magical"
+
+msgid "home.characters.rogue.name"
+msgstr "Rogue"
+
+msgid "home.characters.rogue.description"
+msgstr "Swift & Cunning"
+
+# Features section
+msgid "home.features.title"
+msgstr "Everything You Need"
+
+msgid "home.features.subtitle"
+msgstr "Powerful tools to create and manage your perfect characters"
+
+msgid "home.features.creation.title"
+msgstr "Easy Character Creation"
+
+msgid "home.features.creation.description"
+msgstr "Intuitive step-by-step process to create characters in minutes, not hours."
+
+msgid "home.features.systems.title"
+msgstr "Multiple Game Systems"
+
+msgid "home.features.systems.description"
+msgstr "Support for D&D 5e, Pathfinder, and custom RPG systems."
+
+msgid "home.features.management.title"
+msgstr "Character Management"
+
+msgid "home.features.management.description"
+msgstr "Save, edit, and organize all your characters in one place."
+
+msgid "home.features.sheets.title"
+msgstr "Character Sheets"
+
+msgid "home.features.sheets.description"
+msgstr "Generate beautiful, printable character sheets for your table."
+
+msgid "home.features.import.title"
+msgstr "Import & Export"
+
+msgid "home.features.import.description"
+msgstr "Import from other tools or export your characters to various formats."
+
+msgid "home.features.advanced.title"
+msgstr "Advanced Features"
+
+msgid "home.features.advanced.description"
+msgstr "Spell tracking, inventory management, and character progression tools."
+
+# Getting started section
+msgid "home.getting_started.title"
+msgstr "Get Started in 3 Easy Steps"
+
+msgid "home.getting_started.subtitle"
+msgstr "Creating your perfect character has never been easier"
+
+msgid "home.getting_started.step1.title"
+msgstr "Choose Your Foundation"
+
+msgid "home.getting_started.step1.description"
+msgstr "Select your character's race, class, and background to establish their core identity."
+
+msgid "home.getting_started.step2.title"
+msgstr "Customize Abilities"
+
+msgid "home.getting_started.step2.description"
+msgstr "Set attributes, choose skills, and select spells to match your vision."
+
+msgid "home.getting_started.step3.title"
+msgstr "Ready to Play"
+
+msgid "home.getting_started.step3.description"
+msgstr "Save your character and start your adventure with a complete character sheet."
+
+msgid "home.getting_started.btn.create"
+msgstr "Create Your First Character"
+
+# Footer
+msgid "home.footer.privacy"
+msgstr "Privacy Policy"
+
+msgid "home.footer.terms"
+msgstr "Terms of Service"
+
+msgid "home.footer.contact"
+msgstr "Contact"
+
+# Legacy support (mantener por compatibilidad)
+msgid "page.title"
+msgstr "Roleplaying Characters Manager"
+
 msgid "home.welcome.title"
 msgstr "Roleplaying Characters Manager"
 
@@ -32,7 +161,6 @@ msgstr "Welcome to the Roleplaying Characters Manager"
 msgid "home.welcome.description"
 msgstr "Your adventure begins here. Create, customize and manage your favorite roleplaying characters."
 
-# Features
 msgid "home.features.section_title"
 msgstr "Features"
 
@@ -60,16 +188,5 @@ msgstr "🔄 Real-time Updates"
 msgid "home.features.update.description"
 msgstr "Update your character sheet in real-time during gaming sessions"
 
-# Buttons
 msgid "home.create_character"
 msgstr "Create Character"
-
-# Footer
-msgid "home.footer.privacy"
-msgstr "Privacy Policy"
-
-msgid "home.footer.terms"
-msgstr "Terms of Service"
-
-msgid "home.footer.contact"
-msgstr "Contact"

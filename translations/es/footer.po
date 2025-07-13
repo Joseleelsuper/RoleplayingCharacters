@@ -1,0 +1,67 @@
+# Spanish translations for the footer component
+msgid ""
+msgstr ""
+"Project-Id-Version: RoleplayingCharacters\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-10 12:00+0000\n"
+"PO-Revision-Date: 2025-07-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Footer description
+msgid "footer.description"
+msgstr "Crea, personaliza y gestiona tus personajes de rol con facilidad."
+
+# Quick Links section
+msgid "footer.quick_links.title"
+msgstr "Enlaces Rápidos"
+
+msgid "footer.quick_links.home"
+msgstr "Inicio"
+
+msgid "footer.quick_links.create_character"
+msgstr "Crear Personaje"
+
+msgid "footer.quick_links.browse_characters"
+msgstr "Explorar Personajes"
+
+# Support section
+msgid "footer.support.title"
+msgstr "Soporte"
+
+msgid "footer.support.help_center"
+msgstr "Centro de Ayuda"
+
+msgid "footer.support.contact_us"
+msgstr "Contáctanos"
+
+msgid "footer.support.feedback"
+msgstr "Comentarios"
+
+# Legal section
+msgid "footer.legal.title"
+msgstr "Legal"
+
+msgid "footer.legal.privacy_policy"
+msgstr "Política de Privacidad"
+
+msgid "footer.legal.terms_of_service"
+msgstr "Términos de Servicio"
+
+# Copyright
+msgid "footer.copyright"
+msgstr "Todos los derechos reservados."
+
+# Language selector
+msgid "footer.language.label"
+msgstr "Idioma"
+
+msgid "footer.language.spanish"
+msgstr "Español"
+
+msgid "footer.language.english"
+msgstr "English"
