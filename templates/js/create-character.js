@@ -238,7 +238,7 @@ class CharacterCreator {
         
         raceSelect.addEventListener('change', () => {
             const selectedOption = raceSelect.options[raceSelect.selectedIndex];
-            previewRace.textContent = selectedOption.text === 'Select a race' ? 'Not selected' : selectedOption.text;
+            previewRace.textContent = selectedOption.value === '' ? 'Not selected' : selectedOption.text;
         });
 
         // Clase
