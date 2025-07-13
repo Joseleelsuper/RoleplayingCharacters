@@ -12,161 +12,292 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "create.character.page.title"
-msgstr "Create Character - Roleplaying Characters Manager"
+# Page metadata
+msgid "create_character.page.title"
+msgstr "Create Character"
 
-msgid "create.character.title"
-msgstr "Create New Character"
+msgid "create_character.page.site_name"
+msgstr "Roleplaying Characters"
 
-msgid "create.character.subtitle"
-msgstr "Fill in the details to create your character"
+msgid "create_character.page.description"
+msgstr "Create and customize your roleplaying character with our intuitive character creator. Choose race, class, background and more."
 
-# Basic Information Section
-msgid "create.character.basic.title"
-msgstr "Basic Information"
+msgid "create_character.page.keywords"
+msgstr "character creator, rpg character, d&d character, pathfinder character, character builder"
 
-msgid "create.character.basic.name"
-msgstr "Character Name"
+# Form structure
+msgid "create_character.form.title"
+msgstr "Create Your Character"
 
-msgid "create.character.basic.race"
-msgstr "Race"
+msgid "create_character.form.subtitle"
+msgstr "Bring your imagination to life by creating a unique character for your next adventure"
 
-msgid "create.character.basic.background"
-msgstr "Background"
+msgid "create_character.form.label"
+msgstr "Character creation form"
 
-msgid "create.character.basic.alignment"
-msgstr "Alignment"
+# Progress tracking
+msgid "create_character.progress.label"
+msgstr "Character creation progress"
 
-msgid "create.character.basic.level"
-msgstr "Level"
+msgid "create_character.progress.step1"
+msgstr "Step 1 of 5"
 
-msgid "create.character.basic.description"
-msgstr "Description"
+# Tab navigation
+msgid "create_character.tabs.label"
+msgstr "Character creation steps"
 
-msgid "create.character.select.option"
-msgstr "Select an option..."
+msgid "create_character.tabs.basic_info"
+msgstr "Basic Info"
 
-# Attributes Section
-msgid "create.character.attributes.title"
+msgid "create_character.tabs.attributes"
 msgstr "Attributes"
 
-msgid "create.character.attributes.strength"
-msgstr "Strength"
-
-msgid "create.character.attributes.dexterity"
-msgstr "Dexterity"
-
-msgid "create.character.attributes.constitution"
-msgstr "Constitution"
-
-msgid "create.character.attributes.intelligence"
-msgstr "Intelligence"
-
-msgid "create.character.attributes.wisdom"
-msgstr "Wisdom"
-
-msgid "create.character.attributes.charisma"
-msgstr "Charisma"
-
-msgid "create.character.attributes.points.remaining"
-msgstr "Points Remaining"
-
-# Skills Section
-msgid "create.character.skills.title"
+msgid "create_character.tabs.skills"
 msgstr "Skills"
 
-# Languages Section
-msgid "create.character.languages.title"
-msgstr "Languages"
-
-# Proficiencies Section
-msgid "create.character.proficiencies.title"
-msgstr "Proficiencies"
-
-# Spells Section
-msgid "create.character.spells.title"
-msgstr "Spells"
-
-# Items Section
-msgid "create.character.items.title"
+msgid "create_character.tabs.equipment"
 msgstr "Equipment"
 
-# Buttons
-msgid "create.character.buttons.reset"
-msgstr "Reset"
+msgid "create_character.tabs.spells"
+msgstr "Spells"
 
-msgid "create.character.buttons.save"
-msgstr "Save Character"
+# Basic Information Section
+msgid "create_character.basic.title"
+msgstr "Basic Information"
 
-# Messages
-msgid "create.character.confirm.reset"
-msgstr "Are you sure you want to reset the form? All data will be lost."
+msgid "create_character.basic.character_name"
+msgstr "Character Name"
 
-msgid "create.character.success.message"
-msgstr "Character created successfully!"
+msgid "create_character.basic.character_name_placeholder"
+msgstr "Enter character name"
 
-msgid "create.character.error.message"
-msgstr "There was an error creating the character. Please try again."
+msgid "create_character.basic.character_name_tooltip"
+msgstr "The name your character will be known by"
 
-msgid "create.character.error.not.enough.points"
-msgstr "Not enough attribute points remaining."
+msgid "create_character.basic.player_name"
+msgstr "Player Name"
 
-# Validation Messages
-msgid "create.character.validation.name.required"
-msgstr "Character name is required."
+msgid "create_character.basic.player_name_placeholder"
+msgstr "Enter your name"
 
-msgid "create.character.validation.race.required"
-msgstr "You must select a race."
+msgid "create_character.basic.race"
+msgstr "Race"
 
-msgid "create.character.validation.background.required"
-msgstr "You must select a background."
+msgid "create_character.basic.race_placeholder"
+msgstr "Select a race"
 
-msgid "create.character.validation.alignment.required"
-msgstr "You must select an alignment."
+msgid "create_character.basic.race_tooltip"
+msgstr "Your character's species or ancestry"
 
-# Error Messages
-msgid "create.character.error.races"
-msgstr "Failed to load races. Please refresh the page."
+msgid "create_character.basic.class"
+msgstr "Class"
 
-msgid "create.character.error.backgrounds"
-msgstr "Failed to load backgrounds. Please refresh the page."
+msgid "create_character.basic.class_placeholder"
+msgstr "Select a class"
 
-msgid "create.character.error.alignments"
-msgstr "Failed to load alignments. Please refresh the page."
+msgid "create_character.basic.class_tooltip"
+msgstr "Your character's profession or calling"
 
-msgid "create.character.error.skills"
-msgstr "Failed to load skills. Please refresh the page."
+msgid "create_character.basic.background"
+msgstr "Background"
 
-msgid "create.character.error.languages"
-msgstr "Failed to load languages. Please refresh the page."
+msgid "create_character.basic.background_placeholder"
+msgstr "Select a background"
 
-msgid "create.character.error.proficiencies"
-msgstr "Failed to load proficiencies. Please refresh the page."
+msgid "create_character.basic.background_tooltip"
+msgstr "Your character's life before becoming an adventurer"
 
-msgid "create.character.error.spells"
-msgstr "Failed to load spells. Please refresh the page."
+msgid "create_character.basic.alignment"
+msgstr "Alignment"
 
-msgid "create.character.error.items"
-msgstr "Failed to load items. Please refresh the page."
+msgid "create_character.basic.alignment_placeholder"
+msgstr "Select an alignment"
 
-# New translations for custom selectors
-msgid "create.character.search"
-msgstr "Search..."
+msgid "create_character.basic.alignment_tooltip"
+msgstr "Your character's moral and ethical outlook"
 
-msgid "create.character.custom.race"
-msgstr "Add custom race..."
+msgid "create_character.basic.level"
+msgstr "Level"
 
-msgid "create.character.custom.background"
-msgstr "Add custom background..."
+msgid "create_character.basic.experience"
+msgstr "Experience Points"
 
-msgid "create.character.custom.alignment"
-msgstr "Add custom alignment..."
+# Attributes Section
+msgid "create_character.attributes.title"
+msgstr "Attributes"
 
-msgid "create.character.custom.add"
-msgstr "Add"
+msgid "create_character.attributes.description"
+msgstr "Set your character's core attributes. Each attribute affects different aspects of gameplay."
 
-msgid "home.create_character"
-msgstr "Create character"
+msgid "create_character.attributes.points_remaining"
+msgstr "Points Remaining:"
 
-msgid "home.features.section_title"
-msgstr "Features"
+msgid "create_character.attributes.roll_stats"
+msgstr "Roll for Stats"
+
+msgid "create_character.attributes.standard_array"
+msgstr "Standard Array"
+
+msgid "create_character.attributes.strength"
+msgstr "Strength"
+
+msgid "create_character.attributes.strength_desc"
+msgstr "Physical power"
+
+msgid "create_character.attributes.strength_help"
+msgstr "Physical power and athletic ability"
+
+msgid "create_character.attributes.dexterity"
+msgstr "Dexterity"
+
+msgid "create_character.attributes.dexterity_desc"
+msgstr "Agility & reflexes"
+
+msgid "create_character.attributes.dexterity_help"
+msgstr "Agility, reflexes, and balance"
+
+msgid "create_character.attributes.constitution"
+msgstr "Constitution"
+
+msgid "create_character.attributes.constitution_desc"
+msgstr "Health & stamina"
+
+msgid "create_character.attributes.constitution_help"
+msgstr "Health, stamina, and vital force"
+
+msgid "create_character.attributes.intelligence"
+msgstr "Intelligence"
+
+msgid "create_character.attributes.intelligence_desc"
+msgstr "Reasoning ability"
+
+msgid "create_character.attributes.intelligence_help"
+msgstr "Reasoning ability, memory, and analytical skill"
+
+msgid "create_character.attributes.wisdom"
+msgstr "Wisdom"
+
+msgid "create_character.attributes.wisdom_desc"
+msgstr "Awareness & insight"
+
+msgid "create_character.attributes.wisdom_help"
+msgstr "Awareness, intuition, and insight"
+
+msgid "create_character.attributes.charisma"
+msgstr "Charisma"
+
+msgid "create_character.attributes.charisma_desc"
+msgstr "Force of personality"
+
+msgid "create_character.attributes.charisma_help"
+msgstr "Force of personality, persuasiveness, and leadership"
+
+# Skills Section
+msgid "create_character.skills.title"
+msgstr "Skills & Proficiencies"
+
+msgid "create_character.skills.skills"
+msgstr "Skills"
+
+msgid "create_character.skills.skill_points"
+msgstr "Skill Points:"
+
+msgid "create_character.skills.languages"
+msgstr "Languages"
+
+msgid "create_character.skills.proficiencies"
+msgstr "Proficiencies"
+
+# Equipment Section
+msgid "create_character.equipment.title"
+msgstr "Equipment & Items"
+
+msgid "create_character.equipment.starting"
+msgstr "Starting Equipment"
+
+msgid "create_character.equipment.additional"
+msgstr "Additional Equipment"
+
+# Spells Section
+msgid "create_character.spells.title"
+msgstr "Spells & Magic"
+
+msgid "create_character.spells.info"
+msgstr "Spellcasting Information"
+
+msgid "create_character.spells.known"
+msgstr "Known Spells"
+
+# Character Preview
+msgid "create_character.preview.label"
+msgstr "Character preview"
+
+msgid "create_character.preview.title"
+msgstr "Character Preview"
+
+msgid "create_character.preview.portrait"
+msgstr "Character Portrait"
+
+msgid "create_character.preview.basic_info"
+msgstr "Basic Info"
+
+msgid "create_character.preview.name"
+msgstr "Name:"
+
+msgid "create_character.preview.race"
+msgstr "Race:"
+
+msgid "create_character.preview.class"
+msgstr "Class:"
+
+msgid "create_character.preview.level"
+msgstr "Level:"
+
+msgid "create_character.preview.not_set"
+msgstr "Not set"
+
+msgid "create_character.preview.attributes"
+msgstr "Attributes"
+
+msgid "create_character.preview.str"
+msgstr "STR"
+
+msgid "create_character.preview.dex"
+msgstr "DEX"
+
+msgid "create_character.preview.con"
+msgstr "CON"
+
+msgid "create_character.preview.int"
+msgstr "INT"
+
+msgid "create_character.preview.wis"
+msgstr "WIS"
+
+msgid "create_character.preview.cha"
+msgstr "CHA"
+
+msgid "create_character.preview.progress"
+msgstr "Progress"
+
+msgid "create_character.preview.skills"
+msgstr "Skills"
+
+msgid "create_character.preview.equipment"
+msgstr "Equipment"
+
+msgid "create_character.preview.spells"
+msgstr "Spells"
+
+# Form buttons
+msgid "create_character.buttons.previous"
+msgstr "Previous"
+
+msgid "create_character.buttons.next"
+msgstr "Next"
+
+msgid "create_character.buttons.save_draft"
+msgstr "Save Draft"
+
+msgid "create_character.buttons.create"
+msgstr "Create Character"
