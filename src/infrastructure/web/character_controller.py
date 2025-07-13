@@ -213,17 +213,30 @@ async def get_items() -> List[Dict[str, Any]]:
         {"id": 9, "name": "Amulet of Health", "type": "magic", "rarity": "rare"},
         {"id": 10, "name": "Bag of Holding", "type": "magic", "rarity": "uncommon"}
     ]
+
+
+@router.get("/api/classes", tags=["Characters API"])
+async def get_classes() -> List[Dict[str, Any]]:
+    """
+    Endpoint para obtener todas las clases disponibles.
+
+    Returns:
+        List[Dict[str, Any]]: Lista de clases
+    """
+    # Simulamos datos de clases para la interfaz
     return [
-        {"id": 1, "name": "Sword", "type": "weapon", "weight": 3},
-        {"id": 2, "name": "Bow", "type": "weapon", "weight": 2},
-        {"id": 3, "name": "Dagger", "type": "weapon", "weight": 1},
-        {"id": 4, "name": "Shield", "type": "armor", "weight": 6},
-        {"id": 5, "name": "Leather Armor", "type": "armor", "weight": 10},
-        {"id": 6, "name": "Chain Mail", "type": "armor", "weight": 55},
-        {"id": 7, "name": "Backpack", "type": "gear", "weight": 5},
-        {"id": 8, "name": "Rope", "type": "gear", "weight": 10},
-        {"id": 9, "name": "Torch", "type": "gear", "weight": 1},
-        {"id": 10, "name": "Potion of Healing", "type": "consumable", "weight": 0.5}
+        {"id": 1, "name": "Fighter", "description": "Master of weapons and armor"},
+        {"id": 2, "name": "Wizard", "description": "Scholar of magical arts"},
+        {"id": 3, "name": "Rogue", "description": "Expert in stealth and trickery"},
+        {"id": 4, "name": "Cleric", "description": "Divine spellcaster and healer"},
+        {"id": 5, "name": "Ranger", "description": "Hunter and tracker"},
+        {"id": 6, "name": "Barbarian", "description": "Fierce warrior of the wilds"},
+        {"id": 7, "name": "Bard", "description": "Master of song and story"},
+        {"id": 8, "name": "Druid", "description": "Guardian of nature"},
+        {"id": 9, "name": "Monk", "description": "Master of martial arts"},
+        {"id": 10, "name": "Paladin", "description": "Holy warrior"},
+        {"id": 11, "name": "Sorcerer", "description": "Innate magical power"},
+        {"id": 12, "name": "Warlock", "description": "Pact-bound spellcaster"}
     ]
 
 
@@ -238,32 +251,21 @@ async def create_character(character_data: Dict[str, Any] = Body(...)) -> Dict[s
     Returns:
         Dict[str, Any]: El personaje creado con su ID
     """
-    # Simulamos la creación de un personaje
-    # En una implementación real, usaríamos los casos de uso y repositorios
-    character_id = 1  # En un caso real, este ID vendría de la base de datos
-    
-    return {
-        "id": character_id,
-        **character_data,
-        "created_at": "2025-07-11T12:00:00Z"
-    }
-    """
-    Endpoint para crear un nuevo personaje.
-
-    Args:
-        character_data: Datos del personaje a crear
-
-    Returns:
-        Dict[str, Any]: Personaje creado con su ID
-    """
     try:
-        # Aquí se implementaría la lógica real para crear un personaje
-        # Simulamos respuesta para la interfaz
-        character_data["id"] = 123  # Simulamos ID generado
+        # Simulamos la creación de un personaje
+        # En una implementación real, usaríamos los casos de uso y repositorios
+        character_id = 123  # En un caso real, este ID vendría de la base de datos
+        
         return {
+            "id": character_id,
             "status": "success",
             "message": "Character created successfully",
-            "character": character_data
+            "character": {
+                **character_data,
+                "id": character_id,
+                "created_at": "2025-07-13T12:00:00Z",
+                "updated_at": "2025-07-13T12:00:00Z"
+            }
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
