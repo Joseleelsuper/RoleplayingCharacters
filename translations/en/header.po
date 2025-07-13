@@ -1,0 +1,46 @@
+# English translations for the header component
+msgid ""
+msgstr ""
+"Project-Id-Version: RoleplayingCharacters\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-10 12:00+0000\n"
+"PO-Revision-Date: 2025-07-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Navigation links
+msgid "header.nav.home"
+msgstr "Home"
+
+msgid "header.nav.create_character"
+msgstr "Create Character"
+
+msgid "header.nav.my_characters"
+msgstr "My Characters"
+
+msgid "header.nav.browse"
+msgstr "Browse"
+
+# Authentication buttons
+msgid "header.auth.sign_in"
+msgstr "Sign In"
+
+msgid "header.auth.sign_up"
+msgstr "Sign Up"
+
+msgid "header.language.label"
+msgstr "Language"
+
+msgid "header.language.spanish"
+msgstr "Español"
+
+msgid "header.language.english"
+msgstr "English"
+
+# Brand
+msgid "header.brand.home_label"
+msgstr "Home"
