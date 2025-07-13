@@ -1,29 +1,150 @@
 <!DOCTYPE html>
-<html lang="{{ language }}">
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>{{ _('404_title') }}</title>
-    <link rel="stylesheet" href="/css/404.css">
-    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _('404 - Page Not Found | Roleplaying Characters') }}</title>
+    <meta name="description" content="{{ _('The page you were looking for could not be found. Return to the character creator to continue your adventure.') }}">
+    <link rel="stylesheet" href="/templates/css/404.css">
+    <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
-    <div class="container-404">
-        <div class="page-404-icon">🧭</div>
-        <div class="title-container">
-            <h1 data-text="{{ _('404_title') }}">{{ _('404_title') }}</h1>
+    {% include 'objects/header.html' %}
+    
+    <main class="error-container" role="main">
+        <div class="error-content">
+            <!-- Animated 404 Display -->
+            <div class="error-visual">
+                <div class="error-number">
+                    <span class="digit-4 digit">4</span>
+                    <span class="digit-0 digit">0</span>
+                    <span class="digit-4-2 digit">4</span>
+                </div>
+                <div class="error-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 17h.01"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- Error Message -->
+            <div class="error-message">
+                <h1 class="error-title">{{ _('Oops! You\'ve Wandered Off the Map') }}</h1>
+                <p class="error-description">
+                    {{ _('It seems this page has gone on an adventure of its own. Don\'t worry, we\'ll help you get back on track!') }}
+                </p>
+                
+                <!-- Suggested Actions -->
+                <div class="error-suggestions">
+                    <h2 class="suggestions-title">{{ _('What would you like to do?') }}</h2>
+                    <div class="suggestions-grid">
+                        <a href="{{ url_for('home') }}" class="suggestion-card">
+                            <div class="suggestion-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9,22 9,12 15,12 15,22"/>
+                                </svg>
+                            </div>
+                            <h3 class="suggestion-title">{{ _('Go Home') }}</h3>
+                            <p class="suggestion-desc">{{ _('Return to the main page') }}</p>
+                        </a>
+                        
+                        <a href="{{ url_for('create_character') }}" class="suggestion-card primary">
+                            <div class="suggestion-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                            <h3 class="suggestion-title">{{ _('Create Character') }}</h3>
+                            <p class="suggestion-desc">{{ _('Start your adventure') }}</p>
+                        </a>
+                        
+                        <button class="suggestion-card" id="go-back-btn">
+                            <div class="suggestion-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 12H5"/>
+                                    <path d="M12 19l-7-7 7-7"/>
+                                </svg>
+                            </div>
+                            <h3 class="suggestion-title">{{ _('Go Back') }}</h3>
+                            <p class="suggestion-desc">{{ _('Return to previous page') }}</p>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Fun RPG Reference -->
+                <div class="rpg-reference">
+                    <div class="dice-container">
+                        <div class="dice" aria-hidden="true">
+                            <div class="dice-face">
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="dice" aria-hidden="true">
+                            <div class="dice-face">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="rpg-text">
+                        {{ _('You rolled a 1 on your Navigation check...') }}
+                        <br>
+                        <em>{{ _('Critical failure! You are now lost in the digital wilderness.') }}</em>
+                    </p>
+                </div>
+            </div>
         </div>
-        <p>{{ _('404_message') }}</p>
-        <button class="btn button-404-back" onclick="goBack()">{{ _('404_back_button') }}</button>
-    </div>
+        
+        <!-- Background Elements -->
+        <div class="floating-elements" aria-hidden="true">
+            <div class="floating-element element-1">⚔️</div>
+            <div class="floating-element element-2">🧙‍♂️</div>
+            <div class="floating-element element-3">🐉</div>
+            <div class="floating-element element-4">🏰</div>
+            <div class="floating-element element-5">✨</div>
+            <div class="floating-element element-6">🗡️</div>
+        </div>
+    </main>
+    
+    {% include 'objects/footer.html' %}
+    
     <script>
-        function goBack() {
-            const langQuery = "{{ lang_query }}";
-            if (document.referrer && document.referrer !== window.location.href) {
+        // Go back functionality
+        document.getElementById('go-back-btn')?.addEventListener('click', function() {
+            if (window.history.length > 1) {
                 window.history.back();
             } else {
-                window.location.href = '/' + langQuery;
+                window.location.href = "{{ url_for('home') }}";
             }
+        });
+        
+        // Dice animation on click
+        document.querySelectorAll('.dice').forEach(dice => {
+            dice.addEventListener('click', function() {
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = 'rollDice 1s ease-in-out';
+                }, 10);
+            });
+        });
+        
+        // Enhanced floating animation
+        function randomFloat(min, max) {
+            return Math.random() * (max - min) + min;
         }
+        
+        document.querySelectorAll('.floating-element').forEach((element, index) => {
+            const delay = randomFloat(0, 2);
+            const duration = randomFloat(3, 6);
+            element.style.animationDelay = delay + 's';
+            element.style.animationDuration = duration + 's';
+        });
     </script>
 </body>
 </html>

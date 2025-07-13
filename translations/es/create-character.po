@@ -1,0 +1,172 @@
+# Spanish translations for the character creation page
+msgid ""
+msgstr ""
+"Project-Id-Version: RoleplayingCharacters\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-10 12:00+0000\n"
+"PO-Revision-Date: 2025-07-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "create.character.page.title"
+msgstr "Crear Personaje - Gestor de Personajes de Rol"
+
+msgid "create.character.title"
+msgstr "Crear Nuevo Personaje"
+
+msgid "create.character.subtitle"
+msgstr "Completa los detalles para crear tu personaje"
+
+# Basic Information Section
+msgid "create.character.basic.title"
+msgstr "Información Básica"
+
+msgid "create.character.basic.name"
+msgstr "Nombre del Personaje"
+
+msgid "create.character.basic.race"
+msgstr "Raza"
+
+msgid "create.character.basic.background"
+msgstr "Trasfondo"
+
+msgid "create.character.basic.alignment"
+msgstr "Alineamiento"
+
+msgid "create.character.basic.level"
+msgstr "Nivel"
+
+msgid "create.character.basic.description"
+msgstr "Descripción"
+
+msgid "create.character.select.option"
+msgstr "Selecciona una opción..."
+
+# Nuevas traducciones para selectores personalizados
+msgid "create.character.search"
+msgstr "Buscar..."
+
+msgid "create.character.custom.race"
+msgstr "Añadir raza personalizada..."
+
+msgid "create.character.custom.background"
+msgstr "Añadir trasfondo personalizado..."
+
+msgid "create.character.custom.alignment"
+msgstr "Añadir alineamiento personalizado..."
+
+msgid "create.character.custom.add"
+msgstr "Añadir"
+
+# Attributes Section
+msgid "create.character.attributes.title"
+msgstr "Atributos"
+
+msgid "create.character.attributes.strength"
+msgstr "Fuerza"
+
+msgid "create.character.attributes.dexterity"
+msgstr "Destreza"
+
+msgid "create.character.attributes.constitution"
+msgstr "Constitución"
+
+msgid "create.character.attributes.intelligence"
+msgstr "Inteligencia"
+
+msgid "create.character.attributes.wisdom"
+msgstr "Sabiduría"
+
+msgid "create.character.attributes.charisma"
+msgstr "Carisma"
+
+msgid "create.character.attributes.points.remaining"
+msgstr "Puntos Restantes"
+
+# Skills Section
+msgid "create.character.skills.title"
+msgstr "Habilidades"
+
+# Languages Section
+msgid "create.character.languages.title"
+msgstr "Idiomas"
+
+# Proficiencies Section
+msgid "create.character.proficiencies.title"
+msgstr "Competencias"
+
+# Spells Section
+msgid "create.character.spells.title"
+msgstr "Hechizos"
+
+# Items Section
+msgid "create.character.items.title"
+msgstr "Equipamiento"
+
+# Buttons
+msgid "create.character.buttons.reset"
+msgstr "Reiniciar"
+
+msgid "create.character.buttons.save"
+msgstr "Guardar Personaje"
+
+# Messages
+msgid "create.character.confirm.reset"
+msgstr "¿Estás seguro de que quieres reiniciar el formulario? Se perderán todos los datos."
+
+msgid "create.character.success.message"
+msgstr "¡Personaje creado con éxito!"
+
+msgid "create.character.error.message"
+msgstr "Ha ocurrido un error al crear el personaje. Por favor, inténtalo de nuevo."
+
+msgid "create.character.error.not.enough.points"
+msgstr "No hay suficientes puntos de atributo restantes."
+
+# Validation Messages
+msgid "create.character.validation.name.required"
+msgstr "El nombre del personaje es obligatorio."
+
+msgid "create.character.validation.race.required"
+msgstr "Debes seleccionar una raza."
+
+msgid "create.character.validation.background.required"
+msgstr "Debes seleccionar un trasfondo."
+
+msgid "create.character.validation.alignment.required"
+msgstr "Debes seleccionar un alineamiento."
+
+# Error Messages
+msgid "create.character.error.races"
+msgstr "Error al cargar las razas. Por favor, actualiza la página."
+
+msgid "create.character.error.backgrounds"
+msgstr "Error al cargar los trasfondos. Por favor, actualiza la página."
+
+msgid "create.character.error.alignments"
+msgstr "Error al cargar los alineamientos. Por favor, actualiza la página."
+
+msgid "create.character.error.skills"
+msgstr "Error al cargar las habilidades. Por favor, actualiza la página."
+
+msgid "create.character.error.languages"
+msgstr "Error al cargar los idiomas. Por favor, actualiza la página."
+
+msgid "create.character.error.proficiencies"
+msgstr "Error al cargar las competencias. Por favor, actualiza la página."
+
+msgid "create.character.error.spells"
+msgstr "Error al cargar los hechizos. Por favor, actualiza la página."
+
+msgid "create.character.error.items"
+msgstr "Error al cargar los objetos. Por favor, actualiza la página."
+
+msgid "home.create_character"
+msgstr "Crear personaje"
+
+msgid "home.features.section_title"
+msgstr "Características"

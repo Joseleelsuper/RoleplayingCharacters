@@ -1,0 +1,23 @@
+<header class="site-header" role="banner">
+    <div class="container">
+        <nav class="header-nav" role="navigation" aria-label="Main navigation">
+            <div class="nav-brand">
+                <a href="/" class="brand-link" aria-label="Home">
+                    <span class="brand-text">RoleplayingCharacters</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="/" class="nav-link {% if request.url.path == '/' or request.url.path == '' %}nav-link-active{% endif %}">{{ _('Home') }}</a>
+                <a href="/create-character" class="nav-link {% if '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _('Create Character') }}</a>
+                <a href="/characters" class="nav-link {% if '/characters' in request.url.path and not '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _('My Characters') }}</a>
+                <a href="/browse" class="nav-link {% if '/browse' in request.url.path %}nav-link-active{% endif %}">{{ _('Browse') }}</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn btn-secondary btn-sm">{{ _('Sign In') }}</button>
+                <button class="btn btn-primary btn-sm">{{ _('Sign Up') }}</button>
+            </div>
+        </nav>
+    </div>
+</header>

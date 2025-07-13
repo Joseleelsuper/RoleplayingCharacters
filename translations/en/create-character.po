@@ -1,0 +1,172 @@
+# English translations for the character creation page
+msgid ""
+msgstr ""
+"Project-Id-Version: RoleplayingCharacters\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-10 12:00+0000\n"
+"PO-Revision-Date: 2025-07-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "create.character.page.title"
+msgstr "Create Character - Roleplaying Characters Manager"
+
+msgid "create.character.title"
+msgstr "Create New Character"
+
+msgid "create.character.subtitle"
+msgstr "Fill in the details to create your character"
+
+# Basic Information Section
+msgid "create.character.basic.title"
+msgstr "Basic Information"
+
+msgid "create.character.basic.name"
+msgstr "Character Name"
+
+msgid "create.character.basic.race"
+msgstr "Race"
+
+msgid "create.character.basic.background"
+msgstr "Background"
+
+msgid "create.character.basic.alignment"
+msgstr "Alignment"
+
+msgid "create.character.basic.level"
+msgstr "Level"
+
+msgid "create.character.basic.description"
+msgstr "Description"
+
+msgid "create.character.select.option"
+msgstr "Select an option..."
+
+# Attributes Section
+msgid "create.character.attributes.title"
+msgstr "Attributes"
+
+msgid "create.character.attributes.strength"
+msgstr "Strength"
+
+msgid "create.character.attributes.dexterity"
+msgstr "Dexterity"
+
+msgid "create.character.attributes.constitution"
+msgstr "Constitution"
+
+msgid "create.character.attributes.intelligence"
+msgstr "Intelligence"
+
+msgid "create.character.attributes.wisdom"
+msgstr "Wisdom"
+
+msgid "create.character.attributes.charisma"
+msgstr "Charisma"
+
+msgid "create.character.attributes.points.remaining"
+msgstr "Points Remaining"
+
+# Skills Section
+msgid "create.character.skills.title"
+msgstr "Skills"
+
+# Languages Section
+msgid "create.character.languages.title"
+msgstr "Languages"
+
+# Proficiencies Section
+msgid "create.character.proficiencies.title"
+msgstr "Proficiencies"
+
+# Spells Section
+msgid "create.character.spells.title"
+msgstr "Spells"
+
+# Items Section
+msgid "create.character.items.title"
+msgstr "Equipment"
+
+# Buttons
+msgid "create.character.buttons.reset"
+msgstr "Reset"
+
+msgid "create.character.buttons.save"
+msgstr "Save Character"
+
+# Messages
+msgid "create.character.confirm.reset"
+msgstr "Are you sure you want to reset the form? All data will be lost."
+
+msgid "create.character.success.message"
+msgstr "Character created successfully!"
+
+msgid "create.character.error.message"
+msgstr "There was an error creating the character. Please try again."
+
+msgid "create.character.error.not.enough.points"
+msgstr "Not enough attribute points remaining."
+
+# Validation Messages
+msgid "create.character.validation.name.required"
+msgstr "Character name is required."
+
+msgid "create.character.validation.race.required"
+msgstr "You must select a race."
+
+msgid "create.character.validation.background.required"
+msgstr "You must select a background."
+
+msgid "create.character.validation.alignment.required"
+msgstr "You must select an alignment."
+
+# Error Messages
+msgid "create.character.error.races"
+msgstr "Failed to load races. Please refresh the page."
+
+msgid "create.character.error.backgrounds"
+msgstr "Failed to load backgrounds. Please refresh the page."
+
+msgid "create.character.error.alignments"
+msgstr "Failed to load alignments. Please refresh the page."
+
+msgid "create.character.error.skills"
+msgstr "Failed to load skills. Please refresh the page."
+
+msgid "create.character.error.languages"
+msgstr "Failed to load languages. Please refresh the page."
+
+msgid "create.character.error.proficiencies"
+msgstr "Failed to load proficiencies. Please refresh the page."
+
+msgid "create.character.error.spells"
+msgstr "Failed to load spells. Please refresh the page."
+
+msgid "create.character.error.items"
+msgstr "Failed to load items. Please refresh the page."
+
+# New translations for custom selectors
+msgid "create.character.search"
+msgstr "Search..."
+
+msgid "create.character.custom.race"
+msgstr "Add custom race..."
+
+msgid "create.character.custom.background"
+msgstr "Add custom background..."
+
+msgid "create.character.custom.alignment"
+msgstr "Add custom alignment..."
+
+msgid "create.character.custom.add"
+msgstr "Add"
+
+msgid "home.create_character"
+msgstr "Create character"
+
+msgid "home.features.section_title"
+msgstr "Features"

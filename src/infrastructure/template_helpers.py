@@ -32,12 +32,20 @@ def create_translation_function(language: str, domain: str = "home") -> Callable
 
         Args:
             key: Clave de traducción
-            domain: Dominio de traducción (por defecto 'home')
+            forced_domain: Dominio de traducción específico para esta traducción (opcional)
 
         Returns:
             str: Texto traducido
         """
-        return translation_service.get_translation(key, language, forced_domain or domain)
+        # Asegurarnos de que translation_service esté completamente inicializado
+        if not hasattr(translation_service, '_translations') or not translation_service._translations:
+            translation_service.reload_translations()
+            
+        result = translation_service.get_translation(key, language, forced_domain or domain)
+        # Si la traducción falló (devolvió la misma clave), registrar para debug
+        if result == key:
+            print(f"❌ Traducción fallida para '{key}' en {language}/{forced_domain or domain}")
+        return result
 
     return translate
 
@@ -53,10 +61,48 @@ def get_translation_context(language: str, domain: str = "home") -> dict:
     Returns:
         dict: Contexto con funciones de traducción
     """
+    def url_for(name: str, **path_params) -> str:
+        """
+        Genera URLs para rutas nombradas.
+        
+        Args:
+            name: Nombre de la ruta
+            **path_params: Parámetros de la ruta
+            
+        Returns:
+            str: URL generada
+        """
+        # Mapeo de nombres de ruta a paths
+        route_map = {
+            "home": "/",
+            "create_character": "/create-character",
+            "character_detail": "/character/{character_id}",
+            "browse_characters": "/browse",
+            "user_characters": "/characters",
+            "help": "/help",
+            "contact": "/contact",
+            "feedback": "/feedback",
+            "privacy": "/privacy",
+            "terms": "/terms",
+        }
+        
+        if name not in route_map:
+            return f"/{name}"  # Fallback
+            
+        url = route_map[name]
+        
+        # Reemplazar parámetros de path
+        for param, value in path_params.items():
+            url = url.replace(f"{{{param}}}", str(value))
+            
+        return url
+    
     return {
         "_": create_translation_function(language, domain),
         "language": language,
         "available_domains": translation_service.get_available_domains(),
+        "get_locale": lambda: language,
+        "url_for": url_for,
     }
 
 
