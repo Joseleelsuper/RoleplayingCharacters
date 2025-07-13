@@ -1,314 +1,537 @@
 /**
- * Script para la página de creación de personajes
- * Este script maneja la lógica de la interfaz de usuario para crear un personaje
+ * JavaScript para la página de creación de personajes
+ * Maneja la navegación por pestañas, validación de formularios y actualizaciones en tiempo real
  */
 
-document.addEventListener('DOMContentLoaded', async function() {
-    // Elementos del DOM
-    const form = document.getElementById('character-form');
-    const resetButton = document.getElementById('reset-form');
-    const saveButton = document.getElementById('save-character');
-    
-    // Contenedores para opciones
-    const raceContainer = document.getElementById('race-container');
-    const backgroundContainer = document.getElementById('background-container');
-    const alignmentContainer = document.getElementById('alignment-container');
-    const skillsContainer = document.getElementById('skills-container');
-    const languagesContainer = document.getElementById('languages-container');
-    const proficienciesContainer = document.getElementById('proficiencies-container');
-    const spellsContainer = document.getElementById('spells-container');
-    const itemsContainer = document.getElementById('items-container');
-    
-    // Campos ocultos para valores seleccionados
-    const selectedRace = document.getElementById('selected-race');
-    const selectedBackground = document.getElementById('selected-background');
-    const selectedAlignment = document.getElementById('selected-alignment');
-    
-    // Inputs de atributos
-    const strengthInput = document.getElementById('attribute-strength');
-    const dexterityInput = document.getElementById('attribute-dexterity');
-    const constitutionInput = document.getElementById('attribute-constitution');
-    const intelligenceInput = document.getElementById('attribute-intelligence');
-    const wisdomInput = document.getElementById('attribute-wisdom');
-    const charismaInput = document.getElementById('attribute-charisma');
-    
-    // Modificadores de atributos
-    const strengthModifier = document.getElementById('modifier-strength');
-    const dexterityModifier = document.getElementById('modifier-dexterity');
-    const constitutionModifier = document.getElementById('modifier-constitution');
-    const intelligenceModifier = document.getElementById('modifier-intelligence');
-    const wisdomModifier = document.getElementById('modifier-wisdom');
-    const charismaModifier = document.getElementById('modifier-charisma');
-    
-    // Función para cargar datos de la API
-    async function fetchData(endpoint) {
-        try {
-            const response = await fetch(endpoint);
-            if (!response.ok) {
-                throw new Error(`Error al cargar datos de ${endpoint}: ${response.statusText}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
-    }
-    
-    // Función para crear elementos de selección
-    function createSelectionItems(container, items, type, selectedInput = null) {
-        container.innerHTML = '';
+class CharacterCreator {
+    constructor() {
+        this.currentTab = 0;
+        this.tabs = document.querySelectorAll('.tab-button');
+        this.panels = document.querySelectorAll('[role="tabpanel"]');
+        this.form = document.getElementById('character-form');
+        this.characterData = {};
         
-        items.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.classList.add('selection-option');
-            
-            switch (type) {
-                case 'radio':
-                    itemDiv.innerHTML = `
-                        <input type="radio" id="${type}-${item.id}" name="${type}" value="${item.id}">
-                        <label for="${type}-${item.id}">
-                            <span class="option-name">${item.name}</span>
-                            <span class="option-description">${item.description || ''}</span>
-                        </label>
-                    `;
-                    
-                    const radioInput = itemDiv.querySelector('input');
-                    radioInput.addEventListener('change', function() {
-                        if (selectedInput) {
-                            selectedInput.value = this.value;
-                        }
-                    });
-                    break;
-                    
-                case 'checkbox':
-                    itemDiv.innerHTML = `
-                        <div class="selection-item">
-                            <input type="checkbox" id="${type}-${item.id}" name="${type}[]" value="${item.id}">
-                            <label for="${type}-${item.id}" class="item-name">${item.name}</label>
-                        </div>
-                    `;
-                    break;
-                    
-                default:
-                    itemDiv.innerHTML = `
-                        <div class="selection-item">
-                            <span class="item-name">${item.name}</span>
-                            <span class="item-description">${item.description || ''}</span>
-                        </div>
-                    `;
-            }
-            
-            container.appendChild(itemDiv);
+        this.init();
+    }
+
+    init() {
+        this.setupTabNavigation();
+        this.setupFormHandlers();
+        this.setupAttributeCalculators();
+        this.loadInitialData();
+        this.setupPreviewUpdates();
+        this.setupFormValidation();
+    }
+
+    /**
+     * Configura la navegación por pestañas con accesibilidad
+     */
+    setupTabNavigation() {
+        this.tabs.forEach((tab, index) => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.switchTab(index);
+            });
+
+            // Navegación con teclado
+            tab.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                    const newIndex = (index + direction + this.tabs.length) % this.tabs.length;
+                    this.switchTab(newIndex);
+                    this.tabs[newIndex].focus();
+                }
+            });
         });
     }
-    
-    // Función para calcular el modificador de atributo
-    function calculateModifier(attributeValue) {
-        return Math.floor((attributeValue - 10) / 2);
+
+    /**
+     * Cambia a una pestaña específica
+     */
+    switchTab(index) {
+        // Remover estado activo de todas las pestañas
+        this.tabs.forEach((tab, i) => {
+            tab.classList.toggle('active', i === index);
+            tab.setAttribute('aria-selected', i === index);
+        });
+
+        // Mostrar/ocultar paneles
+        this.panels.forEach((panel, i) => {
+            panel.classList.toggle('hidden', i !== index);
+        });
+
+        this.currentTab = index;
     }
-    
-    // Función para actualizar los modificadores de atributos
-    function updateModifiers() {
-        const attributes = [
-            { input: strengthInput, display: strengthModifier },
-            { input: dexterityInput, display: dexterityModifier },
-            { input: constitutionInput, display: constitutionModifier },
-            { input: intelligenceInput, display: intelligenceModifier },
-            { input: wisdomInput, display: wisdomModifier },
-            { input: charismaInput, display: charismaModifier }
-        ];
+
+    /**
+     * Configura los manejadores del formulario
+     */
+    setupFormHandlers() {
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleFormSubmit();
+        });
+
+        // Botones de acción
+        document.getElementById('save-draft-btn').addEventListener('click', () => {
+            this.saveDraft();
+        });
+
+        document.getElementById('preview-character-btn').addEventListener('click', () => {
+            this.previewCharacter();
+        });
+    }
+
+    /**
+     * Configura los calculadores de modificadores de atributos
+     */
+    setupAttributeCalculators() {
+        const attributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
         
         attributes.forEach(attr => {
-            if (attr.input && attr.display) {
-                const value = parseInt(attr.input.value) || 10;
-                const modifier = calculateModifier(value);
-                attr.display.textContent = modifier >= 0 ? `+${modifier}` : `${modifier}`;
+            const input = document.getElementById(attr);
+            const modifier = document.getElementById(`${attr}-modifier`);
+            
+            if (input && modifier) {
+                input.addEventListener('input', () => {
+                    const value = parseInt(input.value) || 10;
+                    const mod = Math.floor((value - 10) / 2);
+                    modifier.textContent = mod >= 0 ? `+${mod}` : `${mod}`;
+                });
             }
         });
     }
-    
-    // Manejar botones de incremento/decremento de atributos
-    document.querySelectorAll('.number-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const targetId = this.dataset.target;
-            const step = parseInt(this.dataset.step);
-            const targetInput = document.getElementById(targetId);
-            
-            if (targetInput) {
-                const currentValue = parseInt(targetInput.value) || 0;
-                const min = parseInt(targetInput.min) || 0;
-                const max = parseInt(targetInput.max) || 30;
-                
-                const newValue = Math.max(min, Math.min(max, currentValue + step));
-                targetInput.value = newValue;
-                
-                // Si es un atributo, actualizar modificadores
-                if (targetId.startsWith('attribute-')) {
-                    updateModifiers();
-                }
-            }
-        });
-    });
-    
-    // Cargar datos iniciales
-    async function loadInitialData() {
+
+    /**
+     * Carga los datos iniciales desde las APIs
+     */
+    async loadInitialData() {
         try {
-            // Cargar datos en paralelo
-            const [races, backgrounds, alignments, skills, languages, proficiencies, spells, items] = await Promise.all([
-                fetchData('/api/races'),
-                fetchData('/api/backgrounds'),
-                fetchData('/api/alignments'),
-                fetchData('/api/skills'),
-                fetchData('/api/languages'),
-                fetchData('/api/proficiencies'),
-                fetchData('/api/spells'),
-                fetchData('/api/items')
+            const [races, classes, backgrounds, alignments, skills, languages, proficiencies] = await Promise.all([
+                this.fetchData('/api/races'),
+                this.fetchData('/api/classes'),
+                this.fetchData('/api/backgrounds'),
+                this.fetchData('/api/alignments'),
+                this.fetchData('/api/skills'),
+                this.fetchData('/api/languages'),
+                this.fetchData('/api/proficiencies')
             ]);
-            
-            // Crear opciones para cada sección
-            createSelectionItems(raceContainer, races, 'radio', selectedRace);
-            createSelectionItems(backgroundContainer, backgrounds, 'radio', selectedBackground);
-            createSelectionItems(alignmentContainer, alignments, 'radio', selectedAlignment);
-            createSelectionItems(skillsContainer, skills, 'checkbox');
-            createSelectionItems(languagesContainer, languages, 'checkbox');
-            createSelectionItems(proficienciesContainer, proficiencies, 'checkbox');
-            
-            // Para hechizos, agrupar por nivel
-            const spellsByLevel = {};
-            spells.forEach(spell => {
-                const level = spell.level;
-                if (!spellsByLevel[level]) {
-                    spellsByLevel[level] = [];
-                }
-                spellsByLevel[level].push(spell);
-            });
-            
-            const spellsContainerHTML = Object.keys(spellsByLevel).sort((a, b) => a - b).map(level => {
-                const levelName = level === "0" ? "Cantrips" : `Level ${level}`;
-                
-                const spellsHTML = spellsByLevel[level].map(spell => `
-                    <div class="selection-item">
-                        <input type="checkbox" id="spell-${spell.id}" name="spells[]" value="${spell.id}">
-                        <label for="spell-${spell.id}" class="item-name">${spell.name} (${spell.school})</label>
-                    </div>
-                `).join('');
-                
-                return `
-                    <div class="spell-level-group">
-                        <h4 class="spell-level-title">${levelName}</h4>
-                        <div class="spells-list">${spellsHTML}</div>
-                    </div>
-                `;
-            }).join('');
-            
-            spellsContainer.innerHTML = spellsContainerHTML;
-            
-            // Para items, agrupar por tipo
-            const itemsByType = {};
-            items.forEach(item => {
-                const type = item.type.charAt(0).toUpperCase() + item.type.slice(1);
-                if (!itemsByType[type]) {
-                    itemsByType[type] = [];
-                }
-                itemsByType[type].push(item);
-            });
-            
-            const itemsContainerHTML = Object.keys(itemsByType).sort().map(type => {
-                const itemsHTML = itemsByType[type].map(item => `
-                    <div class="selection-item">
-                        <input type="checkbox" id="item-${item.id}" name="items[]" value="${item.id}">
-                        <label for="item-${item.id}" class="item-name">${item.name} (${item.rarity})</label>
-                    </div>
-                `).join('');
-                
-                return `
-                    <div class="item-type-group">
-                        <h4 class="item-type-title">${type}</h4>
-                        <div class="items-list">${itemsHTML}</div>
-                    </div>
-                `;
-            }).join('');
-            
-            itemsContainer.innerHTML = itemsContainerHTML;
+
+            this.populateSelect('race', races);
+            this.populateSelect('character-class', classes);
+            this.populateSelect('background', backgrounds);
+            this.populateSelect('alignment', alignments);
+            this.populateSkills(skills);
+            this.populateLanguages(languages);
+            this.populateProficiencies(proficiencies);
             
         } catch (error) {
-            console.error('Error al cargar datos iniciales:', error);
+            console.error('Error loading initial data:', error);
+            this.showError('Failed to load character options. Please refresh the page.');
         }
     }
-    
-    // Inicializar modificadores de atributos
-    updateModifiers();
-    
-    // Manejar envío del formulario
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault();
+
+    /**
+     * Realiza una petición a la API
+     */
+    async fetchData(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    }
+
+    /**
+     * Rellena un elemento select con opciones
+     */
+    populateSelect(selectId, options) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+
+        options.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option.id;
+            optionElement.textContent = option.name;
+            optionElement.title = option.description || option.name;
+            select.appendChild(optionElement);
+        });
+    }
+
+    /**
+     * Rellena el contenedor de habilidades
+     */
+    populateSkills(skills) {
+        const container = document.getElementById('skills-container');
+        if (!container) return;
+
+        skills.forEach(skill => {
+            const div = document.createElement('div');
+            div.className = 'form-group-enhanced';
+            div.innerHTML = `
+                <label class="form-label-enhanced">
+                    <input type="checkbox" name="skills[]" value="${skill.id}" class="mr-sm">
+                    ${skill.name}
+                    ${skill.description ? `<small class="text-muted">${skill.description}</small>` : ''}
+                </label>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    /**
+     * Rellena el contenedor de idiomas
+     */
+    populateLanguages(languages) {
+        const container = document.getElementById('languages-container');
+        if (!container) return;
+
+        languages.forEach(language => {
+            const div = document.createElement('div');
+            div.className = 'form-group-enhanced';
+            div.innerHTML = `
+                <label class="form-label-enhanced">
+                    <input type="checkbox" name="languages[]" value="${language.id}" class="mr-sm">
+                    ${language.name}
+                </label>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    /**
+     * Rellena el contenedor de competencias
+     */
+    populateProficiencies(proficiencies) {
+        const container = document.getElementById('proficiencies-container');
+        if (!container) return;
+
+        proficiencies.forEach(proficiency => {
+            const div = document.createElement('div');
+            div.className = 'form-group-enhanced';
+            div.innerHTML = `
+                <label class="form-label-enhanced">
+                    <input type="checkbox" name="proficiencies[]" value="${proficiency.id}" class="mr-sm">
+                    ${proficiency.name}
+                </label>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    /**
+     * Configura las actualizaciones en tiempo real de la vista previa
+     */
+    setupPreviewUpdates() {
+        // Nombre del personaje
+        const nameInput = document.getElementById('character-name');
+        const previewName = document.getElementById('preview-name');
         
+        nameInput.addEventListener('input', () => {
+            previewName.textContent = nameInput.value || 'Unnamed Character';
+        });
+
+        // Raza
+        const raceSelect = document.getElementById('race');
+        const previewRace = document.getElementById('preview-race');
+        
+        raceSelect.addEventListener('change', () => {
+            const selectedOption = raceSelect.options[raceSelect.selectedIndex];
+            previewRace.textContent = selectedOption.text === 'Select a race' ? 'Not selected' : selectedOption.text;
+        });
+
+        // Clase
+        const classSelect = document.getElementById('character-class');
+        const previewClass = document.getElementById('preview-class');
+        
+        classSelect.addEventListener('change', () => {
+            const selectedOption = classSelect.options[classSelect.selectedIndex];
+            previewClass.textContent = selectedOption.text === 'Select a class' ? 'Not selected' : selectedOption.text;
+        });
+
+        // Background
+        const backgroundSelect = document.getElementById('background');
+        const previewBackground = document.getElementById('preview-background');
+        
+        backgroundSelect.addEventListener('change', () => {
+            const selectedOption = backgroundSelect.options[backgroundSelect.selectedIndex];
+            previewBackground.textContent = selectedOption.text === 'Select a background' ? 'Not selected' : selectedOption.text;
+        });
+
+        // Nivel
+        const levelInput = document.getElementById('level');
+        const previewLevel = document.getElementById('preview-level');
+        
+        levelInput.addEventListener('input', () => {
+            previewLevel.textContent = levelInput.value || '1';
+        });
+    }
+
+    /**
+     * Configura la validación del formulario
+     */
+    setupFormValidation() {
+        const requiredFields = this.form.querySelectorAll('[required]');
+        
+        requiredFields.forEach(field => {
+            field.addEventListener('blur', () => {
+                this.validateField(field);
+            });
+        });
+    }
+
+    /**
+     * Valida un campo individual
+     */
+    validateField(field) {
+        const isValid = field.checkValidity();
+        field.classList.toggle('error', !isValid);
+        
+        // Remover mensaje de error existente
+        const existingError = field.parentNode.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        // Añadir mensaje de error si es necesario
+        if (!isValid) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = field.validationMessage;
+            field.parentNode.appendChild(errorMessage);
+        }
+    }
+
+    /**
+     * Maneja el envío del formulario
+     */
+    async handleFormSubmit() {
+        if (!this.validateForm()) {
+            return;
+        }
+
+        const formData = new FormData(this.form);
+        const characterData = this.serializeFormData(formData);
+
         try {
-            // Recoger datos del formulario
-            const formData = new FormData(form);
-            const characterData = {
-                name: formData.get('name'),
-                race_id: parseInt(formData.get('race_id')),
-                background_id: parseInt(formData.get('background_id')),
-                alignment_id: parseInt(formData.get('alignment_id')),
-                level: parseInt(formData.get('level')),
-                description: formData.get('description') || '',
-                attributes: {
-                    strength: parseInt(formData.get('attributes[strength]')),
-                    dexterity: parseInt(formData.get('attributes[dexterity]')),
-                    constitution: parseInt(formData.get('attributes[constitution]')),
-                    intelligence: parseInt(formData.get('attributes[intelligence]')),
-                    wisdom: parseInt(formData.get('attributes[wisdom]')),
-                    charisma: parseInt(formData.get('attributes[charisma]'))
-                }
-            };
+            this.setLoading(true);
             
-            // Recoger arrays de valores (habilidades, idiomas, etc.)
-            const skills = Array.from(form.querySelectorAll('input[name="skills[]"]:checked')).map(el => parseInt(el.value));
-            const languages = Array.from(form.querySelectorAll('input[name="languages[]"]:checked')).map(el => parseInt(el.value));
-            const proficiencies = Array.from(form.querySelectorAll('input[name="proficiencies[]"]:checked')).map(el => parseInt(el.value));
-            const spells = Array.from(form.querySelectorAll('input[name="spells[]"]:checked')).map(el => parseInt(el.value));
-            const items = Array.from(form.querySelectorAll('input[name="items[]"]:checked')).map(el => parseInt(el.value));
-            
-            characterData.skills = skills;
-            characterData.languages = languages;
-            characterData.proficiencies = proficiencies;
-            characterData.spells = spells;
-            characterData.items = items;
-            
-            // Enviar datos al servidor
             const response = await fetch('/api/characters', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(characterData)
             });
-            
+
             if (!response.ok) {
-                throw new Error('Error al crear el personaje');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const result = await response.json();
-            alert('¡Personaje creado con éxito!');
+            this.showSuccess('Character created successfully!');
             
-            // Redirigir a la página de inicio
-            window.location.href = '/';
-            
+            // Redireccionar al personaje creado
+            setTimeout(() => {
+                window.location.href = `/characters/${result.id}`;
+            }, 1000);
+
         } catch (error) {
-            console.error('Error al enviar formulario:', error);
-            alert('Error al crear el personaje: ' + error.message);
+            console.error('Error creating character:', error);
+            this.showError('Failed to create character. Please try again.');
+        } finally {
+            this.setLoading(false);
         }
-    });
-    
-    // Resetear formulario
-    resetButton.addEventListener('click', function() {
-        if (confirm('¿Estás seguro de que quieres reiniciar el formulario? Todos los datos ingresados se perderán.')) {
-            form.reset();
-            updateModifiers();
+    }
+
+    /**
+     * Valida todo el formulario
+     */
+    validateForm() {
+        const requiredFields = this.form.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.checkValidity()) {
+                this.validateField(field);
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    /**
+     * Serializa los datos del formulario
+     */
+    serializeFormData(formData) {
+        const data = {};
+        
+        for (let [key, value] of formData.entries()) {
+            if (key.endsWith('[]')) {
+                const arrayKey = key.slice(0, -2);
+                if (!data[arrayKey]) {
+                    data[arrayKey] = [];
+                }
+                data[arrayKey].push(value);
+            } else {
+                data[key] = value;
+            }
         }
-    });
-    
-    // Cargar datos iniciales
-    loadInitialData();
+
+        return data;
+    }
+
+    /**
+     * Guarda un borrador del personaje
+     */
+    async saveDraft() {
+        const formData = new FormData(this.form);
+        const characterData = this.serializeFormData(formData);
+        
+        try {
+            localStorage.setItem('character-draft', JSON.stringify(characterData));
+            this.showSuccess('Draft saved successfully!');
+        } catch (error) {
+            console.error('Error saving draft:', error);
+            this.showError('Failed to save draft.');
+        }
+    }
+
+    /**
+     * Carga un borrador guardado
+     */
+    loadDraft() {
+        try {
+            const draft = localStorage.getItem('character-draft');
+            if (draft) {
+                const data = JSON.parse(draft);
+                this.populateForm(data);
+                this.showSuccess('Draft loaded successfully!');
+            }
+        } catch (error) {
+            console.error('Error loading draft:', error);
+        }
+    }
+
+    /**
+     * Rellena el formulario con datos
+     */
+    populateForm(data) {
+        Object.entries(data).forEach(([key, value]) => {
+            const field = this.form.querySelector(`[name="${key}"]`);
+            if (field) {
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                    field.checked = value;
+                } else {
+                    field.value = value;
+                }
+            }
+        });
+    }
+
+    /**
+     * Muestra la vista previa del personaje
+     */
+    previewCharacter() {
+        // Aquí se podría abrir un modal o navegar a una página de vista previa
+        console.log('Preview character functionality');
+    }
+
+    /**
+     * Establece el estado de carga
+     */
+    setLoading(isLoading) {
+        const form = document.getElementById('character-form');
+        const buttons = document.querySelectorAll('.form-actions .btn');
+        
+        form.classList.toggle('loading', isLoading);
+        buttons.forEach(btn => {
+            btn.disabled = isLoading;
+        });
+    }
+
+    /**
+     * Muestra un mensaje de éxito
+     */
+    showSuccess(message) {
+        this.showMessage(message, 'success');
+    }
+
+    /**
+     * Muestra un mensaje de error
+     */
+    showError(message) {
+        this.showMessage(message, 'error');
+    }
+
+    /**
+     * Muestra un mensaje
+     */
+    showMessage(message, type) {
+        // Remover mensajes existentes
+        const existingMessages = document.querySelectorAll('.message');
+        existingMessages.forEach(msg => msg.remove());
+
+        // Crear nuevo mensaje
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message message-${type}`;
+        messageDiv.textContent = message;
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            background-color: ${type === 'success' ? 'var(--success-500)' : 'var(--error-500)'};
+        `;
+
+        document.body.appendChild(messageDiv);
+
+        // Remover después de 5 segundos
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 5000);
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    new CharacterCreator();
 });
+
+// Añadir estilos para animaciones
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .error {
+        border-color: var(--error-500) !important;
+        box-shadow: 0 0 0 3px rgb(239 68 68 / 0.1) !important;
+    }
+    
+    .error-message {
+        color: var(--error-600);
+        font-size: var(--font-size-xs);
+        margin-top: var(--spacing-xs);
+    }
+    
+    .mr-sm {
+        margin-right: var(--spacing-sm);
+    }
+`;
+document.head.appendChild(style);

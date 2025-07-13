@@ -1,245 +1,457 @@
 <!DOCTYPE html>
-<html lang="{{ language }}">
-
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ _('create.character.page.title') }}</title>
-    <link rel="stylesheet" href="/templates/css/global/colors.css">
-    <link rel="stylesheet" href="/templates/css/global/global.css">
+    <title>{{ _('Create Character') }} | {{ _('Roleplaying Characters') }}</title>
+    <meta name="description" content="{{ _('Create and customize your roleplaying character with our intuitive character creator. Choose race, class, background and more.') }}">
+    <meta name="keywords" content="{{ _('character creator, rpg character, d&d character, pathfinder character, character builder') }}">
     <link rel="stylesheet" href="/templates/css/create-character.css">
-    <link rel="icon" href="/templates/img/favicon.ico" type="image/x-icon">
+    <link rel="canonical" href="{{ url_for('create_character') }}">
 </head>
-
 <body>
-    <header>
-        <div class="container header-content">
-            <a href="/" class="logo">RoleplayingCharacters</a>
-            <nav>
-                <ul>
-                    <li><a href="/">{{ _('home.menu.home') }}</a></li>
-                    <li><a href="/create-character">{{ _('home.menu.create_character') }}</a></li>
-                    <li>
-                        <div class="language-selector">
-                            <a href="?lang=es" {% if language=='es' %}class="active" {% endif %} aria-label="Cambiar a español">
-                                <span class="lang-icon">🇪🇸</span> Español
-                            </a>
-                            <a href="?lang=en" {% if language=='en' %}class="active" {% endif %} aria-label="Switch to English">
-                                <span class="lang-icon">🇬🇧</span> English
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <div class="create-character-container">
-            <h1 class="character-form-title">{{ _('create.character.title') }}</h1>
-            <p class="subtitle text-center mb-3">{{ _('create.character.subtitle') }}</p>
-
-        <form id="character-form" class="character-form">
-            <!-- Sección de información básica -->
-            <section class="form-section">
-                <h2>{{ _('create.character.basic.title') }}</h2>
+    {% include 'objects/header.html' %}
+    
+    <main class="create-character-container" role="main">
+        <div class="character-form">
+            <!-- Form Header -->
+            <header class="form-header">
+                <h1 class="form-title">{{ _('Create Your Character') }}</h1>
+                <p class="form-subtitle">{{ _('Bring your imagination to life by creating a unique character for your next adventure') }}</p>
                 
-                <!-- Nombre del personaje en una fila separada para darle más importancia -->
-                <div class="form-group character-name-group">
-                    <label for="character-name">{{ _('create.character.basic.name') }}</label>
-                    <input type="text" id="character-name" name="name" required>
-                </div>
-
-                <!-- Subsección: Raza -->
-                <div class="basic-info-subsection">
-                    <h3>{{ _('create.character.basic.race') }}</h3>
-                    <div class="basic-options-container" id="race-container">
-                        <!-- Se llenará con JavaScript -->
+                <!-- Progress Indicator -->
+                <div class="progress-container" aria-label="{{ _('Character creation progress') }}">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
                     </div>
-                    <input type="hidden" id="selected-race" name="race_id" required>
+                    <span class="progress-text" id="progress-text">{{ _('Step 1 of 5') }}</span>
                 </div>
+            </header>
 
-                <!-- Subsección: Trasfondo -->
-                <div class="basic-info-subsection">
-                    <h3>{{ _('create.character.basic.background') }}</h3>
-                    <div class="basic-options-container" id="background-container">
-                        <!-- Se llenará con JavaScript -->
-                    </div>
-                    <input type="hidden" id="selected-background" name="background_id" required>
-                </div>
+            <!-- Tab Navigation -->
+            <nav class="tab-navigation" role="tablist" aria-label="{{ _('Character creation steps') }}">
+                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="basic-info-panel" id="basic-info-tab" data-step="1">
+                    <span class="tab-icon">👤</span>
+                    <span class="tab-text">{{ _('Basic Info') }}</span>
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="attributes-panel" id="attributes-tab" data-step="2">
+                    <span class="tab-icon">💪</span>
+                    <span class="tab-text">{{ _('Attributes') }}</span>
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="skills-panel" id="skills-tab" data-step="3">
+                    <span class="tab-icon">🎯</span>
+                    <span class="tab-text">{{ _('Skills') }}</span>
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="equipment-panel" id="equipment-tab" data-step="4">
+                    <span class="tab-icon">⚔️</span>
+                    <span class="tab-text">{{ _('Equipment') }}</span>
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="spells-panel" id="spells-tab" data-step="5">
+                    <span class="tab-icon">✨</span>
+                    <span class="tab-text">{{ _('Spells') }}</span>
+                </button>
+            </nav>
 
-                <!-- Subsección: Alineamiento -->
-                <div class="basic-info-subsection">
-                    <h3>{{ _('create.character.basic.alignment') }}</h3>
-                    <div class="basic-options-container" id="alignment-container">
-                        <!-- Se llenará con JavaScript -->
-                    </div>
-                    <input type="hidden" id="selected-alignment" name="alignment_id" required>
-                </div>
-
-                <!-- Nivel en una sección separada con estilo especial -->
-                <div class="form-group character-level-group">
-                    <label for="character-level">{{ _('create.character.basic.level') }}</label>
-                    <div class="number-input-container">
-                        <button type="button" class="number-btn decrease-5" data-target="character-level" data-step="-5">-5</button>
-                        <button type="button" class="number-btn decrease-1" data-target="character-level" data-step="-1">-1</button>
-                        <input type="number" id="character-level" name="level" min="1" max="20" value="1" required readonly>
-                        <button type="button" class="number-btn increase-1" data-target="character-level" data-step="1">+1</button>
-                        <button type="button" class="number-btn increase-5" data-target="character-level" data-step="5">+5</button>
-                    </div>
-                </div>
-
-                <!-- Descripción en una fila separada -->
-                <div class="form-group character-description-group">
-                    <label for="character-description">{{ _('create.character.basic.description') }}</label>
-                    <textarea id="character-description" name="description" rows="3"></textarea>
-                </div>
-            </section>
-
-            <!-- Sección de atributos -->
-            <section class="form-section">
-                <h2>{{ _('create.character.attributes.title') }}</h2>
-                <div class="attributes-container">
-                    <div class="attribute-item">
-                        <label for="attribute-strength">{{ _('create.character.attributes.strength') }}</label>
-                        <div class="number-input-container">
-                            <button type="button" class="number-btn decrease-5" data-target="attribute-strength" data-step="-5">-5</button>
-                            <button type="button" class="number-btn decrease-1" data-target="attribute-strength" data-step="-1">-1</button>
-                            <input type="number" id="attribute-strength" name="attributes[strength]" min="3" max="20" value="10" required readonly>
-                            <button type="button" class="number-btn increase-1" data-target="attribute-strength" data-step="1">+1</button>
-                            <button type="button" class="number-btn increase-5" data-target="attribute-strength" data-step="5">+5</button>
+            <form id="character-form" class="character-creation-form" aria-label="{{ _('Character creation form') }}" novalidate>
+                <!-- Basic Information Panel -->
+                <div id="basic-info-panel" class="form-section" role="tabpanel" aria-labelledby="basic-info-tab">
+                    <h2 class="section-title">
+                        <span class="section-icon">1</span>
+                        {{ _('Basic Information') }}
+                    </h2>
+                    
+                    <div class="grid grid-cols-2">
+                        <div class="form-group-enhanced">
+                            <label for="character-name" class="form-label-enhanced">
+                                {{ _('Character Name') }} *
+                                <span class="label-tooltip" title="{{ _('The name your character will be known by') }}">ℹ️</span>
+                            </label>
+                            <input type="text" id="character-name" name="character_name" class="form-control-enhanced" 
+                                   placeholder="{{ _('Enter character name') }}" required 
+                                   aria-describedby="name-error" autocomplete="off" maxlength="50">
+                            <div class="form-error" id="name-error" role="alert" aria-live="polite"></div>
                         </div>
-                        <span class="attribute-modifier" id="modifier-strength">+0</span>
-                    </div>
-                    <div class="attribute-item">
-                        <label for="attribute-dexterity">{{ _('create.character.attributes.dexterity') }}</label>
-                        <div class="number-input-container">
-                            <button type="button" class="number-btn decrease-5" data-target="attribute-dexterity" data-step="-5">-5</button>
-                            <button type="button" class="number-btn decrease-1" data-target="attribute-dexterity" data-step="-1">-1</button>
-                            <input type="number" id="attribute-dexterity" name="attributes[dexterity]" min="3" max="20" value="10" required readonly>
-                            <button type="button" class="number-btn increase-1" data-target="attribute-dexterity" data-step="1">+1</button>
-                            <button type="button" class="number-btn increase-5" data-target="attribute-dexterity" data-step="5">+5</button>
+
+                        <div class="form-group-enhanced">
+                            <label for="player-name" class="form-label-enhanced">{{ _('Player Name') }}</label>
+                            <input type="text" id="player-name" name="player_name" class="form-control-enhanced" 
+                                   placeholder="{{ _('Enter your name') }}" maxlength="50">
                         </div>
-                        <span class="attribute-modifier" id="modifier-dexterity">+0</span>
-                    </div>
-                    <div class="attribute-item">
-                        <label for="attribute-constitution">{{ _('create.character.attributes.constitution') }}</label>
-                        <div class="number-input-container">
-                            <button type="button" class="number-btn decrease-5" data-target="attribute-constitution" data-step="-5">-5</button>
-                            <button type="button" class="number-btn decrease-1" data-target="attribute-constitution" data-step="-1">-1</button>
-                            <input type="number" id="attribute-constitution" name="attributes[constitution]" min="3" max="20" value="10" required readonly>
-                            <button type="button" class="number-btn increase-1" data-target="attribute-constitution" data-step="1">+1</button>
-                            <button type="button" class="number-btn increase-5" data-target="attribute-constitution" data-step="5">+5</button>
+
+                        <div class="form-group-enhanced">
+                            <label for="race" class="form-label-enhanced">
+                                {{ _('Race') }} *
+                                <span class="label-tooltip" title="{{ _('Your character\'s species or ancestry') }}">ℹ️</span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="race" name="race_id" class="form-control-enhanced select-enhanced" required 
+                                        aria-describedby="race-error">
+                                    <option value="">{{ _('Select a race') }}</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                                <div class="form-error" id="race-error" role="alert" aria-live="polite"></div>
+                            </div>
                         </div>
-                        <span class="attribute-modifier" id="modifier-constitution">+0</span>
-                    </div>
-                    <div class="attribute-item">
-                        <label for="attribute-intelligence">{{ _('create.character.attributes.intelligence') }}</label>
-                        <div class="number-input-container">
-                            <button type="button" class="number-btn decrease-5" data-target="attribute-intelligence" data-step="-5">-5</button>
-                            <button type="button" class="number-btn decrease-1" data-target="attribute-intelligence" data-step="-1">-1</button>
-                            <input type="number" id="attribute-intelligence" name="attributes[intelligence]" min="3" max="20" value="10" required readonly>
-                            <button type="button" class="number-btn increase-1" data-target="attribute-intelligence" data-step="1">+1</button>
-                            <button type="button" class="number-btn increase-5" data-target="attribute-intelligence" data-step="5">+5</button>
+
+                        <div class="form-group-enhanced">
+                            <label for="character-class" class="form-label-enhanced">
+                                {{ _('Class') }} *
+                                <span class="label-tooltip" title="{{ _('Your character\'s profession or calling') }}">ℹ️</span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="character-class" name="class_id" class="form-control-enhanced select-enhanced" required
+                                        aria-describedby="class-error">
+                                    <option value="">{{ _('Select a class') }}</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                                <div class="form-error" id="class-error" role="alert" aria-live="polite"></div>
+                            </div>
                         </div>
-                        <span class="attribute-modifier" id="modifier-intelligence">+0</span>
-                    </div>
-                    <div class="attribute-item">
-                        <label for="attribute-wisdom">{{ _('create.character.attributes.wisdom') }}</label>
-                        <div class="number-input-container">
-                            <button type="button" class="number-btn decrease-5" data-target="attribute-wisdom" data-step="-5">-5</button>
-                            <button type="button" class="number-btn decrease-1" data-target="attribute-wisdom" data-step="-1">-1</button>
-                            <input type="number" id="attribute-wisdom" name="attributes[wisdom]" min="3" max="20" value="10" required readonly>
-                            <button type="button" class="number-btn increase-1" data-target="attribute-wisdom" data-step="1">+1</button>
-                            <button type="button" class="number-btn increase-5" data-target="attribute-wisdom" data-step="5">+5</button>
+
+                        <div class="form-group-enhanced">
+                            <label for="background" class="form-label-enhanced">
+                                {{ _('Background') }}
+                                <span class="label-tooltip" title="{{ _('Your character\'s life before becoming an adventurer') }}">ℹ️</span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="background" name="background_id" class="form-control-enhanced select-enhanced">
+                                    <option value="">{{ _('Select a background') }}</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                            </div>
                         </div>
-                        <span class="attribute-modifier" id="modifier-wisdom">+0</span>
-                    </div>
-                    <div class="attribute-item">
-                        <label for="attribute-charisma">{{ _('create.character.attributes.charisma') }}</label>
-                        <div class="number-input-container">
-                            <button type="button" class="number-btn decrease-5" data-target="attribute-charisma" data-step="-5">-5</button>
-                            <button type="button" class="number-btn decrease-1" data-target="attribute-charisma" data-step="-1">-1</button>
-                            <input type="number" id="attribute-charisma" name="attributes[charisma]" min="3" max="20" value="10" required readonly>
-                            <button type="button" class="number-btn increase-1" data-target="attribute-charisma" data-step="1">+1</button>
-                            <button type="button" class="number-btn increase-5" data-target="attribute-charisma" data-step="5">+5</button>
+
+                        <div class="form-group-enhanced">
+                            <label for="alignment" class="form-label-enhanced">
+                                {{ _('Alignment') }}
+                                <span class="label-tooltip" title="{{ _('Your character\'s moral and ethical outlook') }}">ℹ️</span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="alignment" name="alignment_id" class="form-control-enhanced select-enhanced">
+                                    <option value="">{{ _('Select an alignment') }}</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                            </div>
                         </div>
-                        <span class="attribute-modifier" id="modifier-charisma">+0</span>
+
+                        <div class="form-group-enhanced">
+                            <label for="level" class="form-label-enhanced">{{ _('Level') }} *</label>
+                            <input type="number" id="level" name="level" class="form-control-enhanced" 
+                                   value="1" min="1" max="20" required aria-describedby="level-error">
+                            <div class="form-error" id="level-error" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <div class="form-group-enhanced">
+                            <label for="experience" class="form-label-enhanced">{{ _('Experience Points') }}</label>
+                            <input type="number" id="experience" name="experience" class="form-control-enhanced" 
+                                   value="0" min="0" max="999999">
+                        </div>
                     </div>
                 </div>
-                <div class="attribute-points-display" id="attribute-points-container">
-                    <p>{{ _('create.character.attributes.points.remaining') }}: <span id="points-remaining" class="attribute-points-value">27</span></p>
+
+                <!-- Attributes Panel -->
+                <div id="attributes-panel" class="form-section hidden" role="tabpanel" aria-labelledby="attributes-tab">
+                    <h2 class="section-title">
+                        <span class="section-icon">2</span>
+                        {{ _('Attributes') }}
+                    </h2>
+                    
+                    <div class="attributes-info">
+                        <p class="mb-lg">{{ _('Set your character\'s core attributes. Each attribute affects different aspects of gameplay.') }}</p>
+                        <div class="point-buy-info">
+                            <span class="points-remaining">{{ _('Points Remaining:') }} <strong id="points-remaining">27</strong></span>
+                            <button type="button" class="btn btn-secondary btn-sm" id="roll-stats-btn">
+                                🎲 {{ _('Roll for Stats') }}
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="standard-array-btn">
+                                📊 {{ _('Standard Array') }}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="attributes-grid">
+                        <div class="attribute-item">
+                            <label for="strength" class="attribute-label">
+                                {{ _('Strength') }}
+                                <span class="attribute-description">{{ _('Physical power') }}</span>
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="strength">−</button>
+                                <input type="number" id="strength" name="strength" class="attribute-input" 
+                                       value="8" min="8" max="15" aria-describedby="strength-help" data-cost="0">
+                                <button type="button" class="attribute-btn increase" data-attribute="strength">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="strength-modifier">-1</div>
+                            <small id="strength-help" class="sr-only">{{ _('Physical power and athletic ability') }}</small>
+                        </div>
+
+                        <div class="attribute-item">
+                            <label for="dexterity" class="attribute-label">
+                                {{ _('Dexterity') }}
+                                <span class="attribute-description">{{ _('Agility & reflexes') }}</span>
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="dexterity">−</button>
+                                <input type="number" id="dexterity" name="dexterity" class="attribute-input" 
+                                       value="8" min="8" max="15" aria-describedby="dexterity-help" data-cost="0">
+                                <button type="button" class="attribute-btn increase" data-attribute="dexterity">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="dexterity-modifier">-1</div>
+                            <small id="dexterity-help" class="sr-only">{{ _('Agility, reflexes, and balance') }}</small>
+                        </div>
+
+                        <div class="attribute-item">
+                            <label for="constitution" class="attribute-label">
+                                {{ _('Constitution') }}
+                                <span class="attribute-description">{{ _('Health & stamina') }}</span>
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="constitution">−</button>
+                                <input type="number" id="constitution" name="constitution" class="attribute-input" 
+                                       value="8" min="8" max="15" aria-describedby="constitution-help" data-cost="0">
+                                <button type="button" class="attribute-btn increase" data-attribute="constitution">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="constitution-modifier">-1</div>
+                            <small id="constitution-help" class="sr-only">{{ _('Health, stamina, and vital force') }}</small>
+                        </div>
+
+                        <div class="attribute-item">
+                            <label for="intelligence" class="attribute-label">
+                                {{ _('Intelligence') }}
+                                <span class="attribute-description">{{ _('Reasoning ability') }}</span>
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="intelligence">−</button>
+                                <input type="number" id="intelligence" name="intelligence" class="attribute-input" 
+                                       value="8" min="8" max="15" aria-describedby="intelligence-help" data-cost="0">
+                                <button type="button" class="attribute-btn increase" data-attribute="intelligence">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="intelligence-modifier">-1</div>
+                            <small id="intelligence-help" class="sr-only">{{ _('Reasoning ability, memory, and analytical skill') }}</small>
+                        </div>
+
+                        <div class="attribute-item">
+                            <label for="wisdom" class="attribute-label">
+                                {{ _('Wisdom') }}
+                                <span class="attribute-description">{{ _('Awareness & insight') }}</span>
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="wisdom">−</button>
+                                <input type="number" id="wisdom" name="wisdom" class="attribute-input" 
+                                       value="8" min="8" max="15" aria-describedby="wisdom-help" data-cost="0">
+                                <button type="button" class="attribute-btn increase" data-attribute="wisdom">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="wisdom-modifier">-1</div>
+                            <small id="wisdom-help" class="sr-only">{{ _('Awareness, intuition, and insight') }}</small>
+                        </div>
+
+                        <div class="attribute-item">
+                            <label for="charisma" class="attribute-label">
+                                {{ _('Charisma') }}
+                                <span class="attribute-description">{{ _('Force of personality') }}</span>
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="charisma">−</button>
+                                <input type="number" id="charisma" name="charisma" class="attribute-input" 
+                                       value="8" min="8" max="15" aria-describedby="charisma-help" data-cost="0">
+                                <button type="button" class="attribute-btn increase" data-attribute="charisma">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="charisma-modifier">-1</div>
+                            <small id="charisma-help" class="sr-only">{{ _('Force of personality, persuasiveness, and leadership') }}</small>
+                        </div>
+                    </div>
                 </div>
-            </section>
 
-            <!-- Sección de habilidades y idiomas (dos columnas) -->
-            <div class="two-column-layout">
-                <section class="form-section">
-                    <h2>{{ _('create.character.skills.title') }}</h2>
-                    <div class="skills-container" id="skills-container">
-                        <!-- Se llenará con JavaScript -->
+                <!-- Skills Panel -->
+                <div id="skills-panel" class="form-section hidden" role="tabpanel" aria-labelledby="skills-tab">
+                    <h2 class="section-title">
+                        <span class="section-icon">3</span>
+                        {{ _('Skills & Proficiencies') }}
+                    </h2>
+                    
+                    <div class="skills-layout">
+                        <div class="skills-section">
+                            <h3 class="subsection-title">
+                                🎯 {{ _('Skills') }}
+                                <span class="skill-points">{{ _('Skill Points:') }} <strong id="skill-points-remaining">4</strong></span>
+                            </h3>
+                            <div id="skills-container" class="skills-grid">
+                                <!-- Skills will be loaded dynamically -->
+                            </div>
+                        </div>
+                        
+                        <div class="proficiencies-section">
+                            <h3 class="subsection-title">🗣️ {{ _('Languages') }}</h3>
+                            <div id="languages-container" class="checkbox-grid">
+                                <!-- Languages will be loaded dynamically -->
+                            </div>
+                            
+                            <h3 class="subsection-title">⚔️ {{ _('Proficiencies') }}</h3>
+                            <div id="proficiencies-container" class="checkbox-grid">
+                                <!-- Proficiencies will be loaded dynamically -->
+                            </div>
+                        </div>
                     </div>
-                </section>
-
-                <section class="form-section">
-                    <h2>{{ _('create.character.languages.title') }}</h2>
-                    <div class="languages-container" id="languages-container">
-                        <!-- Se llenará con JavaScript -->
-                    </div>
-                </section>
-            </div>
-
-            <!-- Sección de competencias y hechizos (dos columnas) -->
-            <div class="two-column-layout">
-                <section class="form-section">
-                    <h2>{{ _('create.character.proficiencies.title') }}</h2>
-                    <div class="proficiencies-container" id="proficiencies-container">
-                        <!-- Se llenará con JavaScript -->
-                    </div>
-                </section>
-
-                <section class="form-section">
-                    <h2>{{ _('create.character.spells.title') }}</h2>
-                    <div class="spells-container" id="spells-container">
-                        <!-- Se llenará con JavaScript -->
-                    </div>
-                </section>
-            </div>
-
-            <!-- Sección de equipamiento -->
-            <section class="form-section">
-                <h2>{{ _('create.character.items.title') }}</h2>
-                <div class="items-container" id="items-container">
-                    <!-- Se llenará con JavaScript -->
                 </div>
-            </section>
 
+                <!-- Equipment Panel -->
+                <div id="equipment-panel" class="form-section hidden" role="tabpanel" aria-labelledby="equipment-tab">
+                    <h2 class="section-title">
+                        <span class="section-icon">4</span>
+                        {{ _('Equipment & Items') }}
+                    </h2>
+                    
+                    <div class="equipment-layout">
+                        <div class="starting-equipment">
+                            <h3 class="subsection-title">🎒 {{ _('Starting Equipment') }}</h3>
+                            <div id="starting-equipment-container" class="equipment-grid">
+                                <!-- Starting equipment will be loaded dynamically -->
+                            </div>
+                        </div>
+                        
+                        <div class="additional-equipment">
+                            <h3 class="subsection-title">💰 {{ _('Additional Equipment') }}</h3>
+                            <div id="additional-equipment-container" class="equipment-selection">
+                                <!-- Additional equipment will be loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spells Panel -->
+                <div id="spells-panel" class="form-section hidden" role="tabpanel" aria-labelledby="spells-tab">
+                    <h2 class="section-title">
+                        <span class="section-icon">5</span>
+                        {{ _('Spells & Magic') }}
+                    </h2>
+                    
+                    <div id="spells-content" class="spells-layout">
+                        <div class="spell-slots-info">
+                            <h3 class="subsection-title">📜 {{ _('Spellcasting Information') }}</h3>
+                            <div id="spell-slots-container" class="spell-slots-grid">
+                                <!-- Spell slots will be shown if class is a spellcaster -->
+                            </div>
+                        </div>
+                        
+                        <div class="spell-selection">
+                            <h3 class="subsection-title">✨ {{ _('Known Spells') }}</h3>
+                            <div id="spells-container" class="spells-grid">
+                                <!-- Spells will be loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Character Preview (Sidebar) -->
+            <aside class="character-preview" aria-label="{{ _('Character preview') }}">
+                <h3 class="preview-title">{{ _('Character Preview') }}</h3>
+                <div class="character-avatar-preview">
+                    <div class="avatar-placeholder" id="avatar-placeholder">
+                        <span class="avatar-icon">👤</span>
+                        <small>{{ _('Character Portrait') }}</small>
+                    </div>
+                </div>
+                
+                <div class="character-summary" id="character-summary">
+                    <div class="summary-section">
+                        <h4>{{ _('Basic Info') }}</h4>
+                        <div class="summary-item">
+                            <span class="summary-label">{{ _('Name:') }}</span>
+                            <span class="summary-value" id="preview-name">{{ _('Not set') }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">{{ _('Race:') }}</span>
+                            <span class="summary-value" id="preview-race">{{ _('Not set') }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">{{ _('Class:') }}</span>
+                            <span class="summary-value" id="preview-class">{{ _('Not set') }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">{{ _('Level:') }}</span>
+                            <span class="summary-value" id="preview-level">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-section">
+                        <h4>{{ _('Attributes') }}</h4>
+                        <div class="attributes-preview" id="attributes-preview">
+                            <div class="attr-preview">
+                                <span class="attr-name">{{ _('STR') }}</span>
+                                <span class="attr-value" id="preview-str">8 (-1)</span>
+                            </div>
+                            <div class="attr-preview">
+                                <span class="attr-name">{{ _('DEX') }}</span>
+                                <span class="attr-value" id="preview-dex">8 (-1)</span>
+                            </div>
+                            <div class="attr-preview">
+                                <span class="attr-name">{{ _('CON') }}</span>
+                                <span class="attr-value" id="preview-con">8 (-1)</span>
+                            </div>
+                            <div class="attr-preview">
+                                <span class="attr-name">{{ _('INT') }}</span>
+                                <span class="attr-value" id="preview-int">8 (-1)</span>
+                            </div>
+                            <div class="attr-preview">
+                                <span class="attr-name">{{ _('WIS') }}</span>
+                                <span class="attr-value" id="preview-wis">8 (-1)</span>
+                            </div>
+                            <div class="attr-preview">
+                                <span class="attr-name">{{ _('CHA') }}</span>
+                                <span class="attr-value" id="preview-cha">8 (-1)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-section">
+                        <h4>{{ _('Progress') }}</h4>
+                        <div class="completion-indicators">
+                            <div class="completion-item">
+                                <span class="completion-icon" id="basic-completion">❌</span>
+                                <span class="completion-text">{{ _('Basic Info') }}</span>
+                            </div>
+                            <div class="completion-item">
+                                <span class="completion-icon" id="attributes-completion">❌</span>
+                                <span class="completion-text">{{ _('Attributes') }}</span>
+                            </div>
+                            <div class="completion-item">
+                                <span class="completion-icon" id="skills-completion">❌</span>
+                                <span class="completion-text">{{ _('Skills') }}</span>
+                            </div>
+                            <div class="completion-item">
+                                <span class="completion-icon" id="equipment-completion">❌</span>
+                                <span class="completion-text">{{ _('Equipment') }}</span>
+                            </div>
+                            <div class="completion-item">
+                                <span class="completion-icon" id="spells-completion">❌</span>
+                                <span class="completion-text">{{ _('Spells') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Form Actions -->
             <div class="form-actions">
-                <button type="button" class="btn btn-cancel" id="reset-form">{{ _('create.character.buttons.reset') }}</button>
-                <button type="submit" class="btn btn-save" id="save-character">{{ _('create.character.buttons.save') }}</button>
+                <button type="button" class="btn btn-secondary btn-large" id="prev-step-btn" disabled>
+                    ← {{ _('Previous') }}
+                </button>
+                <button type="button" class="btn btn-secondary btn-large" id="save-draft-btn">
+                    💾 {{ _('Save Draft') }}
+                </button>
+                <button type="button" class="btn btn-primary btn-large" id="next-step-btn">
+                    {{ _('Next') }} →
+                </button>
+                <button type="submit" form="character-form" class="btn btn-success btn-large hidden" id="create-character-btn">
+                    ✅ {{ _('Create Character') }}
+                </button>
             </div>
-        </form>
         </div>
     </main>
 
-    <footer>
-        <div class="container footer-content">
-            <div>
-                <p>&copy; 2025 RoleplayingCharacters</p>
-            </div>
-            <div>
-                <nav>
-                    <ul class="flex gap-2">
-                        <li><a href="#">{{ _('home.footer.privacy') }}</a></li>
-                        <li><a href="#">{{ _('home.footer.terms') }}</a></li>
-                        <li><a href="#">{{ _('home.footer.contact') }}</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </footer>
-
-    <script src="/templates/js/create-character.js" defer></script>
+    {% include 'objects/footer.html' %}
+    
+    <script src="/templates/js/create-character.js"></script>
 </body>
-
 </html>
