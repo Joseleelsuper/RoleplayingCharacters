@@ -1,11 +1,56 @@
-msgid "404_title"
-msgstr "Page not found"
+# English translations for the 404 error page
+msgid ""
+msgstr ""
+"Project-Id-Version: RoleplayingCharacters\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-10 12:00+0000\n"
+"PO-Revision-Date: 2025-07-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-msgid "404_message"
-msgstr "The page you are looking for does not exist or has been removed."
+# Page metadata
+msgid "404.page.title"
+msgstr "404 - Page Not Found | Roleplaying Characters"
 
-msgid "404_back_button"
-msgstr "Go back"
+msgid "404.page.description"
+msgstr "The page you were looking for could not be found. Return to the character creator to continue your adventure."
 
-msgid "404_home_button"
-msgstr "Go to home"
+# Main content
+msgid "404.title"
+msgstr "Oops! You've Wandered Off the Map"
+
+msgid "404.description"
+msgstr "It seems this page has gone on an adventure of its own. Don't worry, we'll help you get back on track!"
+
+# Suggestions section
+msgid "404.suggestions.title"
+msgstr "What would you like to do?"
+
+msgid "404.suggestions.go_home.title"
+msgstr "Go Home"
+
+msgid "404.suggestions.go_home.desc"
+msgstr "Return to the main page"
+
+msgid "404.suggestions.create_character.title"
+msgstr "Create Character"
+
+msgid "404.suggestions.create_character.desc"
+msgstr "Start your adventure"
+
+msgid "404.suggestions.go_back.title"
+msgstr "Go Back"
+
+msgid "404.suggestions.go_back.desc"
+msgstr "Return to previous page"
+
+# RPG reference section
+msgid "404.rpg.main"
+msgstr "You rolled a 1 on your Navigation check..."
+
+msgid "404.rpg.subtitle"
+msgstr "Critical failure! You are now lost in the digital wilderness."

@@ -1,11 +1,56 @@
-msgid "404_title"
-msgstr "Página no encontrada"
+# Spanish translations for the 404 error page
+msgid ""
+msgstr ""
+"Project-Id-Version: RoleplayingCharacters\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-10 12:00+0000\n"
+"PO-Revision-Date: 2025-07-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-msgid "404_message"
-msgstr "La página que buscas no existe o ha sido eliminada."
+# Page metadata
+msgid "404.page.title"
+msgstr "404 - Página No Encontrada | Personajes de Rol"
 
-msgid "404_back_button"
-msgstr "Volver"
+msgid "404.page.description"
+msgstr "La página que buscabas no pudo ser encontrada. Regresa al creador de personajes para continuar tu aventura."
 
-msgid "404_home_button"
-msgstr "Ir a inicio"
+# Main content
+msgid "404.title"
+msgstr "¡Oops! Te Has Desviado del Mapa"
+
+msgid "404.description"
+msgstr "Parece que esta página se ha ido de aventura por su cuenta. ¡No te preocupes, te ayudaremos a volver al camino!"
+
+# Suggestions section
+msgid "404.suggestions.title"
+msgstr "¿Qué te gustaría hacer?"
+
+msgid "404.suggestions.go_home.title"
+msgstr "Ir a Inicio"
+
+msgid "404.suggestions.go_home.desc"
+msgstr "Regresar a la página principal"
+
+msgid "404.suggestions.create_character.title"
+msgstr "Crear Personaje"
+
+msgid "404.suggestions.create_character.desc"
+msgstr "Comenzar tu aventura"
+
+msgid "404.suggestions.go_back.title"
+msgstr "Volver Atrás"
+
+msgid "404.suggestions.go_back.desc"
+msgstr "Regresar a la página anterior"
+
+# RPG reference section
+msgid "404.rpg.main"
+msgstr "Sacaste un 1 en tu tirada de Navegación..."
+
+msgid "404.rpg.subtitle"
+msgstr "¡Fallo crítico! Ahora estás perdido en el desierto digital."
