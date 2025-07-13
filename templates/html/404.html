@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ _('404 - Page Not Found | Roleplaying Characters') }}</title>
-    <meta name="description" content="{{ _('The page you were looking for could not be found. Return to the character creator to continue your adventure.') }}">
+    <title>{{ _('404.page.title') }}</title>
+    <meta name="description" content="{{ _('404.page.description') }}">
     <link rel="stylesheet" href="/templates/css/404.css">
     <meta name="robots" content="noindex, nofollow">
 </head>
@@ -31,14 +31,14 @@
             
             <!-- Error Message -->
             <div class="error-message">
-                <h1 class="error-title">{{ _('Oops! You\'ve Wandered Off the Map') }}</h1>
+                <h1 class="error-title">{{ _('404.title') }}</h1>
                 <p class="error-description">
-                    {{ _('It seems this page has gone on an adventure of its own. Don\'t worry, we\'ll help you get back on track!') }}
+                    {{ _('404.description') }}
                 </p>
                 
                 <!-- Suggested Actions -->
                 <div class="error-suggestions">
-                    <h2 class="suggestions-title">{{ _('What would you like to do?') }}</h2>
+                    <h2 class="suggestions-title">{{ _('404.suggestions.title') }}</h2>
                     <div class="suggestions-grid">
                         <a href="{{ url_for('home') }}" class="suggestion-card">
                             <div class="suggestion-icon">
@@ -47,8 +47,8 @@
                                     <polyline points="9,22 9,12 15,12 15,22"/>
                                 </svg>
                             </div>
-                            <h3 class="suggestion-title">{{ _('Go Home') }}</h3>
-                            <p class="suggestion-desc">{{ _('Return to the main page') }}</p>
+                            <h3 class="suggestion-title">{{ _('404.suggestions.go_home.title') }}</h3>
+                            <p class="suggestion-desc">{{ _('404.suggestions.go_home.desc') }}</p>
                         </a>
                         
                         <a href="{{ url_for('create_character') }}" class="suggestion-card primary">
@@ -58,8 +58,8 @@
                                     <circle cx="12" cy="7" r="4"/>
                                 </svg>
                             </div>
-                            <h3 class="suggestion-title">{{ _('Create Character') }}</h3>
-                            <p class="suggestion-desc">{{ _('Start your adventure') }}</p>
+                            <h3 class="suggestion-title">{{ _('404.suggestions.create_character.title') }}</h3>
+                            <p class="suggestion-desc">{{ _('404.suggestions.create_character.desc') }}</p>
                         </a>
                         
                         <button class="suggestion-card" id="go-back-btn">
@@ -69,8 +69,8 @@
                                     <path d="M12 19l-7-7 7-7"/>
                                 </svg>
                             </div>
-                            <h3 class="suggestion-title">{{ _('Go Back') }}</h3>
-                            <p class="suggestion-desc">{{ _('Return to previous page') }}</p>
+                            <h3 class="suggestion-title">{{ _('404.suggestions.go_back.title') }}</h3>
+                            <p class="suggestion-desc">{{ _('404.suggestions.go_back.desc') }}</p>
                         </button>
                     </div>
                 </div>
@@ -93,9 +93,9 @@
                         </div>
                     </div>
                     <p class="rpg-text">
-                        {{ _('You rolled a 1 on your Navigation check...') }}
+                        {{ _('404.rpg.main') }}
                         <br>
-                        <em>{{ _('Critical failure! You are now lost in the digital wilderness.') }}</em>
+                        <em>{{ _('404.rpg.subtitle') }}</em>
                     </p>
                 </div>
             </div>
