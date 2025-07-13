@@ -2,21 +2,38 @@
     <div class="container">
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
             <div class="nav-brand">
-                <a href="/" class="brand-link" aria-label="Home">
+                <a href="/" class="brand-link" aria-label="{{ _header('header.brand.home_label') }}">
                     <span class="brand-text">RoleplayingCharacters</span>
                 </a>
             </div>
             
             <div class="nav-menu">
-                <a href="/" class="nav-link {% if request.url.path == '/' or request.url.path == '' %}nav-link-active{% endif %}">{{ _('Home') }}</a>
-                <a href="/create-character" class="nav-link {% if '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _('Create Character') }}</a>
-                <a href="/characters" class="nav-link {% if '/characters' in request.url.path and not '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _('My Characters') }}</a>
-                <a href="/browse" class="nav-link {% if '/browse' in request.url.path %}nav-link-active{% endif %}">{{ _('Browse') }}</a>
+                <a href="/" class="nav-link {% if request.url.path == '/' or request.url.path == '' %}nav-link-active{% endif %}">{{ _header('header.nav.home') }}</a>
+                <a href="/create-character" class="nav-link {% if '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _header('header.nav.create_character') }}</a>
+                <a href="/characters" class="nav-link {% if '/characters' in request.url.path and not '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _header('header.nav.my_characters') }}</a>
+                <a href="/browse" class="nav-link {% if '/browse' in request.url.path %}nav-link-active{% endif %}">{{ _header('header.nav.browse') }}</a>
             </div>
             
             <div class="nav-actions">
-                <button class="btn btn-secondary btn-sm">{{ _('Sign In') }}</button>
-                <button class="btn btn-primary btn-sm">{{ _('Sign Up') }}</button>
+                <div class="language-selector">
+                    <button class="btn btn-text btn-sm language-toggle" aria-label="{{ _header('header.language.label') }}">
+                        <span class="language-icon">🌐</span>
+                        <span class="language-text">{{ get_locale().upper() }}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="language-dropdown">
+                        <a href="?lang=es" class="language-option {% if get_locale() == 'es' %}active{% endif %}">
+                            <span class="flag">🇪🇸</span>
+                            {{ _header('header.language.spanish') }}
+                        </a>
+                        <a href="?lang=en" class="language-option {% if get_locale() == 'en' %}active{% endif %}">
+                            <span class="flag">🇺🇸</span>
+                            {{ _header('header.language.english') }}
+                        </a>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm">{{ _header('header.auth.sign_in') }}</button>
+                <button class="btn btn-primary btn-sm">{{ _header('header.auth.sign_up') }}</button>
             </div>
         </nav>
     </div>
