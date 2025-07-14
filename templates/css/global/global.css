@@ -370,3 +370,15 @@ a:hover, a:focus {
     position: relative;
     z-index: 2;
 }
+
+/* Eliminar flechas de los campos de entrada numérica en todos los navegadores */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
