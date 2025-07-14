@@ -301,3 +301,25 @@ msgstr "Guardar Borrador"
 
 msgid "create_character.buttons.create"
 msgstr "Crear Personaje"
+
+# Source options
+msgid "create_character.source.dd5e"
+msgstr "D&D 5e"
+
+msgid "create_character.source.normal"
+msgstr "Normal"
+
+msgid "create_character.source.custom"
+msgstr "Personalizada"
+
+msgid "create_character.attribute_control.increment"
+msgstr "Incrementar"
+
+msgid "create_character.attribute_control.decrement"
+msgstr "Disminuir"
+
+msgid "create_character.experience_control.increment"
+msgstr "Incrementar Experiencia"
+
+msgid "create_character.experience_control.decrement"
+msgstr "Disminuir Experiencia"

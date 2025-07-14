@@ -301,3 +301,24 @@ msgstr "Save Draft"
 
 msgid "create_character.buttons.create"
 msgstr "Create Character"
+
+msgid "create_character.source.dd5e"
+msgstr "D&D 5e"
+
+msgid "create_character.source.normal"
+msgstr "Normal"
+
+msgid "create_character.source.custom"
+msgstr "Custom"
+
+msgid "create_character.attribute_control.increment"
+msgstr "Increase"
+
+msgid "create_character.attribute_control.decrement"
+msgstr "Decrease"
+
+msgid "create_character.experience_control.increment"
+msgstr "Increase Experience"
+
+msgid "create_character.experience_control.decrement"
+msgstr "Decrease Experience"
