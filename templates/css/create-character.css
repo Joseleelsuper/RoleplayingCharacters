@@ -651,162 +651,105 @@
     font-weight: 700;
     color: var(--primary-700);
     background: var(--surface);
+    appearance: textfield;
+    -moz-appearance: textfield; /* Firefox */
 }
 
-/* Skills Layout */
-.skills-layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: var(--spacing-2xl);
+/* Ocultar flechas en input number */
+.form-group-enhanced .attribute-input::-webkit-outer-spin-button,
+.form-group-enhanced .attribute-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-@media (max-width: 1024px) {
-    .skills-layout {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xl);
-    }
-}
-
-.subsection-title {
+/* Estilos para level y experience con botones */
+.form-group-enhanced .attribute-controls {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    margin-bottom: var(--spacing-lg);
-    color: var(--text-primary);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--border);
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-md) auto;
 }
 
-.skill-points {
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+/* Estilos mejorados para las secciones de selección */
+.skills-container, .languages-container, .proficiencies-container, 
+.equipment-container, .spells-container {
+    background: var(--surface-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    max-height: 400px;
+    overflow-y: auto;
 }
 
-.skills-grid {
+.skills-list, .languages-list, .proficiencies-list, 
+.equipment-list, .spells-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-md);
 }
 
-.checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.skill-item, .language-item, .proficiency-item, 
+.equipment-item, .spell-item {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
     gap: var(--spacing-sm);
 }
 
-.skill-item,
-.checkbox-item {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
-    transition: all var(--transition-fast);
-    cursor: pointer;
-}
-
-.skill-item:hover,
-.checkbox-item:hover {
+.skill-item:hover, .language-item:hover, .proficiency-item:hover, 
+.equipment-item:hover, .spell-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
     border-color: var(--primary-300);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
 }
 
-.skill-item.selected,
-.checkbox-item.selected {
+.skill-item.selected, .language-item.selected, .proficiency-item.selected, 
+.equipment-item.selected, .spell-item.selected {
+    background: linear-gradient(135deg, var(--primary-50), var(--secondary-50));
     border-color: var(--primary-500);
-    background: var(--primary-50);
 }
 
-/* Equipment Layout */
-.equipment-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-2xl);
+.skill-checkbox, .language-checkbox, .proficiency-checkbox, 
+.equipment-checkbox, .spell-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-400);
+    border-radius: var(--radius-sm);
+    position: relative;
+    flex-shrink: 0;
 }
 
-@media (max-width: 1024px) {
-    .equipment-layout {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xl);
-    }
+.skill-checkbox.checked, .language-checkbox.checked, .proficiency-checkbox.checked, 
+.equipment-checkbox.checked, .spell-checkbox.checked {
+    background-color: var(--primary-500);
 }
 
-.equipment-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-md);
+.skill-checkbox.checked::after, .language-checkbox.checked::after, .proficiency-checkbox.checked::after, 
+.equipment-checkbox.checked::after, .spell-checkbox.checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-inverse);
+    font-size: var(--font-size-sm);
 }
 
-.equipment-item {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
-    text-align: center;
-    transition: all var(--transition-fast);
+.skill-name, .language-name, .proficiency-name, 
+.equipment-name, .spell-name {
+    font-weight: 500;
+    flex-grow: 1;
 }
 
-.equipment-item:hover {
-    border-color: var(--accent-300);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-/* Spells Layout */
-.spells-layout {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: var(--spacing-2xl);
-}
-
-@media (max-width: 1024px) {
-    .spells-layout {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xl);
-    }
-}
-
-.spell-slots-grid {
-    display: grid;
-    gap: var(--spacing-md);
-}
-
-.spell-slot-level {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.spells-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-md);
-}
-
-.spell-item {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
-    transition: all var(--transition-fast);
-    cursor: pointer;
-}
-
-.spell-item:hover {
-    border-color: var(--secondary-300);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.spell-item.selected {
-    border-color: var(--secondary-500);
-    background: var(--secondary-50);
+.skill-attribute {
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    margin-left: auto;
 }
 
 /* Character Avatar Preview */

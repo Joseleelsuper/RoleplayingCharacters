@@ -134,17 +134,32 @@
                             </div>
                         </div>
 
-                        <div class="form-group-enhanced">
-                            <label for="level" class="form-label-enhanced">{{ _('create_character.basic.level') }} *</label>
-                            <input type="number" id="level" name="level" class="form-control-enhanced" 
-                                   value="1" min="1" max="20" required aria-describedby="level-error">
-                            <div class="form-error" id="level-error" role="alert" aria-live="polite"></div>
+                        <!-- Componente de atributo configurable para nivel -->
+                        <div class="attribute-item">
+                            <label for="level" class="attribute-label">
+                                {{ _('create_character.basic.level') }} *
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="level">−</button>
+                                <input type="number" id="level" name="level" class="attribute-input" 
+                                       value="1" min="1" max="20" aria-describedby="level-help" data-cost="0" readonly>
+                                <button type="button" class="attribute-btn increase" data-attribute="level">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="level-modifier"></div>
                         </div>
 
-                        <div class="form-group-enhanced">
-                            <label for="experience" class="form-label-enhanced">{{ _('create_character.basic.experience') }}</label>
-                            <input type="number" id="experience" name="experience" class="form-control-enhanced" 
-                                   value="0" min="0" max="999999">
+                        <!-- Componente de atributo configurable para experiencia -->
+                        <div class="attribute-item">
+                            <label for="experience" class="attribute-label">
+                                {{ _('create_character.basic.experience') }}
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="experience">−</button>
+                                <input type="number" id="experience" name="experience" class="attribute-input" 
+                                       value="0" min="0" max="999999" data-cost="0" readonly>
+                                <button type="button" class="attribute-btn increase" data-attribute="experience">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="experience-modifier"></div>
                         </div>
                     </div>
                 </div>
@@ -158,15 +173,43 @@
                     
                     <div class="attributes-info">
                         <p class="mb-lg">{{ _('create_character.attributes.description') }}</p>
-                        <div class="point-buy-info">
-                            <span class="points-remaining">{{ _('create_character.attributes.points_remaining') }} <strong id="points-remaining">27</strong></span>
-                            <button type="button" class="btn btn-secondary btn-sm" id="roll-stats-btn">
-                                🎲 {{ _('create_character.attributes.roll_stats') }}
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-sm" id="standard-array-btn">
-                                📊 {{ _('create_character.attributes.standard_array') }}
-                            </button>
-                        </div>
+            <div class="form-group-enhanced">
+                <label for="attribute-system" class="form-label-enhanced">{{ _('create_character.attributes.system_label') }}</label>
+                <div class="select-wrapper">
+                    <select id="attribute-system" class="form-control-enhanced select-enhanced">
+                        <option value="dnd5e">{{ _('create_character.attributes.system.dnd5e') }}</option>
+                        <option value="dnd35">{{ _('create_character.attributes.system.dnd35') }}</option>
+                        <option value="pathfinder">{{ _('create_character.attributes.system.pathfinder') }}</option>
+                        <option value="custom">{{ _('create_character.attributes.system.custom') }}</option>
+                    </select>
+                </div>
+            </div>
+            <div id="custom-attribute-config" class="form-group-enhanced" style="display:none;">
+                <label class="form-label-enhanced">{{ _('create_character.attributes.custom_config') }}</label>
+                <div class="grid grid-cols-3 gap-md">
+                    <div>
+                        <label for="custom-min" class="form-label-enhanced">{{ _('create_character.attributes.custom_min') }}</label>
+                        <input type="number" id="custom-min" class="form-control-enhanced" min="1" max="30" value="6">
+                    </div>
+                    <div>
+                        <label for="custom-max" class="form-label-enhanced">{{ _('create_character.attributes.custom_max') }}</label>
+                        <input type="number" id="custom-max" class="form-control-enhanced" min="1" max="30" value="15">
+                    </div>
+                    <div>
+                        <label for="custom-points" class="form-label-enhanced">{{ _('create_character.attributes.custom_points') }}</label>
+                        <input type="number" id="custom-points" class="form-control-enhanced" min="1" max="100" value="27">
+                    </div>
+                </div>
+            </div>
+            <div class="point-buy-info">
+                <span class="points-remaining">{{ _('create_character.attributes.points_remaining') }} <strong id="points-remaining">27</strong></span>
+                <button type="button" class="btn btn-secondary btn-sm" id="random-attributes-btn">
+                    <i class="icon-dice"></i> {{ _('create_character.attributes.random_btn') }}
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="default-attributes-btn">
+                    <i class="icon-reset"></i> {{ _('create_character.attributes.default_btn') }}
+                </button>
+            </div>
                     </div>
                     
                     <div class="attributes-grid">
@@ -262,7 +305,7 @@
                     </div>
                 </div>
 
-                <!-- Skills Panel -->
+                <!-- Skills Panel - Reemplazo completo de la sección de skills -->
                 <div id="skills-panel" class="form-section hidden" role="tabpanel" aria-labelledby="skills-tab">
                     <h2 class="section-title">
                         <span class="section-icon">3</span>
@@ -275,26 +318,32 @@
                                 🎯 {{ _('create_character.skills.skills') }}
                                 <span class="skill-points">{{ _('create_character.skills.skill_points') }} <strong id="skill-points-remaining">4</strong></span>
                             </h3>
-                            <div id="skills-container" class="skills-grid">
-                                <!-- Skills will be loaded dynamically -->
+                            <div class="skills-container">
+                                <div class="skills-list" id="skills-list">
+                                    <!-- Skills will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                         
                         <div class="proficiencies-section">
                             <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
-                            <div id="languages-container" class="checkbox-grid">
-                                <!-- Languages will be loaded dynamically -->
+                            <div class="languages-container">
+                                <div class="languages-list" id="languages-list">
+                                    <!-- Languages will be loaded dynamically -->
+                                </div>
                             </div>
                             
                             <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
-                            <div id="proficiencies-container" class="checkbox-grid">
-                                <!-- Proficiencies will be loaded dynamically -->
+                            <div class="proficiencies-container">
+                                <div class="proficiencies-list" id="proficiencies-list">
+                                    <!-- Proficiencies will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Equipment Panel -->
+                <!-- Equipment Panel - Reemplazo de la sección de equipamiento -->
                 <div id="equipment-panel" class="form-section hidden" role="tabpanel" aria-labelledby="equipment-tab">
                     <h2 class="section-title">
                         <span class="section-icon">4</span>
@@ -304,21 +353,25 @@
                     <div class="equipment-layout">
                         <div class="starting-equipment">
                             <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
-                            <div id="starting-equipment-container" class="equipment-grid">
-                                <!-- Starting equipment will be loaded dynamically -->
+                            <div class="equipment-container">
+                                <div class="equipment-list" id="starting-equipment-list">
+                                    <!-- Starting equipment will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                         
                         <div class="additional-equipment">
                             <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
-                            <div id="additional-equipment-container" class="equipment-selection">
-                                <!-- Additional equipment will be loaded dynamically -->
+                            <div class="equipment-container">
+                                <div class="equipment-list" id="additional-equipment-list">
+                                    <!-- Additional equipment will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Spells Panel -->
+                <!-- Spells Panel - Reemplazo de la sección de hechizos -->
                 <div id="spells-panel" class="form-section hidden" role="tabpanel" aria-labelledby="spells-tab">
                     <h2 class="section-title">
                         <span class="section-icon">5</span>
@@ -328,15 +381,17 @@
                     <div id="spells-content" class="spells-layout">
                         <div class="spell-slots-info">
                             <h3 class="subsection-title">📜 {{ _('create_character.spells.info') }}</h3>
-                            <div id="spell-slots-container" class="spell-slots-grid">
+                            <div class="spell-slots-container" id="spell-slots-container">
                                 <!-- Spell slots will be shown if class is a spellcaster -->
                             </div>
                         </div>
                         
                         <div class="spell-selection">
                             <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
-                            <div id="spells-container" class="spells-grid">
-                                <!-- Spells will be loaded dynamically -->
+                            <div class="spells-container">
+                                <div class="spells-list" id="spells-list">
+                                    <!-- Spells will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>
