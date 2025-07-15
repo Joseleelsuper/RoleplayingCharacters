@@ -192,6 +192,34 @@ msgstr "Force of personality"
 msgid "create_character.attributes.charisma_help"
 msgstr "Force of personality, persuasiveness, and leadership"
 
+# Attribute system selector
+msgid "create_character.attributes.system_label"
+msgstr "Attribute System"
+
+msgid "create_character.attributes.system.dnd5e"
+msgstr "D&D 5th Edition"
+
+msgid "create_character.attributes.system.dnd35"
+msgstr "D&D 3.5"
+
+msgid "create_character.attributes.system.pathfinder"
+msgstr "Pathfinder"
+
+msgid "create_character.attributes.system.custom"
+msgstr "Custom"
+
+msgid "create_character.attributes.custom_config"
+msgstr "Custom Configuration"
+
+msgid "create_character.attributes.custom_min"
+msgstr "Minimum Value"
+
+msgid "create_character.attributes.custom_max"
+msgstr "Maximum Value"
+
+msgid "create_character.attributes.custom_points"
+msgstr "Available Points"
+
 # Skills Section
 msgid "create_character.skills.title"
 msgstr "Skills & Proficiencies"
@@ -322,3 +350,10 @@ msgstr "Increase Experience"
 
 msgid "create_character.experience_control.decrement"
 msgstr "Decrease Experience"
+
+# Attribute buttons
+msgid "create_character.attributes.random_btn"
+msgstr "Random"
+
+msgid "create_character.attributes.default_btn"
+msgstr "Default"
