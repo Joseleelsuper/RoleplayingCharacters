@@ -61,6 +61,9 @@ msgstr "Equipamiento"
 msgid "create_character.tabs.spells"
 msgstr "Hechizos"
 
+msgid "create_character.tabs.game_type"
+msgstr "Tipo de Juego"
+
 # Basic Information Section
 msgid "create_character.basic.title"
 msgstr "Información Básica"
@@ -317,6 +320,9 @@ msgstr "Equipamiento"
 msgid "create_character.preview.spells"
 msgstr "Hechizos"
 
+msgid "create_character.preview.game_type"
+msgstr "Tipo de Juego:"
+
 # Form buttons
 msgid "create_character.buttons.previous"
 msgstr "Anterior"
@@ -358,3 +364,25 @@ msgstr "Aleatorio"
 
 msgid "create_character.attributes.default_btn"
 msgstr "Por Defecto"
+
+# Nuevas traducciones para la selección de tipo de juego
+msgid "create_character.game_type.title"
+msgstr "Selecciona un Tipo de Juego"
+
+msgid "create_character.game_type.description"
+msgstr "Elige el sistema de juego de rol para el que quieres crear tu personaje. Esto determinará las opciones disponibles para clases, razas y más."
+
+msgid "create_character.game_type.dnd5e_desc"
+msgstr "La quinta edición del juego de rol de fantasía más popular del mundo, con un sistema de reglas accesible y flexible."
+
+msgid "create_character.game_type.pathfinder_desc"
+msgstr "Un sistema basado en D&D 3.5 con mayor profundidad táctica y personalización de personajes."
+
+msgid "create_character.game_type.wod_desc"
+msgstr "Un juego de rol moderno y oscuro donde interpretas a criaturas sobrenaturales en un mundo de horror gótico."
+
+msgid "create_character.game_type.custom"
+msgstr "Personalizado"
+
+msgid "create_character.game_type.custom_desc"
+msgstr "Crea un personaje con acceso a todas las opciones disponibles de todos los sistemas de juego."
