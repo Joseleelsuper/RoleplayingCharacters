@@ -30,33 +30,73 @@
 
             <!-- Tab Navigation -->
             <nav class="tab-navigation" role="tablist" aria-label="{{ _('create_character.tabs.label') }}">
-                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="basic-info-panel" id="basic-info-tab" data-step="1">
+                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="game-type-panel" id="game-type-tab" data-step="1">
+                    <span class="tab-icon">🎲</span>
+                    <span class="tab-text">{{ _('create_character.tabs.game_type') }}</span>
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="basic-info-panel" id="basic-info-tab" data-step="2">
                     <span class="tab-icon">👤</span>
                     <span class="tab-text">{{ _('create_character.tabs.basic_info') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="attributes-panel" id="attributes-tab" data-step="2">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="attributes-panel" id="attributes-tab" data-step="3">
                     <span class="tab-icon">💪</span>
                     <span class="tab-text">{{ _('create_character.tabs.attributes') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="skills-panel" id="skills-tab" data-step="3">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="skills-panel" id="skills-tab" data-step="4">
                     <span class="tab-icon">🎯</span>
                     <span class="tab-text">{{ _('create_character.tabs.skills') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="equipment-panel" id="equipment-tab" data-step="4">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="equipment-panel" id="equipment-tab" data-step="5">
                     <span class="tab-icon">⚔️</span>
                     <span class="tab-text">{{ _('create_character.tabs.equipment') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="spells-panel" id="spells-tab" data-step="5">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="spells-panel" id="spells-tab" data-step="6">
                     <span class="tab-icon">✨</span>
                     <span class="tab-text">{{ _('create_character.tabs.spells') }}</span>
                 </button>
             </nav>
 
             <form id="character-form" class="character-creation-form" aria-label="{{ _('create_character.form.label') }}" novalidate>
-                <!-- Basic Information Panel -->
-                <div id="basic-info-panel" class="form-section" role="tabpanel" aria-labelledby="basic-info-tab">
+                <!-- Game Type Selection Panel -->
+                <div id="game-type-panel" class="form-section" role="tabpanel" aria-labelledby="game-type-tab">
                     <h2 class="section-title">
                         <span class="section-icon">1</span>
+                        {{ _('create_character.game_type.title') }}
+                    </h2>
+                    
+                    <div class="game-type-info">
+                        <p class="mb-lg">{{ _('create_character.game_type.description') }}</p>
+                        <div class="game-type-grid">
+                            <div class="game-type-card" data-game-type="dnd5e">
+                                <div class="game-type-icon">🐉</div>
+                                <h3 class="game-type-title">Dungeons & Dragons 5e</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.dnd5e_desc') }}</p>
+                            </div>
+                            <div class="game-type-card" data-game-type="pathfinder">
+                                <div class="game-type-icon">🧭</div>
+                                <h3 class="game-type-title">Pathfinder</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.pathfinder_desc') }}</p>
+                            </div>
+                            <div class="game-type-card" data-game-type="wod">
+                                <div class="game-type-icon">🌙</div>
+                                <h3 class="game-type-title">World of Darkness</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.wod_desc') }}</p>
+                            </div>
+                            <div class="game-type-card" data-game-type="custom">
+                                <div class="game-type-icon">🎭</div>
+                                <h3 class="game-type-title">{{ _('create_character.game_type.custom') }}</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.custom_desc') }}</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="selected-game-type" name="game_type" value="" required>
+                        <div class="form-error" id="game-type-error" role="alert" aria-live="polite"></div>
+                    </div>
+                </div>
+
+                <!-- Basic Information Panel -->
+                <div id="basic-info-panel" class="form-section hidden" role="tabpanel" aria-labelledby="basic-info-tab">
+                    <h2 class="section-title">
+                        <span class="section-icon">2</span>
                         {{ _('create_character.basic.title') }}
                     </h2>
                     
@@ -167,7 +207,7 @@
                 <!-- Attributes Panel -->
                 <div id="attributes-panel" class="form-section hidden" role="tabpanel" aria-labelledby="attributes-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">2</span>
+                        <span class="section-icon">3</span>
                         {{ _('create_character.attributes.title') }}
                     </h2>
                     
@@ -203,10 +243,10 @@
             </div>
             <div class="point-buy-info">
                 <span class="points-remaining">{{ _('create_character.attributes.points_remaining') }} <strong id="points-remaining">27</strong></span>
-                <button type="button" class="btn btn-secondary btn-sm" id="random-attributes-btn">
+                <button type="button" class="btn btn-secondary btn-sm" id="random-attributes-btn" data-text="{{ _('create_character.attributes.random_btn') }}">
                     <i class="icon-dice"></i> {{ _('create_character.attributes.random_btn') }}
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm" id="default-attributes-btn">
+                <button type="button" class="btn btn-secondary btn-sm" id="default-attributes-btn" data-text="{{ _('create_character.attributes.default_btn') }}">
                     <i class="icon-reset"></i> {{ _('create_character.attributes.default_btn') }}
                 </button>
             </div>
@@ -308,7 +348,7 @@
                 <!-- Skills Panel - Reemplazo completo de la sección de skills -->
                 <div id="skills-panel" class="form-section hidden" role="tabpanel" aria-labelledby="skills-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">3</span>
+                        <span class="section-icon">4</span>
                         {{ _('create_character.skills.title') }}
                     </h2>
                     
@@ -346,7 +386,7 @@
                 <!-- Equipment Panel - Reemplazo de la sección de equipamiento -->
                 <div id="equipment-panel" class="form-section hidden" role="tabpanel" aria-labelledby="equipment-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">4</span>
+                        <span class="section-icon">5</span>
                         {{ _('create_character.equipment.title') }}
                     </h2>
                     
@@ -374,7 +414,7 @@
                 <!-- Spells Panel - Reemplazo de la sección de hechizos -->
                 <div id="spells-panel" class="form-section hidden" role="tabpanel" aria-labelledby="spells-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">5</span>
+                        <span class="section-icon">6</span>
                         {{ _('create_character.spells.title') }}
                     </h2>
                     
@@ -411,6 +451,10 @@
                 <div class="character-summary" id="character-summary">
                     <div class="summary-section">
                         <h4>{{ _('create_character.preview.basic_info') }}</h4>
+                        <div class="summary-item">
+                            <span class="summary-label">{{ _('create_character.preview.game_type') }}</span>
+                            <span class="summary-value" id="preview-game-type">{{ _('create_character.preview.not_set') }}</span>
+                        </div>
                         <div class="summary-item">
                             <span class="summary-label">{{ _('create_character.preview.name') }}</span>
                             <span class="summary-value" id="preview-name">{{ _('create_character.preview.not_set') }}</span>
@@ -507,6 +551,12 @@
 
     {% include 'objects/footer.html' %}
     
-    <script src="/templates/js/create-character.js"></script>
+    <!-- Componentes JS separados -->
+    <script src="/templates/js/create-character/game-type-selector.js"></script>
+    <script src="/templates/js/create-character/data-manager.js"></script>
+    <script src="/templates/js/create-character/attribute-manager.js"></script>
+    <script src="/templates/js/create-character/preview-manager.js"></script>
+    <script src="/templates/js/create-character/navigation-manager.js"></script>
+    <script src="/templates/js/create-character/create-character.js"></script>
 </body>
 </html>

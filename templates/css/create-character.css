@@ -1043,3 +1043,94 @@ p.error-description {
     color: var(--text-secondary);
     font-weight: 500;
 }
+
+/* Game Type Selection Styles */
+.game-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.game-type-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: 0;
+}
+
+.game-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-300);
+}
+
+.game-type-card:hover::before {
+    opacity: 0.05;
+}
+
+.game-type-card.selected {
+    transform: translateY(-5px);
+    border-color: var(--primary-500);
+    box-shadow: var(--shadow-xl);
+    background: linear-gradient(135deg, var(--primary-50), var(--secondary-50));
+}
+
+.game-type-card.selected::before {
+    opacity: 0.1;
+}
+
+.game-type-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    width: 24px;
+    height: 24px;
+    background: var(--primary-500);
+    color: var(--text-inverse);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.game-type-icon {
+    font-size: 48px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.game-type-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    z-index: 1;
+}
+
+.game-type-description {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    position: relative;
+    z-index: 1;
+}
