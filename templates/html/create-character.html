@@ -90,6 +90,25 @@
                         </div>
                         <input type="hidden" id="selected-game-type" name="game_type" value="" required>
                         <div class="form-error" id="game-type-error" role="alert" aria-live="polite"></div>
+                        
+                        <!-- Configuración personalizada - Modificada para aparecer aquí al seleccionar Custom -->
+                        <div id="custom-attribute-config" class="form-group-enhanced" style="display:none; margin-top: var(--spacing-xl);">
+                            <h3>{{ _('create_character.attributes.custom_config') }}</h3>
+                            <div class="grid grid-cols-3 gap-md">
+                                <div>
+                                    <label for="custom-min" class="form-label-enhanced">{{ _('create_character.attributes.custom_min') }}</label>
+                                    <input type="number" id="custom-min" class="form-control-enhanced" min="1" max="30" value="6">
+                                </div>
+                                <div>
+                                    <label for="custom-max" class="form-label-enhanced">{{ _('create_character.attributes.custom_max') }}</label>
+                                    <input type="number" id="custom-max" class="form-control-enhanced" min="1" max="30" value="15">
+                                </div>
+                                <div>
+                                    <label for="custom-points" class="form-label-enhanced">{{ _('create_character.attributes.custom_points') }}</label>
+                                    <input type="number" id="custom-points" class="form-control-enhanced" min="1" max="100" value="27">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -204,52 +223,23 @@
                     </div>
                 </div>
 
-                <!-- Attributes Panel -->
+                <!-- Attributes Panel - Elimina la duplicación del custom-attribute-config -->
                 <div id="attributes-panel" class="form-section hidden" role="tabpanel" aria-labelledby="attributes-tab">
                     <h2 class="section-title">
                         <span class="section-icon">3</span>
                         {{ _('create_character.attributes.title') }}
                     </h2>
-                    
                     <div class="attributes-info">
                         <p class="mb-lg">{{ _('create_character.attributes.description') }}</p>
-            <div class="form-group-enhanced">
-                <label for="attribute-system" class="form-label-enhanced">{{ _('create_character.attributes.system_label') }}</label>
-                <div class="select-wrapper">
-                    <select id="attribute-system" class="form-control-enhanced select-enhanced">
-                        <option value="dnd5e">{{ _('create_character.attributes.system.dnd5e') }}</option>
-                        <option value="dnd35">{{ _('create_character.attributes.system.dnd35') }}</option>
-                        <option value="pathfinder">{{ _('create_character.attributes.system.pathfinder') }}</option>
-                        <option value="custom">{{ _('create_character.attributes.system.custom') }}</option>
-                    </select>
-                </div>
-            </div>
-            <div id="custom-attribute-config" class="form-group-enhanced" style="display:none;">
-                <label class="form-label-enhanced">{{ _('create_character.attributes.custom_config') }}</label>
-                <div class="grid grid-cols-3 gap-md">
-                    <div>
-                        <label for="custom-min" class="form-label-enhanced">{{ _('create_character.attributes.custom_min') }}</label>
-                        <input type="number" id="custom-min" class="form-control-enhanced" min="1" max="30" value="6">
-                    </div>
-                    <div>
-                        <label for="custom-max" class="form-label-enhanced">{{ _('create_character.attributes.custom_max') }}</label>
-                        <input type="number" id="custom-max" class="form-control-enhanced" min="1" max="30" value="15">
-                    </div>
-                    <div>
-                        <label for="custom-points" class="form-label-enhanced">{{ _('create_character.attributes.custom_points') }}</label>
-                        <input type="number" id="custom-points" class="form-control-enhanced" min="1" max="100" value="27">
-                    </div>
-                </div>
-            </div>
-            <div class="point-buy-info">
-                <span class="points-remaining">{{ _('create_character.attributes.points_remaining') }} <strong id="points-remaining">27</strong></span>
-                <button type="button" class="btn btn-secondary btn-sm" id="random-attributes-btn" data-text="{{ _('create_character.attributes.random_btn') }}">
-                    <i class="icon-dice"></i> {{ _('create_character.attributes.random_btn') }}
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm" id="default-attributes-btn" data-text="{{ _('create_character.attributes.default_btn') }}">
-                    <i class="icon-reset"></i> {{ _('create_character.attributes.default_btn') }}
-                </button>
-            </div>
+                        <div class="point-buy-info">
+                            <span class="points-remaining">{{ _('create_character.attributes.points_remaining') }} <strong id="points-remaining">27</strong></span>
+                            <button type="button" class="btn btn-secondary btn-sm" id="random-attributes-btn" data-text="{{ _('create_character.attributes.random_btn') }}">
+                                <i class="icon-dice"></i> {{ _('create_character.attributes.random_btn') }}
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="default-attributes-btn" data-text="{{ _('create_character.attributes.default_btn') }}">
+                                <i class="icon-reset"></i> {{ _('create_character.attributes.default_btn') }}
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="attributes-grid">
