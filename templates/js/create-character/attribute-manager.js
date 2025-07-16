@@ -255,31 +255,10 @@ class AttributeManager {
                 
                 let values = Array(6).fill(minAttr);
                 
-                // Generar valores aleatorios válidos para point buy
-                for (let i = 0; i < 1000; i++) {
-                    let temp = Array(6).fill(minAttr);
-                    let pts = pointsLimit;
-                    
-                    // Sube aleatoriamente atributos mientras haya puntos
-                    while (pts > 0) {
-                        let idx = Math.floor(Math.random() * 6);
-                        if (temp[idx] < maxAttr) {
-                            let cost = this.pointBuyCost(temp[idx] + 1) - this.pointBuyCost(temp[idx]);
-                            if (pts - cost >= 0) {
-                                temp[idx]++;
-                                pts -= cost;
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                    // Si es una distribución válida, la usamos
-                    if (pts >= 0) {
-                        values = temp;
-                        break;
-                    }
-                }
+                // Usar un algoritmo de distribución mejorado
+                values = this.generateRandomAttributeDistribution(attrs.length, minAttr, maxAttr, pointsLimit);
                 
+                // Aplicar los valores generados a los inputs y actualizar modificadores
                 attrs.forEach((attr, i) => {
                     const input = document.getElementById(attr);
                     if (input) {
@@ -288,8 +267,12 @@ class AttributeManager {
                     }
                 });
                 
+                // Actualizar interfaz
                 this.updateAttributePointsRemaining();
                 this.updateAttributeButtonStates();
+                
+                // Opcionalmente, mostrar qué tipo de build se generó
+                console.log('Generated attribute distribution');
                 
                 // Notificar cambio en todos los atributos
                 document.dispatchEvent(new CustomEvent('attributesReset'));
@@ -576,6 +559,133 @@ class AttributeManager {
             // Usar el texto de traducción para "Por Defecto"
             defaultBtnText.innerHTML = `<i class="icon-reset"></i> ${defaultBtnText.dataset.text || 'Default'}`;
         }
+    }
+    
+    generateRandomAttributeDistribution(attributeCount, minAttr, maxAttr, pointsLimit) {
+        // Inicializar todos los atributos al mínimo
+        let values = Array(attributeCount).fill(minAttr);
+        let remainingPoints = pointsLimit;
+        let attempts = 0;
+        const maxAttempts = 5000; // Límite para evitar bucles infinitos
+        
+        // Función para calcular cuántos puntos quedan disponibles
+        const calculateRemainingPoints = () => {
+            let used = 0;
+            for (let i = 0; i < values.length; i++) {
+                used += this.pointBuyCost(values[i]);
+            }
+            return pointsLimit - used;
+        };
+
+        // Paso 1: Determinar una distribución primaria (para qué queremos optimizar este personaje)
+        // Opciones: Equilibrado, Físico (STR/DEX/CON), Mental (INT/WIS/CHA), Especialista (1-2 atributos altos)
+        const buildTypes = ['balanced', 'physical', 'mental', 'specialist'];
+        const selectedType = buildTypes[Math.floor(Math.random() * buildTypes.length)];
+        
+        // Crear pesos para cada atributo según el tipo de build
+        let weights;
+        switch (selectedType) {
+            case 'physical':
+                weights = [0.25, 0.25, 0.25, 0.08, 0.08, 0.09]; // STR, DEX, CON prioritarios
+                break;
+            case 'mental':
+                weights = [0.08, 0.08, 0.09, 0.25, 0.25, 0.25]; // INT, WIS, CHA prioritarios
+                break;
+            case 'specialist':
+                // Elegir 1-2 atributos para especializar
+                weights = [0.05, 0.05, 0.05, 0.05, 0.05, 0.05];
+                const primaryAttr = Math.floor(Math.random() * 6);
+                weights[primaryAttr] = 0.5;
+                
+                // 50% de probabilidad de tener un segundo atributo prioritario
+                if (Math.random() > 0.5) {
+                    let secondaryAttr;
+                    do {
+                        secondaryAttr = Math.floor(Math.random() * 6);
+                    } while (secondaryAttr === primaryAttr);
+                    weights[secondaryAttr] = 0.25;
+                }
+                break;
+            default: // balanced
+                weights = [0.17, 0.17, 0.17, 0.16, 0.16, 0.17]; // Todos relativamente equilibrados
+        }
+        
+        // Normalizar pesos (asegurarse que sumen 1)
+        const weightSum = weights.reduce((sum, w) => sum + w, 0);
+        weights = weights.map(w => w / weightSum);
+        
+        // Paso 2: Asignar puntos disponibles de manera ponderada por prioridades
+        // Iteramos y aumentamos los atributos según sus pesos hasta que no podamos añadir más
+        while (remainingPoints > 0 && attempts < maxAttempts) {
+            attempts++;
+            
+            // Identificar atributos que podemos seguir aumentando
+            const eligibleIndices = [];
+            for (let i = 0; i < attributeCount; i++) {
+                if (values[i] < maxAttr) {
+                    const costToIncrease = this.pointBuyCost(values[i] + 1) - this.pointBuyCost(values[i]);
+                    if (costToIncrease <= remainingPoints) {
+                        eligibleIndices.push(i);
+                    }
+                }
+            }
+            
+            if (eligibleIndices.length === 0) break;
+            
+            // Elegir un atributo para aumentar según los pesos
+            const weightedSelection = Math.random();
+            let accumulatedWeight = 0;
+            let selectedIndex = eligibleIndices[0]; // valor predeterminado
+            
+            for (const idx of eligibleIndices) {
+                accumulatedWeight += weights[idx];
+                if (weightedSelection <= accumulatedWeight) {
+                    selectedIndex = idx;
+                    break;
+                }
+            }
+            
+            // Aumentar el atributo seleccionado y actualizar puntos restantes
+            const oldValue = values[selectedIndex];
+            values[selectedIndex]++;
+            
+            // Recalcular los puntos restantes (para manejar costos no lineales)
+            remainingPoints = calculateRemainingPoints();
+            
+            // Si gastamos todos los puntos o no podemos aumentar ningún atributo más, terminamos
+            if (remainingPoints <= 0) break;
+            
+            // Evitar bucles infinitos si no podemos gastar más puntos
+            if (values.every(v => v === maxAttr)) break;
+        }
+        
+        // Paso 3: Si aún nos quedan puntos, intentamos un enfoque greedy para optimizar
+        if (remainingPoints > 0 && attempts < maxAttempts) {
+            // Ordenar atributos por prioridad
+            const indices = Array.from({ length: attributeCount }, (_, i) => i);
+            indices.sort((a, b) => weights[b] - weights[a]);
+            
+            // Intentar aumentar los atributos en orden de prioridad hasta que no podamos más
+            let madeChange = true;
+            while (madeChange && remainingPoints > 0 && attempts < maxAttempts) {
+                attempts++;
+                madeChange = false;
+                
+                for (const i of indices) {
+                    if (values[i] < maxAttr) {
+                        const costToIncrease = this.pointBuyCost(values[i] + 1) - this.pointBuyCost(values[i]);
+                        if (costToIncrease <= remainingPoints) {
+                            values[i]++;
+                            remainingPoints = calculateRemainingPoints();
+                            madeChange = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return values;
     }
 }
 
