@@ -1089,29 +1089,23 @@ p.error-description {
 
 .game-type-card.selected {
     transform: translateY(-5px);
-    border-color: var(--primary-500);
+    border-color: var(--selected-border);
     box-shadow: var(--shadow-xl);
-    background: linear-gradient(135deg, var(--primary-50), var(--secondary-50));
+    background: var(--selected-gradient);
+    color: var(--text-primary);
+}
+
+/* Mejorar la visibilidad del texto cuando la tarjeta está seleccionada */
+.game-type-card.selected .game-type-title,
+.game-type-card.selected .game-type-description {
+    color: var(--text-primary);
+    font-weight: 600;
+    /* Eliminamos la sombra que dificulta la legibilidad */
+    text-shadow: none;
 }
 
 .game-type-card.selected::before {
     opacity: 0.1;
-}
-
-.game-type-card.selected::after {
-    content: '✓';
-    position: absolute;
-    top: var(--spacing-md);
-    right: var(--spacing-md);
-    width: 24px;
-    height: 24px;
-    background: var(--selected-border);
-    color: var(--text-inverse);
-    border-radius: var(--radius-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
 }
 
 .game-type-icon {
