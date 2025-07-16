@@ -47,9 +47,11 @@ class GameTypeSelector {
         }
         
         // Mostrar/ocultar configuración personalizada si corresponde
-        if (this.customConfig) {
-            const isCustom = this.selectedGameType === 'custom';
-            this.customConfig.style.display = isCustom ? 'block' : 'none';
+        // Ahora el config está en la sección de atributos, pero sigue funcionando igual
+        const customConfig = document.getElementById('custom-attribute-config');
+        if (customConfig) {
+            const isCustom = this.selectedGameType === 'custom' || this.selectedGameType === 'wod';
+            customConfig.style.display = isCustom ? 'block' : 'none';
             
             // Si es personalizado, aplicar valores de configuración inmediatamente
             if (isCustom && window.attributeManager) {

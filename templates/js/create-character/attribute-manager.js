@@ -381,6 +381,19 @@ class AttributeManager {
             customPoints.addEventListener('change', () => {
                 this.updateCustomFromInputs();
             });
+            
+            // Asegurar que los eventos de input también actualicen los valores inmediatamente
+            customMin.addEventListener('input', () => {
+                this.updateCustomFromInputs();
+            });
+            
+            customMax.addEventListener('input', () => {
+                this.updateCustomFromInputs();
+            });
+            
+            customPoints.addEventListener('input', () => {
+                this.updateCustomFromInputs();
+            });
         }
     }
     
@@ -390,9 +403,9 @@ class AttributeManager {
         const customPoints = document.getElementById('custom-points');
         
         if (customMin && customMax && customPoints) {
-            const minVal = parseInt(customMin.value);
-            const maxVal = parseInt(customMax.value);
-            const pointsVal = parseInt(customPoints.value);
+            const minVal = parseInt(customMin.value) || 1;
+            const maxVal = parseInt(customMax.value) || 15;
+            const pointsVal = parseInt(customPoints.value) || 27;
             
             // Validar valores
             if (minVal < 1) customMin.value = 1;
@@ -407,6 +420,13 @@ class AttributeManager {
                 parseInt(customMax.value),
                 parseInt(customPoints.value)
             );
+            
+            // Si el sistema actual es custom, actualizar inmediatamente todos los campos
+            if (this.currentAttributeSystem === 'custom') {
+                this.updateAttributeLimits();
+                this.updateAttributePointsRemaining();
+                this.updateAttributeButtonStates();
+            }
         }
     }
     
