@@ -631,7 +631,7 @@
 }
 
 .attribute-btn:hover:not(:disabled) {
-    background: var(--primary-500);
+    background: var(--selected-border);
     color: var(--text-inverse);
     transform: scale(1.1);
 }
@@ -710,8 +710,8 @@
 
 .skill-item.selected, .language-item.selected, .proficiency-item.selected, 
 .equipment-item.selected, .spell-item.selected {
-    background: linear-gradient(135deg, var(--primary-50), var(--secondary-50));
-    border-color: var(--primary-500);
+    background: var(--selected-gradient);
+    border-color: var(--selected-border);
 }
 
 .skill-checkbox, .language-checkbox, .proficiency-checkbox, 
@@ -726,7 +726,7 @@
 
 .skill-checkbox.checked, .language-checkbox.checked, .proficiency-checkbox.checked, 
 .equipment-checkbox.checked, .spell-checkbox.checked {
-    background-color: var(--primary-500);
+    background-color: var(--selected-border);
 }
 
 .skill-checkbox.checked::after, .language-checkbox.checked::after, .proficiency-checkbox.checked::after, 
@@ -1105,7 +1105,7 @@ p.error-description {
     right: var(--spacing-md);
     width: 24px;
     height: 24px;
-    background: var(--primary-500);
+    background: var(--selected-border);
     color: var(--text-inverse);
     border-radius: var(--radius-full);
     display: flex;
