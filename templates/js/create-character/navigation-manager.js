@@ -25,11 +25,14 @@ class NavigationManager {
         
         this.setupNavigation();
         this.setupFormSubmission();
+        this.setupErrorClearingListeners();
         
         // Escuchar eventos de cambio de tipo de juego
         document.addEventListener('gameTypeSelected', () => {
             // Actualizar el estado de los botones después de seleccionar un tipo de juego
             this.updateButtonStates();
+            // Limpiar error si existe
+            this.clearError('game-type-error');
         });
     }
     
@@ -56,15 +59,11 @@ class NavigationManager {
     }
     
     goToStep(stepNumber) {
-        // Validar paso actual antes de avanzar
-        if (stepNumber > this.currentStep && !this.validateCurrentStep()) {
-            return;
-        }
-        
+        // Validar solo si estamos en el último paso y queremos crear el personaje
         if (stepNumber < 1 || stepNumber > this.totalSteps) return;
         
-        // Si estamos avanzando al segundo paso por primera vez, cargar datos filtrados
-        if (stepNumber === 2 && this.currentStep === 1 && !this.dataPopulated) {
+        // Si estamos avanzando al segundo paso por primera vez, solo validar que se haya seleccionado un tipo de juego
+        if (stepNumber > 1 && this.currentStep === 1) {
             // Si no se ha seleccionado un tipo de juego, mostrar error
             if (!window.gameTypeSelector?.isGameTypeSelected()) {
                 window.gameTypeSelector?.showGameTypeError();
@@ -137,60 +136,56 @@ class NavigationManager {
         }
     }
     
-    validateCurrentStep() {
-        switch (this.currentStep) {
-            case 1: // Validar selección de tipo de juego
-                if (!window.gameTypeSelector?.isGameTypeSelected()) {
-                    window.gameTypeSelector?.showGameTypeError();
-                    return false;
-                }
-                return true;
-                
-            case 2: // Validar información básica
-                // Validar nombre del personaje
-                const nameInput = document.getElementById('character-name');
-                const nameError = document.getElementById('name-error');
-                
-                if (!nameInput?.value) {
-                    if (nameError) {
-                        nameError.textContent = 'Por favor, introduce un nombre para tu personaje.';
-                        nameError.classList.add('active');
-                        nameInput.classList.add('error');
-                    }
-                    return false;
-                }
-                
-                // Validar raza
-                const raceSelect = document.getElementById('race');
-                const raceError = document.getElementById('race-error');
-                
-                if (!raceSelect?.value) {
-                    if (raceError) {
-                        raceError.textContent = 'Por favor, selecciona una raza para tu personaje.';
-                        raceError.classList.add('active');
-                        raceSelect.classList.add('error');
-                    }
-                    return false;
-                }
-                
-                // Validar clase
-                const classSelect = document.getElementById('character-class');
-                const classError = document.getElementById('class-error');
-                
-                if (!classSelect?.value) {
-                    if (classError) {
-                        classError.textContent = 'Por favor, selecciona una clase para tu personaje.';
-                        classError.classList.add('active');
-                        classSelect.classList.add('error');
-                    }
-                    return false;
-                }
-                
-                return true;
-                
-            default:
-                return true;
+    // Método para configurar los listeners que limpian los mensajes de error
+    setupErrorClearingListeners() {
+        // Limpiar errores en campos de entrada de texto cuando el usuario escribe
+        const nameInput = document.getElementById('character-name');
+        if (nameInput) {
+            nameInput.addEventListener('input', () => {
+                this.clearError('name-error');
+                nameInput.classList.remove('error');
+            });
         }
+        
+        // Limpiar errores en selects cuando cambia el valor
+        const raceSelect = document.getElementById('race');
+        if (raceSelect) {
+            raceSelect.addEventListener('change', () => {
+                this.clearError('race-error');
+                raceSelect.classList.remove('error');
+            });
+        }
+        
+        const classSelect = document.getElementById('character-class');
+        if (classSelect) {
+            classSelect.addEventListener('change', () => {
+                this.clearError('class-error');
+                classSelect.classList.remove('error');
+            });
+        }
+    }
+    
+    // Método auxiliar para limpiar un mensaje de error
+    clearError(errorId) {
+        const errorElement = document.getElementById(errorId);
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.classList.remove('active');
+        }
+    }
+    
+    validateForm() {
+        // Validar todo el formulario al intentar crear el personaje
+        let isValid = true;
+        
+        // Validar selección de tipo de juego (único requisito obligatorio)
+        if (!window.gameTypeSelector?.isGameTypeSelected()) {
+            window.gameTypeSelector?.showGameTypeError();
+            this.goToStep(1); // Ir al paso de selección de tipo de juego
+            isValid = false;
+        }
+        
+        return isValid;
     }
     
     setupFormSubmission() {
@@ -199,17 +194,11 @@ class NavigationManager {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                // Validar todos los pasos
-                for (let step = 1; step <= this.totalSteps; step++) {
-                    this.currentStep = step;
-                    if (!this.validateCurrentStep()) {
-                        this.goToStep(step);
-                        return;
-                    }
+                // Validar todo el formulario solo cuando se intente enviar
+                if (this.validateForm()) {
+                    // Si todo está validado, enviar el formulario
+                    this.submitForm();
                 }
-                
-                // Si todo está validado, enviar el formulario
-                this.submitForm();
             });
         }
     }
@@ -249,7 +238,7 @@ class NavigationManager {
             }
             return response.json();
         })
-        .then(data => {
+        .then((data) => {
             // Redirigir a la página del personaje creado
             window.location.href = `/characters/${data.id}`;
         })

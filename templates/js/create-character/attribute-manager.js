@@ -101,6 +101,7 @@ class AttributeManager {
         this.setupAttributeControls();
         this.setupAttributeSystemSelector();
         this.setupRandomButtons();
+        this.setupCustomConfigInputs();
         this.updateAttributePointsRemaining();
         this.updateAttributeButtonStates();
     }
@@ -355,13 +356,93 @@ class AttributeManager {
         }
     }
     
+    setupCustomConfigInputs() {
+        const customMin = document.getElementById('custom-min');
+        const customMax = document.getElementById('custom-max');
+        const customPoints = document.getElementById('custom-points');
+        
+        if (customMin && customMax && customPoints) {
+            // Inicializar con los valores actuales
+            this.updateCustomSystem(
+                parseInt(customMin.value),
+                parseInt(customMax.value),
+                parseInt(customPoints.value)
+            );
+            
+            // Configurar eventos de cambio
+            customMin.addEventListener('change', () => {
+                this.updateCustomFromInputs();
+            });
+            
+            customMax.addEventListener('change', () => {
+                this.updateCustomFromInputs();
+            });
+            
+            customPoints.addEventListener('change', () => {
+                this.updateCustomFromInputs();
+            });
+        }
+    }
+    
+    updateCustomFromInputs() {
+        const customMin = document.getElementById('custom-min');
+        const customMax = document.getElementById('custom-max');
+        const customPoints = document.getElementById('custom-points');
+        
+        if (customMin && customMax && customPoints) {
+            const minVal = parseInt(customMin.value);
+            const maxVal = parseInt(customMax.value);
+            const pointsVal = parseInt(customPoints.value);
+            
+            // Validar valores
+            if (minVal < 1) customMin.value = 1;
+            if (maxVal > 30) customMax.value = 30;
+            if (minVal > maxVal) customMin.value = maxVal;
+            if (pointsVal < 1) customPoints.value = 1;
+            if (pointsVal > 100) customPoints.value = 100;
+            
+            // Actualizar sistema con valores validados
+            this.updateCustomSystem(
+                parseInt(customMin.value),
+                parseInt(customMax.value),
+                parseInt(customPoints.value)
+            );
+        }
+    }
+    
+    updateCustomSystem(minAttr, maxAttr, pointsLimit) {
+        if (!this.attributeSystems.custom) return;
+        
+        // Actualizar configuración del sistema personalizado
+        this.attributeSystems.custom.minAttr = minAttr;
+        this.attributeSystems.custom.maxAttr = maxAttr;
+        this.attributeSystems.custom.pointsLimit = pointsLimit;
+        
+        // Si el sistema actual es "custom", aplicar los cambios inmediatamente
+        if (this.currentAttributeSystem === 'custom') {
+            this.updateAttributeLimits();
+            this.updateAttributePointsRemaining();
+            this.updateAttributeButtonStates();
+        }
+    }
+    
     setAttributeSystem(systemName) {
         if (this.attributeSystems[systemName]) {
             this.currentAttributeSystem = systemName;
             
-            // Mostrar/ocultar configuración personalizada
-            if (this.customConfig) {
-                this.customConfig.style.display = systemName === 'custom' ? 'block' : 'none';
+            // Si es personalizado, actualizar con los valores actuales de la configuración
+            if (systemName === 'custom') {
+                const customMin = document.getElementById('custom-min');
+                const customMax = document.getElementById('custom-max');
+                const customPoints = document.getElementById('custom-points');
+                
+                if (customMin && customMax && customPoints) {
+                    this.updateCustomSystem(
+                        parseInt(customMin.value),
+                        parseInt(customMax.value),
+                        parseInt(customPoints.value)
+                    );
+                }
             }
             
             // Actualizar límites de los atributos
@@ -385,6 +466,7 @@ class AttributeManager {
         attrs.forEach(attr => {
             const input = document.getElementById(attr);
             if (input) {
+                // Actualizar límites en el elemento input
                 input.min = system.minAttr;
                 input.max = system.maxAttr;
                 
@@ -448,5 +530,7 @@ class AttributeManager {
     }
 }
 
+// Exportar para uso global
+window.attributeManager = new AttributeManager();
 // Exportar para uso global
 window.attributeManager = new AttributeManager();

@@ -17,6 +17,7 @@ class GameTypeSelector {
     init() {
         this.gameTypeCards = document.querySelectorAll('.game-type-card');
         this.selectedGameTypeInput = document.getElementById('selected-game-type');
+        this.customConfig = document.getElementById('custom-attribute-config');
         this.setupGameTypeSelection();
     }
     
@@ -43,6 +44,27 @@ class GameTypeSelector {
         // Actualizar el input oculto
         if (this.selectedGameTypeInput) {
             this.selectedGameTypeInput.value = this.selectedGameType;
+        }
+        
+        // Mostrar/ocultar configuración personalizada si corresponde
+        if (this.customConfig) {
+            const isCustom = this.selectedGameType === 'custom';
+            this.customConfig.style.display = isCustom ? 'block' : 'none';
+            
+            // Si es personalizado, aplicar valores de configuración inmediatamente
+            if (isCustom && window.attributeManager) {
+                const customMin = document.getElementById('custom-min');
+                const customMax = document.getElementById('custom-max');
+                const customPoints = document.getElementById('custom-points');
+                
+                if (customMin && customMax && customPoints) {
+                    window.attributeManager.updateCustomSystem(
+                        parseInt(customMin.value),
+                        parseInt(customMax.value),
+                        parseInt(customPoints.value)
+                    );
+                }
+            }
         }
         
         // Actualizar el sistema de atributos según el juego seleccionado
@@ -93,7 +115,7 @@ class GameTypeSelector {
     showGameTypeError() {
         const errorElement = document.getElementById('game-type-error');
         if (errorElement) {
-            errorElement.textContent = 'Please select a game type to continue.';
+            errorElement.textContent = 'Por favor, selecciona un tipo de juego para continuar.';
             errorElement.classList.add('active');
         }
     }
