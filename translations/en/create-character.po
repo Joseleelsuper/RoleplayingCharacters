@@ -20,7 +20,7 @@ msgid "create_character.page.site_name"
 msgstr "Roleplaying Characters"
 
 msgid "create_character.page.description"
-msgstr "Create and customize your roleplaying character with our intuitive character creator. Choose race, class, background and more."
+msgstr "Create and customize your roleplaying character with our intuitive character creator. Choose race, class, background, and more."
 
 msgid "create_character.page.keywords"
 msgstr "character creator, rpg character, d&d character, pathfinder character, character builder"
@@ -46,6 +46,9 @@ msgstr "Step 1 of 5"
 msgid "create_character.tabs.label"
 msgstr "Character creation steps"
 
+msgid "create_character.tabs.game_type"
+msgstr "Game Type"
+
 msgid "create_character.tabs.basic_info"
 msgstr "Basic Info"
 
@@ -61,6 +64,28 @@ msgstr "Equipment"
 msgid "create_character.tabs.spells"
 msgstr "Spells"
 
+# Game Type Section
+msgid "create_character.game_type.title"
+msgstr "Select a Game Type"
+
+msgid "create_character.game_type.description"
+msgstr "Choose the roleplaying game system for which you want to create your character. This will determine the available options for classes, races, and more."
+
+msgid "create_character.game_type.dnd5e_desc"
+msgstr "The fifth edition of the world's most popular fantasy roleplaying game, with an accessible and flexible rules system."
+
+msgid "create_character.game_type.pathfinder_desc"
+msgstr "A system based on D&D 3.5 with greater tactical depth and character customization."
+
+msgid "create_character.game_type.wod_desc"
+msgstr "A modern dark roleplaying game where you play as supernatural creatures in a world of gothic horror."
+
+msgid "create_character.game_type.custom"
+msgstr "Custom"
+
+msgid "create_character.game_type.custom_desc"
+msgstr "Create a character with access to all available options from all game systems."
+
 # Basic Information Section
 msgid "create_character.basic.title"
 msgstr "Basic Information"
@@ -72,7 +97,7 @@ msgid "create_character.basic.character_name_placeholder"
 msgstr "Enter character name"
 
 msgid "create_character.basic.character_name_tooltip"
-msgstr "The name your character will be known by"
+msgstr "The name by which your character will be known"
 
 msgid "create_character.basic.player_name"
 msgstr "Player Name"
@@ -96,7 +121,7 @@ msgid "create_character.basic.class_placeholder"
 msgstr "Select a class"
 
 msgid "create_character.basic.class_tooltip"
-msgstr "Your character's profession or calling"
+msgstr "Your character's profession or vocation"
 
 msgid "create_character.basic.background"
 msgstr "Background"
@@ -114,7 +139,7 @@ msgid "create_character.basic.alignment_placeholder"
 msgstr "Select an alignment"
 
 msgid "create_character.basic.alignment_tooltip"
-msgstr "Your character's moral and ethical outlook"
+msgstr "Your character's moral and ethical perspective"
 
 msgid "create_character.basic.level"
 msgstr "Level"
@@ -127,13 +152,13 @@ msgid "create_character.attributes.title"
 msgstr "Attributes"
 
 msgid "create_character.attributes.description"
-msgstr "Set your character's core attributes. Each attribute affects different aspects of gameplay."
+msgstr "Set your character's main attributes. Each attribute affects different aspects of the game."
 
 msgid "create_character.attributes.points_remaining"
 msgstr "Points Remaining:"
 
 msgid "create_character.attributes.roll_stats"
-msgstr "Roll for Stats"
+msgstr "Roll Stats"
 
 msgid "create_character.attributes.standard_array"
 msgstr "Standard Array"
@@ -151,7 +176,7 @@ msgid "create_character.attributes.dexterity"
 msgstr "Dexterity"
 
 msgid "create_character.attributes.dexterity_desc"
-msgstr "Agility & reflexes"
+msgstr "Agility and reflexes"
 
 msgid "create_character.attributes.dexterity_help"
 msgstr "Agility, reflexes, and balance"
@@ -160,7 +185,7 @@ msgid "create_character.attributes.constitution"
 msgstr "Constitution"
 
 msgid "create_character.attributes.constitution_desc"
-msgstr "Health & stamina"
+msgstr "Health and stamina"
 
 msgid "create_character.attributes.constitution_help"
 msgstr "Health, stamina, and vital force"
@@ -178,7 +203,7 @@ msgid "create_character.attributes.wisdom"
 msgstr "Wisdom"
 
 msgid "create_character.attributes.wisdom_desc"
-msgstr "Awareness & insight"
+msgstr "Awareness and intuition"
 
 msgid "create_character.attributes.wisdom_help"
 msgstr "Awareness, intuition, and insight"
@@ -190,11 +215,39 @@ msgid "create_character.attributes.charisma_desc"
 msgstr "Force of personality"
 
 msgid "create_character.attributes.charisma_help"
-msgstr "Force of personality, persuasiveness, and leadership"
+msgstr "Force of personality, persuasion, and leadership"
+
+# Attribute system selector
+msgid "create_character.attributes.system_label"
+msgstr "Attribute System"
+
+msgid "create_character.attributes.system.dnd5e"
+msgstr "D&D 5th Edition"
+
+msgid "create_character.attributes.system.dnd35"
+msgstr "D&D 3.5"
+
+msgid "create_character.attributes.system.pathfinder"
+msgstr "Pathfinder"
+
+msgid "create_character.attributes.system.custom"
+msgstr "Custom"
+
+msgid "create_character.attributes.custom_config"
+msgstr "Custom Configuration"
+
+msgid "create_character.attributes.custom_min"
+msgstr "Minimum Value"
+
+msgid "create_character.attributes.custom_max"
+msgstr "Maximum Value"
+
+msgid "create_character.attributes.custom_points"
+msgstr "Available Points"
 
 # Skills Section
 msgid "create_character.skills.title"
-msgstr "Skills & Proficiencies"
+msgstr "Skills and Proficiencies"
 
 msgid "create_character.skills.skills"
 msgstr "Skills"
@@ -210,7 +263,7 @@ msgstr "Proficiencies"
 
 # Equipment Section
 msgid "create_character.equipment.title"
-msgstr "Equipment & Items"
+msgstr "Equipment and Items"
 
 msgid "create_character.equipment.starting"
 msgstr "Starting Equipment"
@@ -220,7 +273,7 @@ msgstr "Additional Equipment"
 
 # Spells Section
 msgid "create_character.spells.title"
-msgstr "Spells & Magic"
+msgstr "Spells and Magic"
 
 msgid "create_character.spells.info"
 msgstr "Spellcasting Information"
@@ -239,7 +292,7 @@ msgid "create_character.preview.portrait"
 msgstr "Character Portrait"
 
 msgid "create_character.preview.basic_info"
-msgstr "Basic Info"
+msgstr "Basic Information"
 
 msgid "create_character.preview.name"
 msgstr "Name:"
@@ -252,6 +305,9 @@ msgstr "Class:"
 
 msgid "create_character.preview.level"
 msgstr "Level:"
+
+msgid "create_character.preview.game_type"
+msgstr "Game Type:"
 
 msgid "create_character.preview.not_set"
 msgstr "Not set"
@@ -301,3 +357,32 @@ msgstr "Save Draft"
 
 msgid "create_character.buttons.create"
 msgstr "Create Character"
+
+# Source options
+msgid "create_character.source.dd5e"
+msgstr "D&D 5e"
+
+msgid "create_character.source.normal"
+msgstr "Normal"
+
+msgid "create_character.source.custom"
+msgstr "Custom"
+
+msgid "create_character.attribute_control.increment"
+msgstr "Increment"
+
+msgid "create_character.attribute_control.decrement"
+msgstr "Decrement"
+
+msgid "create_character.experience_control.increment"
+msgstr "Increment Experience"
+
+msgid "create_character.experience_control.decrement"
+msgstr "Decrement Experience"
+
+# Attribute buttons
+msgid "create_character.attributes.random_btn"
+msgstr "Random"
+
+msgid "create_character.attributes.default_btn"
+msgstr "Default"

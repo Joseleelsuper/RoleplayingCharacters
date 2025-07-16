@@ -8,6 +8,7 @@
     <meta name="keywords" content="{{ _('create_character.page.keywords') }}">
     <link rel="stylesheet" href="/templates/css/create-character.css">
     <link rel="canonical" href="{{ url_for('create_character') }}">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
     {% include 'objects/header.html' %}
@@ -30,33 +31,73 @@
 
             <!-- Tab Navigation -->
             <nav class="tab-navigation" role="tablist" aria-label="{{ _('create_character.tabs.label') }}">
-                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="basic-info-panel" id="basic-info-tab" data-step="1">
+                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="game-type-panel" id="game-type-tab" data-step="1">
+                    <span class="tab-icon">🎲</span>
+                    <span class="tab-text">{{ _('create_character.tabs.game_type') }}</span>
+                </button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="basic-info-panel" id="basic-info-tab" data-step="2">
                     <span class="tab-icon">👤</span>
                     <span class="tab-text">{{ _('create_character.tabs.basic_info') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="attributes-panel" id="attributes-tab" data-step="2">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="attributes-panel" id="attributes-tab" data-step="3">
                     <span class="tab-icon">💪</span>
                     <span class="tab-text">{{ _('create_character.tabs.attributes') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="skills-panel" id="skills-tab" data-step="3">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="skills-panel" id="skills-tab" data-step="4">
                     <span class="tab-icon">🎯</span>
                     <span class="tab-text">{{ _('create_character.tabs.skills') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="equipment-panel" id="equipment-tab" data-step="4">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="equipment-panel" id="equipment-tab" data-step="5">
                     <span class="tab-icon">⚔️</span>
                     <span class="tab-text">{{ _('create_character.tabs.equipment') }}</span>
                 </button>
-                <button class="tab-button" role="tab" aria-selected="false" aria-controls="spells-panel" id="spells-tab" data-step="5">
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="spells-panel" id="spells-tab" data-step="6">
                     <span class="tab-icon">✨</span>
                     <span class="tab-text">{{ _('create_character.tabs.spells') }}</span>
                 </button>
             </nav>
 
             <form id="character-form" class="character-creation-form" aria-label="{{ _('create_character.form.label') }}" novalidate>
-                <!-- Basic Information Panel -->
-                <div id="basic-info-panel" class="form-section" role="tabpanel" aria-labelledby="basic-info-tab">
+                <!-- Game Type Selection Panel -->
+                <div id="game-type-panel" class="form-section" role="tabpanel" aria-labelledby="game-type-tab">
                     <h2 class="section-title">
                         <span class="section-icon">1</span>
+                        {{ _('create_character.game_type.title') }}
+                    </h2>
+                    
+                    <div class="game-type-info">
+                        <p class="mb-lg">{{ _('create_character.game_type.description') }}</p>
+                        <div class="game-type-grid">
+                            <div class="game-type-card" data-game-type="dnd5e">
+                                <div class="game-type-icon">🐉</div>
+                                <h3 class="game-type-title">Dungeons & Dragons 5e</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.dnd5e_desc') }}</p>
+                            </div>
+                            <div class="game-type-card" data-game-type="pathfinder">
+                                <div class="game-type-icon">🧭</div>
+                                <h3 class="game-type-title">Pathfinder</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.pathfinder_desc') }}</p>
+                            </div>
+                            <div class="game-type-card" data-game-type="wod">
+                                <div class="game-type-icon">🌙</div>
+                                <h3 class="game-type-title">World of Darkness</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.wod_desc') }}</p>
+                            </div>
+                            <div class="game-type-card" data-game-type="custom">
+                                <div class="game-type-icon">🎭</div>
+                                <h3 class="game-type-title">{{ _('create_character.game_type.custom') }}</h3>
+                                <p class="game-type-description">{{ _('create_character.game_type.custom_desc') }}</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="selected-game-type" name="game_type" value="" required>
+                        <div class="form-error" id="game-type-error" role="alert" aria-live="polite"></div>
+                    </div>
+                </div>
+
+                <!-- Basic Information Panel -->
+                <div id="basic-info-panel" class="form-section hidden" role="tabpanel" aria-labelledby="basic-info-tab">
+                    <h2 class="section-title">
+                        <span class="section-icon">2</span>
                         {{ _('create_character.basic.title') }}
                     </h2>
                     
@@ -134,37 +175,69 @@
                             </div>
                         </div>
 
-                        <div class="form-group-enhanced">
-                            <label for="level" class="form-label-enhanced">{{ _('create_character.basic.level') }} *</label>
-                            <input type="number" id="level" name="level" class="form-control-enhanced" 
-                                   value="1" min="1" max="20" required aria-describedby="level-error">
-                            <div class="form-error" id="level-error" role="alert" aria-live="polite"></div>
+                        <!-- Componente de atributo configurable para nivel -->
+                        <div class="attribute-item">
+                            <label for="level" class="attribute-label">
+                                {{ _('create_character.basic.level') }} *
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="level">−</button>
+                                <input type="number" id="level" name="level" class="attribute-input" 
+                                       value="1" min="1" max="20" aria-describedby="level-help" data-cost="0" readonly>
+                                <button type="button" class="attribute-btn increase" data-attribute="level">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="level-modifier"></div>
                         </div>
 
-                        <div class="form-group-enhanced">
-                            <label for="experience" class="form-label-enhanced">{{ _('create_character.basic.experience') }}</label>
-                            <input type="number" id="experience" name="experience" class="form-control-enhanced" 
-                                   value="0" min="0" max="999999">
+                        <!-- Componente de atributo configurable para experiencia -->
+                        <div class="attribute-item">
+                            <label for="experience" class="attribute-label">
+                                {{ _('create_character.basic.experience') }}
+                            </label>
+                            <div class="attribute-controls">
+                                <button type="button" class="attribute-btn decrease" data-attribute="experience">−</button>
+                                <input type="number" id="experience" name="experience" class="attribute-input" 
+                                       value="0" min="0" max="999999" data-cost="0" readonly>
+                                <button type="button" class="attribute-btn increase" data-attribute="experience">+</button>
+                            </div>
+                            <div class="attribute-modifier" id="experience-modifier"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Attributes Panel -->
+                <!-- Attributes Panel - Elimina la duplicación del custom-attribute-config -->
                 <div id="attributes-panel" class="form-section hidden" role="tabpanel" aria-labelledby="attributes-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">2</span>
+                        <span class="section-icon">3</span>
                         {{ _('create_character.attributes.title') }}
                     </h2>
-                    
                     <div class="attributes-info">
                         <p class="mb-lg">{{ _('create_character.attributes.description') }}</p>
+                        <!-- Configuración personalizada de atributos - Ahora en la sección de atributos -->
+                        <div id="custom-attribute-config" class="form-group-enhanced" style="display:none; margin-bottom: var(--spacing-lg);">
+                            <h3>{{ _('create_character.attributes.custom_config') }}</h3>
+                            <div class="grid grid-cols-3 gap-md">
+                                <div>
+                                    <label for="custom-min" class="form-label-enhanced">{{ _('create_character.attributes.custom_min') }}</label>
+                                    <input type="number" id="custom-min" class="form-control-enhanced" min="1" value="6">
+                                </div>
+                                <div>
+                                    <label for="custom-max" class="form-label-enhanced">{{ _('create_character.attributes.custom_max') }}</label>
+                                    <input type="number" id="custom-max" class="form-control-enhanced" min="1" value="15">
+                                </div>
+                                <div>
+                                    <label for="custom-points" class="form-label-enhanced">{{ _('create_character.attributes.custom_points') }}</label>
+                                    <input type="number" id="custom-points" class="form-control-enhanced" min="1" value="27">
+                                </div>
+                            </div>
+                        </div>
                         <div class="point-buy-info">
                             <span class="points-remaining">{{ _('create_character.attributes.points_remaining') }} <strong id="points-remaining">27</strong></span>
-                            <button type="button" class="btn btn-secondary btn-sm" id="roll-stats-btn">
-                                🎲 {{ _('create_character.attributes.roll_stats') }}
+                            <button type="button" class="btn btn-secondary btn-sm" id="random-attributes-btn" data-text="{{ _('create_character.attributes.random_btn') }}">
+                                <i class="icon-dice"></i> {{ _('create_character.attributes.random_btn') }}
                             </button>
-                            <button type="button" class="btn btn-secondary btn-sm" id="standard-array-btn">
-                                📊 {{ _('create_character.attributes.standard_array') }}
+                            <button type="button" class="btn btn-secondary btn-sm" id="default-attributes-btn" data-text="{{ _('create_character.attributes.default_btn') }}">
+                                <i class="icon-reset"></i> {{ _('create_character.attributes.default_btn') }}
                             </button>
                         </div>
                     </div>
@@ -262,10 +335,10 @@
                     </div>
                 </div>
 
-                <!-- Skills Panel -->
+                <!-- Skills Panel - Reemplazo completo de la sección de skills -->
                 <div id="skills-panel" class="form-section hidden" role="tabpanel" aria-labelledby="skills-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">3</span>
+                        <span class="section-icon">4</span>
                         {{ _('create_character.skills.title') }}
                     </h2>
                     
@@ -275,68 +348,80 @@
                                 🎯 {{ _('create_character.skills.skills') }}
                                 <span class="skill-points">{{ _('create_character.skills.skill_points') }} <strong id="skill-points-remaining">4</strong></span>
                             </h3>
-                            <div id="skills-container" class="skills-grid">
-                                <!-- Skills will be loaded dynamically -->
+                            <div class="skills-container">
+                                <div class="skills-list" id="skills-list">
+                                    <!-- Skills will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                         
                         <div class="proficiencies-section">
                             <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
-                            <div id="languages-container" class="checkbox-grid">
-                                <!-- Languages will be loaded dynamically -->
+                            <div class="languages-container">
+                                <div class="languages-list" id="languages-list">
+                                    <!-- Languages will be loaded dynamically -->
+                                </div>
                             </div>
                             
                             <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
-                            <div id="proficiencies-container" class="checkbox-grid">
-                                <!-- Proficiencies will be loaded dynamically -->
+                            <div class="proficiencies-container">
+                                <div class="proficiencies-list" id="proficiencies-list">
+                                    <!-- Proficiencies will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Equipment Panel -->
+                <!-- Equipment Panel - Reemplazo de la sección de equipamiento -->
                 <div id="equipment-panel" class="form-section hidden" role="tabpanel" aria-labelledby="equipment-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">4</span>
+                        <span class="section-icon">5</span>
                         {{ _('create_character.equipment.title') }}
                     </h2>
                     
                     <div class="equipment-layout">
                         <div class="starting-equipment">
                             <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
-                            <div id="starting-equipment-container" class="equipment-grid">
-                                <!-- Starting equipment will be loaded dynamically -->
+                            <div class="equipment-container">
+                                <div class="equipment-list" id="starting-equipment-list">
+                                    <!-- Starting equipment will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                         
                         <div class="additional-equipment">
                             <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
-                            <div id="additional-equipment-container" class="equipment-selection">
-                                <!-- Additional equipment will be loaded dynamically -->
+                            <div class="equipment-container">
+                                <div class="equipment-list" id="additional-equipment-list">
+                                    <!-- Additional equipment will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Spells Panel -->
+                <!-- Spells Panel - Reemplazo de la sección de hechizos -->
                 <div id="spells-panel" class="form-section hidden" role="tabpanel" aria-labelledby="spells-tab">
                     <h2 class="section-title">
-                        <span class="section-icon">5</span>
+                        <span class="section-icon">6</span>
                         {{ _('create_character.spells.title') }}
                     </h2>
                     
                     <div id="spells-content" class="spells-layout">
                         <div class="spell-slots-info">
                             <h3 class="subsection-title">📜 {{ _('create_character.spells.info') }}</h3>
-                            <div id="spell-slots-container" class="spell-slots-grid">
+                            <div class="spell-slots-container" id="spell-slots-container">
                                 <!-- Spell slots will be shown if class is a spellcaster -->
                             </div>
                         </div>
                         
                         <div class="spell-selection">
                             <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
-                            <div id="spells-container" class="spells-grid">
-                                <!-- Spells will be loaded dynamically -->
+                            <div class="spells-container">
+                                <div class="spells-list" id="spells-list">
+                                    <!-- Spells will be loaded dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -356,6 +441,10 @@
                 <div class="character-summary" id="character-summary">
                     <div class="summary-section">
                         <h4>{{ _('create_character.preview.basic_info') }}</h4>
+                        <div class="summary-item">
+                            <span class="summary-label">{{ _('create_character.preview.game_type') }}</span>
+                            <span class="summary-value" id="preview-game-type">{{ _('create_character.preview.not_set') }}</span>
+                        </div>
                         <div class="summary-item">
                             <span class="summary-label">{{ _('create_character.preview.name') }}</span>
                             <span class="summary-value" id="preview-name">{{ _('create_character.preview.not_set') }}</span>
@@ -452,6 +541,12 @@
 
     {% include 'objects/footer.html' %}
     
-    <script src="/templates/js/create-character.js"></script>
+    <!-- Componentes JS separados -->
+    <script src="/templates/js/create-character/game-type-selector.js"></script>
+    <script src="/templates/js/create-character/data-manager.js"></script>
+    <script src="/templates/js/create-character/attribute-manager.js"></script>
+    <script src="/templates/js/create-character/preview-manager.js"></script>
+    <script src="/templates/js/create-character/navigation-manager.js"></script>
+    <script src="/templates/js/create-character/create-character.js"></script>
 </body>
 </html>

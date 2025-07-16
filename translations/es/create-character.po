@@ -61,6 +61,9 @@ msgstr "Equipamiento"
 msgid "create_character.tabs.spells"
 msgstr "Hechizos"
 
+msgid "create_character.tabs.game_type"
+msgstr "Tipo de Juego"
+
 # Basic Information Section
 msgid "create_character.basic.title"
 msgstr "Información Básica"
@@ -192,6 +195,34 @@ msgstr "Fuerza de personalidad"
 msgid "create_character.attributes.charisma_help"
 msgstr "Fuerza de personalidad, persuasión y liderazgo"
 
+# Attribute system selector
+msgid "create_character.attributes.system_label"
+msgstr "Sistema de Atributos"
+
+msgid "create_character.attributes.system.dnd5e"
+msgstr "D&D 5ª Edición"
+
+msgid "create_character.attributes.system.dnd35"
+msgstr "D&D 3.5"
+
+msgid "create_character.attributes.system.pathfinder"
+msgstr "Pathfinder"
+
+msgid "create_character.attributes.system.custom"
+msgstr "Personalizado"
+
+msgid "create_character.attributes.custom_config"
+msgstr "Configuración Personalizada"
+
+msgid "create_character.attributes.custom_min"
+msgstr "Valor Mínimo"
+
+msgid "create_character.attributes.custom_max"
+msgstr "Valor Máximo"
+
+msgid "create_character.attributes.custom_points"
+msgstr "Puntos Disponibles"
+
 # Skills Section
 msgid "create_character.skills.title"
 msgstr "Habilidades y Competencias"
@@ -289,6 +320,9 @@ msgstr "Equipamiento"
 msgid "create_character.preview.spells"
 msgstr "Hechizos"
 
+msgid "create_character.preview.game_type"
+msgstr "Tipo de Juego:"
+
 # Form buttons
 msgid "create_character.buttons.previous"
 msgstr "Anterior"
@@ -301,3 +335,54 @@ msgstr "Guardar Borrador"
 
 msgid "create_character.buttons.create"
 msgstr "Crear Personaje"
+
+# Source options
+msgid "create_character.source.dd5e"
+msgstr "D&D 5e"
+
+msgid "create_character.source.normal"
+msgstr "Normal"
+
+msgid "create_character.source.custom"
+msgstr "Personalizada"
+
+msgid "create_character.attribute_control.increment"
+msgstr "Incrementar"
+
+msgid "create_character.attribute_control.decrement"
+msgstr "Disminuir"
+
+msgid "create_character.experience_control.increment"
+msgstr "Incrementar Experiencia"
+
+msgid "create_character.experience_control.decrement"
+msgstr "Disminuir Experiencia"
+
+# Attribute buttons
+msgid "create_character.attributes.random_btn"
+msgstr "Aleatorio"
+
+msgid "create_character.attributes.default_btn"
+msgstr "Por Defecto"
+
+# Nuevas traducciones para la selección de tipo de juego
+msgid "create_character.game_type.title"
+msgstr "Selecciona un Tipo de Juego"
+
+msgid "create_character.game_type.description"
+msgstr "Elige el sistema de juego de rol para el que quieres crear tu personaje. Esto determinará las opciones disponibles para clases, razas y más."
+
+msgid "create_character.game_type.dnd5e_desc"
+msgstr "La quinta edición del juego de rol de fantasía más popular del mundo, con un sistema de reglas accesible y flexible."
+
+msgid "create_character.game_type.pathfinder_desc"
+msgstr "Un sistema basado en D&D 3.5 con mayor profundidad táctica y personalización de personajes."
+
+msgid "create_character.game_type.wod_desc"
+msgstr "Un juego de rol moderno y oscuro donde interpretas a criaturas sobrenaturales en un mundo de horror gótico."
+
+msgid "create_character.game_type.custom"
+msgstr "Personalizado"
+
+msgid "create_character.game_type.custom_desc"
+msgstr "Crea un personaje con acceso a todas las opciones disponibles de todos los sistemas de juego."
