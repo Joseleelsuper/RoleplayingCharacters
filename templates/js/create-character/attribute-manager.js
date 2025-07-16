@@ -71,6 +71,7 @@ class AttributeManager {
                 maxAttr: 15,
                 pointsLimit: 27,
                 pointBuyCostFunction: function(val) {
+                    // Para valores hasta 15, usar la tabla estándar de D&D 5e
                     if (val < 8) return 0;
                     if (val === 8) return 0;
                     if (val === 9) return 1;
@@ -80,7 +81,25 @@ class AttributeManager {
                     if (val === 13) return 5;
                     if (val === 14) return 7;
                     if (val === 15) return 9;
-                    return 1000;
+                    
+                    // Para valores más allá de 15, usar una progresión más agresiva
+                    // Cada +1 cuesta 2 más que el anterior
+                    if (val === 16) return 11; // 9 + 2
+                    if (val === 17) return 14; // 11 + 3
+                    if (val === 18) return 18; // 14 + 4
+                    if (val === 19) return 23; // 18 + 5
+                    if (val === 20) return 29; // 23 + 6
+                    
+                    // Para valores aún más altos, crecimiento exponencial
+                    // Esto permitirá valores muy altos, pero a un costo prohibitivo
+                    const baseVal = 29;
+                    const extraVal = val - 20;
+                    if (extraVal > 0) {
+                        // Cada punto más allá de 20 cuesta exponencialmente más
+                        return baseVal + Math.pow(2, extraVal + 1);
+                    }
+                    
+                    return baseVal;
                 },
                 name: 'Custom'
             }
@@ -277,12 +296,24 @@ class AttributeManager {
             });
         }
 
-        // Botón de restaurar por defecto (valores mínimos del sistema actual)
+        // Botón de restaurar por defecto (valores +0 según el sistema, normalmente 10)
         if (this.defaultStatsBtn) {
             this.defaultStatsBtn.addEventListener('click', () => {
                 const attrs = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
                 const system = this.attributeSystems[this.currentAttributeSystem];
-                const defaultValue = system.minAttr;
+                
+                // Encontrar el valor que da modificador +0 en este sistema
+                // Por defecto, usamos 10 si no encontramos un valor que dé +0
+                let defaultValue = 10;
+                
+                // Buscar valor que da modificador +0
+                for (let i = system.minAttr; i <= system.maxAttr; i++) {
+                    const modifier = Math.floor((i - 10) / 2);
+                    if (modifier === 0) {
+                        defaultValue = i;
+                        break;
+                    }
+                }
                 
                 attrs.forEach(attr => {
                     const input = document.getElementById(attr);
@@ -332,7 +363,7 @@ class AttributeManager {
                     const minVal = parseInt(customMin.value);
                     const maxVal = parseInt(customMax.value);
                     
-                    if (maxVal >= minVal && maxVal <= 30) {
+                    if (maxVal >= minVal) {
                         this.attributeSystems.custom.maxAttr = maxVal;
                         this.updateAttributeLimits();
                         this.updateAttributePointsRemaining();
@@ -345,7 +376,7 @@ class AttributeManager {
                 customPoints.addEventListener('change', () => {
                     const pointsVal = parseInt(customPoints.value);
                     
-                    if (pointsVal >= 1 && pointsVal <= 100) {
+                    if (pointsVal >= 1) {
                         this.attributeSystems.custom.pointsLimit = pointsVal;
                         this.updateAttributePointsRemaining();
                     } else {
@@ -407,12 +438,10 @@ class AttributeManager {
             const maxVal = parseInt(customMax.value) || 15;
             const pointsVal = parseInt(customPoints.value) || 27;
             
-            // Validar valores
+            // Validar valores - solo verificamos que sean números positivos y que min <= max
             if (minVal < 1) customMin.value = 1;
-            if (maxVal > 30) customMax.value = 30;
             if (minVal > maxVal) customMin.value = maxVal;
             if (pointsVal < 1) customPoints.value = 1;
-            if (pointsVal > 100) customPoints.value = 100;
             
             // Actualizar sistema con valores validados
             this.updateCustomSystem(
