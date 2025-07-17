@@ -1,4 +1,11 @@
 /**
+ * Gestor del tipo de juego para la creación de personajes.
+ * 
+ * Este módulo se encarga de gestionar la selección del tipo de juego
+ * y cargar los datos correspondientes al juego seleccionado.
+ */
+
+/**
  * Clase para gestionar la selección del tipo de juego de rol
  */
 class GameTypeSelector {
@@ -12,6 +19,8 @@ class GameTypeSelector {
             'wod': 'custom',
             'custom': 'custom'
         };
+        
+        this.currentGameType = 'custom';
     }
     
     init() {
@@ -45,6 +54,8 @@ class GameTypeSelector {
         if (this.selectedGameTypeInput) {
             this.selectedGameTypeInput.value = this.selectedGameType;
         }
+        
+        // Ya no tenemos selector de tipo de juego
         
         // Mostrar/ocultar configuración personalizada si corresponde
         // Ahora el config está en la sección de atributos, pero sigue funcionando igual
@@ -84,6 +95,10 @@ class GameTypeSelector {
             errorElement.classList.remove('active');
         }
         
+        // Actualizar el tipo de juego actual y cargar los datos del juego
+        this.currentGameType = this.selectedGameType;
+        this.loadGameData();
+        
         // Notificar que se ha seleccionado un juego
         document.dispatchEvent(new CustomEvent('gameTypeSelected', { 
             detail: { gameType: this.selectedGameType } 
@@ -119,6 +134,110 @@ class GameTypeSelector {
         if (errorElement) {
             errorElement.textContent = 'Por favor, selecciona un tipo de juego para continuar.';
             errorElement.classList.add('active');
+        }
+    }
+    
+    // Se eliminó el método loadGameTypes
+    
+    // Se eliminaron los métodos handleGameTypeChange, updateGameTypeDescription y updateGameTypeCards
+    
+    /**
+     * Carga los datos del juego seleccionado.
+     */
+    async loadGameData() {
+        try {
+            // Mostrar indicador de carga
+            document.body.classList.add('loading');
+            
+            // Hacer la petición a la API para obtener los datos del juego
+            const response = await fetch(`/api/game-data?game_type=${this.currentGameType}`);
+            if (!response.ok) {
+                throw new Error(`Error al cargar los datos del juego: ${response.statusText}`);
+            }
+            
+            const gameData = await response.json();
+            
+            // Actualizar los selectores del formulario con los nuevos datos
+            this.updateFormSelects(gameData);
+            
+            // Notificar a otros módulos que se han cargado nuevos datos de juego
+            document.dispatchEvent(new CustomEvent('gameDataLoaded', {
+                detail: {
+                    gameType: this.currentGameType,
+                    gameData: gameData
+                }
+            }));
+            
+        } catch (error) {
+            console.error('Error al cargar los datos del juego:', error);
+        } finally {
+            // Ocultar indicador de carga
+            document.body.classList.remove('loading');
+        }
+    }
+    
+    /**
+     * Actualiza los selectores del formulario con los datos del juego.
+     * 
+     * @param {Object} gameData - Datos del juego cargados
+     */
+    updateFormSelects(gameData) {
+        // Actualizar selector de razas
+        this.updateSelect('race', gameData.races);
+        
+        // Actualizar selector de clases
+        this.updateSelect('class', gameData.classes);
+        
+        // Actualizar selector de trasfondos
+        this.updateSelect('background', gameData.backgrounds);
+        
+        // Actualizar selector de alineamientos
+        this.updateSelect('alignment', gameData.alignments);
+    }
+    
+    /**
+     * Actualiza un selector con los datos proporcionados.
+     * 
+     * @param {string} selectId - ID del selector a actualizar
+     * @param {Array} items - Elementos para añadir al selector
+     */
+    updateSelect(selectId, items) {
+        const select = document.getElementById(selectId);
+        if (select) {
+            // Guardar el valor seleccionado actual
+            const currentValue = select.value;
+            
+            // Limpiar opciones existentes
+            select.innerHTML = '';
+            
+            // Añadir opción vacía
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = '-- Selecciona --';
+            select.appendChild(emptyOption);
+            
+            // Añadir las nuevas opciones
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.name;
+                option.dataset.description = item.description || '';
+                select.appendChild(option);
+            });
+            
+            // Intentar restaurar el valor seleccionado
+            if (currentValue) {
+                // Buscar una opción con el mismo valor
+                const matchingOption = Array.from(select.options)
+                    .find(option => option.value === currentValue);
+                
+                if (matchingOption) {
+                    select.value = currentValue;
+                }
+            }
+            
+            // Disparar evento de cambio para actualizar descripciones, etc.
+            select.dispatchEvent(new Event('change'));
         }
     }
 }
