@@ -37,207 +37,138 @@ async def get_create_character_page(request: Request) -> HTMLResponse:
 
 
 @router.get("/api/races", tags=["Characters API"])
-async def get_races() -> List[Dict[str, Any]]:
+async def get_races(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todas las razas disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de razas
     """
-    # Simulamos datos de razas para la interfaz
-    return [
-        {"id": 1, "name": "Human", "description": "Versatile and adaptable"},
-        {"id": 2, "name": "Elf", "description": "Graceful and long-lived"},
-        {"id": 3, "name": "Dwarf", "description": "Strong and sturdy"},
-        {"id": 4, "name": "Halfling", "description": "Small and nimble"},
-        {"id": 5, "name": "Gnome", "description": "Curious and inventive"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_races(game_type)
 
 
 @router.get("/api/backgrounds", tags=["Characters API"])
-async def get_backgrounds() -> List[Dict[str, Any]]:
+async def get_backgrounds(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todos los trasfondos disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de trasfondos
     """
-    # Simulamos datos de trasfondos para la interfaz
-    return [
-        {"id": 1, "name": "Noble", "description": "Born to wealth and privilege"},
-        {"id": 2, "name": "Acolyte", "description": "Served in a temple"},
-        {"id": 3, "name": "Criminal", "description": "Has a criminal past"},
-        {"id": 4, "name": "Soldier", "description": "Trained in military"},
-        {"id": 5, "name": "Sage", "description": "Scholar and researcher"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_backgrounds(game_type)
 
 
 @router.get("/api/alignments", tags=["Characters API"])
-async def get_alignments() -> List[Dict[str, Any]]:
+async def get_alignments(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todos los alineamientos disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de alineamientos
     """
-    # Simulamos datos de alineamientos para la interfaz
-    return [
-        {"id": 1, "name": "Lawful Good", "description": "Honor and compassion"},
-        {"id": 2, "name": "Neutral Good", "description": "Do the best good"},
-        {"id": 3, "name": "Chaotic Good", "description": "Freedom and kindness"},
-        {"id": 4, "name": "Lawful Neutral", "description": "Order above all"},
-        {"id": 5, "name": "True Neutral", "description": "Balance in all things"},
-        {"id": 6, "name": "Chaotic Neutral", "description": "Freedom above all"},
-        {"id": 7, "name": "Lawful Evil", "description": "Methodical conquest"},
-        {"id": 8, "name": "Neutral Evil", "description": "Selfish interest"},
-        {"id": 9, "name": "Chaotic Evil", "description": "Destruction and chaos"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_alignments(game_type)
 
 
 @router.get("/api/skills", tags=["Characters API"])
-async def get_skills() -> List[Dict[str, Any]]:
+async def get_skills(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todas las habilidades disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de habilidades
     """
-    # Simulamos datos de habilidades para la interfaz
-    return [
-        {"id": 1, "name": "Acrobatics", "attribute": "dexterity"},
-        {"id": 2, "name": "Animal Handling", "attribute": "wisdom"},
-        {"id": 3, "name": "Arcana", "attribute": "intelligence"},
-        {"id": 4, "name": "Athletics", "attribute": "strength"},
-        {"id": 5, "name": "Deception", "attribute": "charisma"},
-        {"id": 6, "name": "History", "attribute": "intelligence"},
-        {"id": 7, "name": "Insight", "attribute": "wisdom"},
-        {"id": 8, "name": "Intimidation", "attribute": "charisma"},
-        {"id": 9, "name": "Investigation", "attribute": "intelligence"},
-        {"id": 10, "name": "Medicine", "attribute": "wisdom"},
-        {"id": 11, "name": "Nature", "attribute": "intelligence"},
-        {"id": 12, "name": "Perception", "attribute": "wisdom"},
-        {"id": 13, "name": "Performance", "attribute": "charisma"},
-        {"id": 14, "name": "Persuasion", "attribute": "charisma"},
-        {"id": 15, "name": "Religion", "attribute": "intelligence"},
-        {"id": 16, "name": "Sleight of Hand", "attribute": "dexterity"},
-        {"id": 17, "name": "Stealth", "attribute": "dexterity"},
-        {"id": 18, "name": "Survival", "attribute": "wisdom"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_skills(game_type)
 
 
 @router.get("/api/languages", tags=["Characters API"])
-async def get_languages() -> List[Dict[str, Any]]:
+async def get_languages(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todos los idiomas disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de idiomas
     """
-    # Simulamos datos de idiomas para la interfaz
-    return [
-        {"id": 1, "name": "Common", "description": "The common tongue of humans"},
-        {"id": 2, "name": "Elvish", "description": "The language of elves"},
-        {"id": 3, "name": "Dwarvish", "description": "The language of dwarves"},
-        {"id": 4, "name": "Giant", "description": "The language of giants"},
-        {"id": 5, "name": "Gnomish", "description": "The language of gnomes"},
-        {"id": 6, "name": "Goblin", "description": "The language of goblins"},
-        {"id": 7, "name": "Halfling", "description": "The language of halflings"},
-        {"id": 8, "name": "Orc", "description": "The language of orcs"},
-        {"id": 9, "name": "Abyssal", "description": "The language of demons"},
-        {"id": 10, "name": "Celestial", "description": "The language of celestials"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_languages(game_type)
 
 
 @router.get("/api/proficiencies", tags=["Characters API"])
-async def get_proficiencies() -> List[Dict[str, Any]]:
+async def get_proficiencies(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todas las competencias disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de competencias
     """
-    # Simulamos datos de competencias para la interfaz
-    return [
-        {"id": 1, "name": "Light Armor", "type": "armor"},
-        {"id": 2, "name": "Medium Armor", "type": "armor"},
-        {"id": 3, "name": "Heavy Armor", "type": "armor"},
-        {"id": 4, "name": "Shields", "type": "armor"},
-        {"id": 5, "name": "Simple Weapons", "type": "weapon"},
-        {"id": 6, "name": "Martial Weapons", "type": "weapon"},
-        {"id": 7, "name": "Alchemist's Supplies", "type": "tool"},
-        {"id": 8, "name": "Brewer's Supplies", "type": "tool"},
-        {"id": 9, "name": "Carpenter's Tools", "type": "tool"},
-        {"id": 10, "name": "Cook's Utensils", "type": "tool"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_proficiencies(game_type)
 
 
 @router.get("/api/spells", tags=["Characters API"])
-async def get_spells() -> List[Dict[str, Any]]:
+async def get_spells(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todos los hechizos disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de hechizos
     """
-    # Simulamos datos de hechizos para la interfaz
-    return [
-        {"id": 1, "name": "Acid Splash", "level": 0, "school": "Conjuration"},
-        {"id": 2, "name": "Chill Touch", "level": 0, "school": "Necromancy"},
-        {"id": 3, "name": "Magic Missile", "level": 1, "school": "Evocation"},
-        {"id": 4, "name": "Burning Hands", "level": 1, "school": "Evocation"},
-        {"id": 5, "name": "Cure Wounds", "level": 1, "school": "Evocation"},
-        {"id": 6, "name": "Detect Magic", "level": 1, "school": "Divination"},
-        {"id": 7, "name": "Fireball", "level": 3, "school": "Evocation"},
-        {"id": 8, "name": "Fly", "level": 3, "school": "Transmutation"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_spells(game_type)
 
 
 @router.get("/api/items", tags=["Characters API"])
-async def get_items() -> List[Dict[str, Any]]:
+async def get_items(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todos los objetos disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de objetos
     """
-    # Simulamos datos de objetos para la interfaz
-    return [
-        {"id": 1, "name": "Potion of Healing", "type": "consumable", "rarity": "common"},
-        {"id": 2, "name": "Longsword", "type": "weapon", "rarity": "common"},
-        {"id": 3, "name": "Shield", "type": "armor", "rarity": "common"},
-        {"id": 4, "name": "Rope", "type": "gear", "rarity": "common"},
-        {"id": 5, "name": "Lantern", "type": "gear", "rarity": "common"},
-        {"id": 6, "name": "Spellbook", "type": "gear", "rarity": "uncommon"},
-        {"id": 7, "name": "Studded Leather", "type": "armor", "rarity": "common"},
-        {"id": 8, "name": "Wand of Magic Missiles", "type": "magic", "rarity": "uncommon"},
-        {"id": 9, "name": "Amulet of Health", "type": "magic", "rarity": "rare"},
-        {"id": 10, "name": "Bag of Holding", "type": "magic", "rarity": "uncommon"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_items(game_type)
 
 
 @router.get("/api/classes", tags=["Characters API"])
-async def get_classes() -> List[Dict[str, Any]]:
+async def get_classes(game_type: str = "custom") -> List[Dict[str, Any]]:
     """
     Endpoint para obtener todas las clases disponibles.
+
+    Args:
+        game_type: Tipo de juego (dnd5e, pathfinder, wod o custom)
 
     Returns:
         List[Dict[str, Any]]: Lista de clases
     """
-    # Simulamos datos de clases para la interfaz
-    return [
-        {"id": 1, "name": "Fighter", "description": "Master of weapons and armor"},
-        {"id": 2, "name": "Wizard", "description": "Scholar of magical arts"},
-        {"id": 3, "name": "Rogue", "description": "Expert in stealth and trickery"},
-        {"id": 4, "name": "Cleric", "description": "Divine spellcaster and healer"},
-        {"id": 5, "name": "Ranger", "description": "Hunter and tracker"},
-        {"id": 6, "name": "Barbarian", "description": "Fierce warrior of the wilds"},
-        {"id": 7, "name": "Bard", "description": "Master of song and story"},
-        {"id": 8, "name": "Druid", "description": "Guardian of nature"},
-        {"id": 9, "name": "Monk", "description": "Master of martial arts"},
-        {"id": 10, "name": "Paladin", "description": "Holy warrior"},
-        {"id": 11, "name": "Sorcerer", "description": "Innate magical power"},
-        {"id": 12, "name": "Warlock", "description": "Pact-bound spellcaster"}
-    ]
+    from src.infrastructure.apis.rpg_service import RPGDataService
+    return await RPGDataService.get_classes(game_type)
 
 
 @router.post("/api/characters", tags=["Characters API"])
