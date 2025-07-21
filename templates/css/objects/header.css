@@ -82,6 +82,7 @@
 .nav-link-active {
     color: var(--primary-600);
     background-color: var(--primary-100);
+    font-weight: 600;
 }
 
 .nav-link-active::after {
@@ -323,9 +324,4 @@
         background-color: rgba(14, 165, 233, 0.15);
         color: var(--primary-400);
     }
-}
-
-/* Additional contrast adjustments for navigation */
-.nav-link-active {
-    font-weight: 600;
 }
