@@ -16,7 +16,7 @@ class GameTypeSelector {
         this.gameTypeAttributeSystemMap = {
             'dnd5e': 'dnd5e',
             'pathfinder': 'pathfinder',
-            'wod': 'custom',
+            'wod': 'wod',
             'custom': 'custom'
         };
         
@@ -61,7 +61,7 @@ class GameTypeSelector {
         // Ahora el config está en la sección de atributos, pero sigue funcionando igual
         const customConfig = document.getElementById('custom-attribute-config');
         if (customConfig) {
-            const isCustom = this.selectedGameType === 'custom' || this.selectedGameType === 'wod';
+            const isCustom = this.selectedGameType === 'custom';
             customConfig.style.display = isCustom ? 'block' : 'none';
             
             // Si es personalizado, aplicar valores de configuración inmediatamente
@@ -213,7 +213,8 @@ class GameTypeSelector {
             // Añadir opción vacía
             const emptyOption = document.createElement('option');
             emptyOption.value = '';
-            emptyOption.textContent = '-- Selecciona --';
+            // Obtener el texto traducido desde un elemento oculto en el HTML
+            emptyOption.textContent = document.getElementById('preview-not-set-text')?.textContent || 'Not set';
             select.appendChild(emptyOption);
             
             // Añadir las nuevas opciones
