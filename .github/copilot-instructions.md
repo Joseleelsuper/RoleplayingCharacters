@@ -43,6 +43,8 @@ Página web hosteada en Vercel que permite a los usuarios crear y gestionar pers
 
 18. En `/templates/css/global/base.css` y `colors.css` tenemos todos los estilos por defecto. No utilices estilos no necesarios en los CSS de las páginas. Utiliza los estilos ya creados en estos ficheros.
 
+19. Al trabajar con APIs, quiero que siempre hagas fetch para asegurarte de que el JSON recibido tiene la estructura esperada. Utiliza `pydantic` para validar los datos de las respuestas de las APIs.
+
 ## Flujos de trabajo críticos
 
 ### Ejecución de pruebas
