@@ -1,7 +1,7 @@
 """
 Servicio centralizado para las APIs de juegos de rol.
 
-Este módulo proporciona una interfaz unificada para acceder a los datos
+Este módulo proporciona una interfaz unificada para acceder a datos
 de diferentes sistemas de juegos de rol (D&D 5e, Pathfinder 2e, World of Darkness).
 """
 
@@ -37,7 +37,20 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de razas
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_races()
+            try:
+                races = await DnD5eApiClient.get_races()
+                if hasattr(races, 'results'):
+                    return [{"id": r.index, 
+                            "name": r.name, 
+                            "description": "", 
+                            "source": "dnd5e"} 
+                           for r in races.results]
+                else:
+                    print("Error: El objeto races no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener razas: {e}")
+                return []
         elif game_type == RPGGameType.PATHFINDER:
             return await PathfinderApiClient.get_ancestries()
         elif game_type == RPGGameType.WOD:
@@ -64,7 +77,20 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de clases
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_classes()
+            try:
+                classes = await DnD5eApiClient.get_classes()
+                if hasattr(classes, 'results'):
+                    return [{"id": c.index, 
+                            "name": c.name, 
+                            "description": "", 
+                            "source": "dnd5e"} 
+                           for c in classes.results]
+                else:
+                    print("Error: El objeto classes no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener clases: {e}")
+                return []
         elif game_type == RPGGameType.PATHFINDER:
             return await PathfinderApiClient.get_classes()
         else:
@@ -89,7 +115,20 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de trasfondos
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_backgrounds()
+            try:
+                backgrounds = await DnD5eApiClient.get_backgrounds()
+                if hasattr(backgrounds, 'results'):
+                    return [{"id": b.index, 
+                            "name": b.name, 
+                            "description": "", 
+                            "source": "dnd5e"} 
+                           for b in backgrounds.results]
+                else:
+                    print("Error: El objeto backgrounds no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener trasfondos: {e}")
+                return []
         elif game_type == RPGGameType.PATHFINDER:
             return await PathfinderApiClient.get_backgrounds()
         elif game_type == RPGGameType.WOD:
@@ -116,7 +155,20 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de alineamientos
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_alignments()
+            try:
+                alignments = await DnD5eApiClient.get_alignments()
+                if hasattr(alignments, 'results'):
+                    return [{"id": a.index, 
+                            "name": a.name, 
+                            "description": "", 
+                            "source": "dnd5e"} 
+                           for a in alignments.results]
+                else:
+                    print("Error: El objeto alignments no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener alineamientos: {e}")
+                return []
         else:
             # Pathfinder, WoD y juegos personalizados, datos simulados
             return [
@@ -143,7 +195,20 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de habilidades
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_skills()
+            try:
+                skills = await DnD5eApiClient.get_skills()
+                if hasattr(skills, 'results'):
+                    return [{"id": s.index, 
+                            "name": s.name, 
+                            "attribute": "", 
+                            "source": "dnd5e"} 
+                           for s in skills.results]
+                else:
+                    print("Error: El objeto skills no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener habilidades: {e}")
+                return []
         elif game_type == RPGGameType.PATHFINDER:
             return await PathfinderApiClient.get_skills()
         elif game_type == RPGGameType.WOD:
@@ -173,7 +238,20 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de idiomas
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_languages()
+            try:
+                languages = await DnD5eApiClient.get_languages()
+                if hasattr(languages, 'results'):
+                    return [{"id": lang.index, 
+                            "name": lang.name, 
+                            "description": "", 
+                            "source": "dnd5e"} 
+                           for lang in languages.results]
+                else:
+                    print("Error: El objeto languages no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener idiomas: {e}")
+                return []
         elif game_type == RPGGameType.PATHFINDER:
             return await PathfinderApiClient.get_languages()
         else:
@@ -198,7 +276,20 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de competencias
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_proficiencies()
+            try:
+                proficiencies = await DnD5eApiClient.get_proficiencies()
+                if hasattr(proficiencies, 'results'):
+                    return [{"id": p.index, 
+                            "name": p.name, 
+                            "type": "", 
+                            "source": "dnd5e"} 
+                           for p in proficiencies.results]
+                else:
+                    print("Error: El objeto proficiencies no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener competencias: {e}")
+                return []
         else:
             # Para Pathfinder, WoD y juegos personalizados, datos simulados
             return [
@@ -222,7 +313,21 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de hechizos
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_spells()
+            try:
+                spells = await DnD5eApiClient.get_spells()
+                if hasattr(spells, 'results'):
+                    return [{"id": s.index, 
+                            "name": s.name, 
+                            "level": 0, 
+                            "school": "", 
+                            "source": "dnd5e"} 
+                           for s in spells.results]
+                else:
+                    print("Error: El objeto spells no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener hechizos: {e}")
+                return []
         elif game_type == RPGGameType.PATHFINDER:
             return await PathfinderApiClient.get_spells()
         elif game_type == RPGGameType.WOD:
@@ -249,7 +354,21 @@ class RPGDataService:
             List[Dict[str, Any]]: Lista de objetos
         """
         if game_type == RPGGameType.DND5E:
-            return await DnD5eApiClient.get_equipment()
+            try:
+                equipments = await DnD5eApiClient.get_equipment()
+                if hasattr(equipments, 'results'):
+                    return [{"id": e.index, 
+                            "name": e.name, 
+                            "type": "", 
+                            "rarity": "common", 
+                            "source": "dnd5e"} 
+                           for e in equipments.results]
+                else:
+                    print("Error: El objeto equipments no tiene un atributo 'results'")
+                    return []
+            except Exception as e:
+                print(f"Error al obtener equipamiento: {e}")
+                return []
         elif game_type == RPGGameType.PATHFINDER:
             return await PathfinderApiClient.get_equipment()
         else:
@@ -273,24 +392,39 @@ class RPGDataService:
         Returns:
             Dict[str, List[Dict[str, Any]]]: Diccionario con todos los datos por categoría
         """
-        races = await RPGDataService.get_races(game_type)
-        classes = await RPGDataService.get_classes(game_type)
-        backgrounds = await RPGDataService.get_backgrounds(game_type)
-        alignments = await RPGDataService.get_alignments(game_type)
-        skills = await RPGDataService.get_skills(game_type)
-        languages = await RPGDataService.get_languages(game_type)
-        proficiencies = await RPGDataService.get_proficiencies(game_type)
-        spells = await RPGDataService.get_spells(game_type)
-        items = await RPGDataService.get_items(game_type)
-        
-        return {
-            "races": races,
-            "classes": classes,
-            "backgrounds": backgrounds,
-            "alignments": alignments,
-            "skills": skills,
-            "languages": languages,
-            "proficiencies": proficiencies,
-            "spells": spells,
-            "items": items
-        }
+        try:
+            races = await RPGDataService.get_races(game_type)
+            classes = await RPGDataService.get_classes(game_type)
+            backgrounds = await RPGDataService.get_backgrounds(game_type)
+            alignments = await RPGDataService.get_alignments(game_type)
+            skills = await RPGDataService.get_skills(game_type)
+            languages = await RPGDataService.get_languages(game_type)
+            proficiencies = await RPGDataService.get_proficiencies(game_type)
+            spells = await RPGDataService.get_spells(game_type)
+            items = await RPGDataService.get_items(game_type)
+            
+            return {
+                "races": races,
+                "classes": classes,
+                "backgrounds": backgrounds,
+                "alignments": alignments,
+                "skills": skills,
+                "languages": languages,
+                "proficiencies": proficiencies,
+                "spells": spells,
+                "items": items
+            }
+        except Exception as e:
+            print(f"Error al obtener todos los datos del juego: {e}")
+            # Devolver datos vacíos para evitar error 500
+            return {
+                "races": [],
+                "classes": [],
+                "backgrounds": [],
+                "alignments": [],
+                "skills": [],
+                "languages": [],
+                "proficiencies": [],
+                "spells": [],
+                "items": []
+            }

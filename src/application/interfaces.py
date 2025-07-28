@@ -12,6 +12,7 @@ from dataclasses import dataclass
 @dataclass
 class CharacterInterface:
     """Interfaz para la entidad Character."""
+
     id: Optional[int]
     name: str
     race_id: int
@@ -24,6 +25,7 @@ class CharacterInterface:
 @dataclass
 class AttributeInterface:
     """Interfaz para la entidad Attribute."""
+
     id: Optional[int]
     character_id: int
     name: str
@@ -33,6 +35,7 @@ class AttributeInterface:
 @dataclass
 class CharacterLanguageInterface:
     """Interfaz para la entidad CharacterLanguage."""
+
     id: Optional[int]
     character_id: int
     language_id: int
@@ -41,6 +44,7 @@ class CharacterLanguageInterface:
 @dataclass
 class CharacterProficiencyInterface:
     """Interfaz para la entidad CharacterProficiency."""
+
     id: Optional[int]
     character_id: int
     proficiency_id: int
@@ -49,6 +53,7 @@ class CharacterProficiencyInterface:
 @dataclass
 class CharacterSkillInterface:
     """Interfaz para la entidad CharacterSkill."""
+
     id: Optional[int]
     character_id: int
     skill_id: int
@@ -58,6 +63,7 @@ class CharacterSkillInterface:
 @dataclass
 class CharacterSpellInterface:
     """Interfaz para la entidad CharacterSpell."""
+
     id: Optional[int]
     character_id: int
     spell_id: int
@@ -66,6 +72,7 @@ class CharacterSpellInterface:
 @dataclass
 class CharacterItemInterface:
     """Interfaz para la entidad CharacterItem."""
+
     id: Optional[int]
     character_id: int
     item_id: int
