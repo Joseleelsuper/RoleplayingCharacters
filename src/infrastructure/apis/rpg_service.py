@@ -200,7 +200,7 @@ class RPGDataService:
                 if hasattr(skills, 'results'):
                     return [{"id": s.index, 
                             "name": s.name, 
-                            "attribute": "", 
+                            "attribute": s.ability_score.index if hasattr(s, 'ability_score') else '', 
                             "source": "dnd5e"} 
                            for s in skills.results]
                 else:
@@ -281,7 +281,7 @@ class RPGDataService:
                 if hasattr(proficiencies, 'results'):
                     return [{"id": p.index, 
                             "name": p.name, 
-                            "type": "", 
+                            "type": p.type if hasattr(p, 'type') else '', 
                             "source": "dnd5e"} 
                            for p in proficiencies.results]
                 else:
