@@ -102,8 +102,8 @@ class DnD5eApiClient:
                 
             for response in responses:
                 try:
-                    if not isinstance(response, Exception):
-                        if hasattr(response, 'status_code') and response.status_code == 200:
+                    if isinstance(response, httpx.Response):
+                        if response.status_code == 200:
                             item_data = response.json()
                             if transform_func:
                                 results.append(transform_func(item_data))

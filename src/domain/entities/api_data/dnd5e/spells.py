@@ -43,6 +43,10 @@ class Spells:
     count: int
     results: List[ResultsTemplate]
 
+    def __post_init__(self):
+        if self.results and isinstance(self.results[0], dict):
+            self.results = [ResultsTemplate(**result) for result in self.results]
+
 
 @dataclass
 class Spell:
