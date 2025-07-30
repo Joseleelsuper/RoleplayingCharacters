@@ -187,13 +187,21 @@
                             <label for="experience" class="attribute-label">
                                 {{ _('create_character.basic.experience') }}
                             </label>
-                            <div class="attribute-controls">
-                                <button type="button" class="attribute-btn decrease-5" data-attribute="experience">−5</button>
-                                <button type="button" class="attribute-btn decrease" data-attribute="experience">−</button>
-                                <input type="number" id="experience" name="experience" class="attribute-input" 
+                            <div class="attribute-controls experience-controls">
+                                <input type="number" id="experience" name="experience" class="attribute-input experience-display" 
                                        value="0" min="0" max="999999" data-cost="0" readonly>
-                                <button type="button" class="attribute-btn increase" data-attribute="experience">+</button>
-                                <button type="button" class="attribute-btn increase-5" data-attribute="experience">+5</button>
+                                <div class="experience-slider-container">
+                                    <div class="slider-controls">
+                                        <button type="button" class="slider-btn decrease" id="exp-decrease-btn">−</button>
+                                        <input type="range" id="experience-slider" class="experience-slider" 
+                                               min="0" max="100" value="0" step="1">
+                                        <button type="button" class="slider-btn increase" id="exp-increase-btn">+</button>
+                                    </div>
+                                    <div class="experience-slider-labels">
+                                        <span class="slider-label-start">Nivel actual</span>
+                                        <span class="slider-label-end">Siguiente nivel</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="attribute-modifier" id="experience-modifier"></div>
                         </div>
