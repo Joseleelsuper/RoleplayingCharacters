@@ -120,59 +120,55 @@
                         </div>
 
                         <div class="form-group-enhanced">
-                            <label for="race" class="form-label-enhanced">
+                            <label for="race-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.race') }} *
                                 <span class="label-tooltip" title="{{ _('create_character.basic.race_tooltip') }}">ℹ️</span>
                             </label>
-                            <div class="select-wrapper">
-                                <select id="race" name="race_id" class="form-control-enhanced select-enhanced" required 
-                                        aria-describedby="race-error">
-                                    <option value="">{{ _('create_character.basic.race_placeholder') }}</option>
-                                    <!-- Options will be loaded dynamically -->
-                                </select>
-                                <div class="form-error" id="race-error" role="alert" aria-live="polite"></div>
-                            </div>
+                            <button type="button" id="race-button" class="selection-button" data-selection-type="race" aria-describedby="race-error">
+                                <span class="selection-text">{{ _('create_character.basic.race_placeholder') }}</span>
+                                <span class="selection-icon">📖</span>
+                            </button>
+                            <input type="hidden" id="race" name="race_id" required>
+                            <div class="form-error" id="race-error" role="alert" aria-live="polite"></div>
                         </div>
 
                         <div class="form-group-enhanced">
-                            <label for="character-class" class="form-label-enhanced">
+                            <label for="class-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.class') }} *
                                 <span class="label-tooltip" title="{{ _('create_character.basic.class_tooltip') }}">ℹ️</span>
                             </label>
-                            <div class="select-wrapper">
-                                <select id="character-class" name="class_id" class="form-control-enhanced select-enhanced" required
-                                        aria-describedby="class-error">
-                                    <option value="">{{ _('create_character.basic.class_placeholder') }}</option>
-                                    <!-- Options will be loaded dynamically -->
-                                </select>
-                                <div class="form-error" id="class-error" role="alert" aria-live="polite"></div>
-                            </div>
+                            <button type="button" id="class-button" class="selection-button" data-selection-type="class" aria-describedby="class-error">
+                                <span class="selection-text">{{ _('create_character.basic.class_placeholder') }}</span>
+                                <span class="selection-icon">⚔️</span>
+                            </button>
+                            <input type="hidden" id="character-class" name="class_id" required>
+                            <div class="form-error" id="class-error" role="alert" aria-live="polite"></div>
                         </div>
 
                         <div class="form-group-enhanced">
-                            <label for="background" class="form-label-enhanced">
+                            <label for="background-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.background') }}
                                 <span class="label-tooltip" title="{{ _('create_character.basic.background_tooltip') }}">ℹ️</span>
                             </label>
-                            <div class="select-wrapper">
-                                <select id="background" name="background_id" class="form-control-enhanced select-enhanced">
-                                    <option value="">{{ _('create_character.basic.background_placeholder') }}</option>
-                                    <!-- Options will be loaded dynamically -->
-                                </select>
-                            </div>
+                            <button type="button" id="background-button" class="selection-button" data-selection-type="background" aria-describedby="background-error">
+                                <span class="selection-text">{{ _('create_character.basic.background_placeholder') }}</span>
+                                <span class="selection-icon">📜</span>
+                            </button>
+                            <input type="hidden" id="background" name="background_id">
+                            <div class="form-error" id="background-error" role="alert" aria-live="polite"></div>
                         </div>
 
                         <div class="form-group-enhanced">
-                            <label for="alignment" class="form-label-enhanced">
+                            <label for="alignment-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.alignment') }}
                                 <span class="label-tooltip" title="{{ _('create_character.basic.alignment_tooltip') }}">ℹ️</span>
                             </label>
-                            <div class="select-wrapper">
-                                <select id="alignment" name="alignment_id" class="form-control-enhanced select-enhanced">
-                                    <option value="">{{ _('create_character.basic.alignment_placeholder') }}</option>
-                                    <!-- Options will be loaded dynamically -->
-                                </select>
-                            </div>
+                            <button type="button" id="alignment-button" class="selection-button" data-selection-type="alignment" aria-describedby="alignment-error">
+                                <span class="selection-text">{{ _('create_character.basic.alignment_placeholder') }}</span>
+                                <span class="selection-icon">⚖️</span>
+                            </button>
+                            <input type="hidden" id="alignment" name="alignment_id">
+                            <div class="form-error" id="alignment-error" role="alert" aria-live="polite"></div>
                         </div>
 
                         <!-- Componente de atributo configurable para nivel -->
@@ -543,11 +539,30 @@
         </div>
     </main>
 
+    <!-- Selection Overlays -->
+    <div id="selection-overlay" class="selection-overlay hidden">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h3 id="overlay-title">Seleccionar</h3>
+                <button type="button" class="overlay-close" id="overlay-close">&times;</button>
+            </div>
+            <div class="overlay-body">
+                <div class="search-container">
+                    <input type="text" id="overlay-search" class="overlay-search" placeholder="Buscar...">
+                </div>
+                <div id="overlay-options" class="overlay-options">
+                    <!-- Options will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% include 'objects/footer.html' %}
     
     <!-- Componentes JS separados -->
     <script src="/templates/js/create-character/game-type-selector.js"></script>
     <script src="/templates/js/create-character/data-manager.js"></script>
+    <script src="/templates/js/create-character/selection-overlay.js"></script>
     <script src="/templates/js/create-character/attribute-manager.js"></script>
     <script src="/templates/js/create-character/preview-manager.js"></script>
     <script src="/templates/js/create-character/navigation-manager.js"></script>
