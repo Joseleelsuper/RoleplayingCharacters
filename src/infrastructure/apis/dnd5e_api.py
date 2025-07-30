@@ -9,15 +9,15 @@ import httpx
 from typing import Dict, List, Any, Optional, TypeVar, Callable
 import asyncio
 from functools import lru_cache
-from domain.entities.api_data.dnd5e.races import Races
-from domain.entities.api_data.dnd5e.classes import Classes
-from domain.entities.api_data.dnd5e.spells import Spells
-from domain.entities.api_data.dnd5e.skills import Skills
-from domain.entities.api_data.dnd5e.alignments import Alignments
-from domain.entities.api_data.dnd5e.backgrounds import Backgrounds
-from domain.entities.api_data.dnd5e.languages import Languages
-from domain.entities.api_data.dnd5e.proficiencies import Proficiencies
-from domain.entities.api_data.dnd5e.equipments import Equipments
+from src.domain.entities.api_data.dnd5e.races import Races
+from src.domain.entities.api_data.dnd5e.classes import Classes
+from src.domain.entities.api_data.dnd5e.spells import Spells
+from src.domain.entities.api_data.dnd5e.skills import Skills
+from src.domain.entities.api_data.dnd5e.alignments import Alignments
+from src.domain.entities.api_data.dnd5e.backgrounds import Backgrounds
+from src.domain.entities.api_data.dnd5e.languages import Languages
+from src.domain.entities.api_data.dnd5e.proficiencies import Proficiencies
+from src.domain.entities.api_data.dnd5e.equipments import Equipments
 
 T = TypeVar('T')
 
@@ -118,7 +118,6 @@ class DnD5eApiClient:
             return []
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_races() -> Races:
         """
         Obtiene todas las razas disponibles.
@@ -132,7 +131,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando razas: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_classes() -> Classes:
         """
         Obtiene todas las clases disponibles.
@@ -146,7 +144,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando clases: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_spells() -> Spells:
         """
         Obtiene todos los hechizos disponibles.
@@ -160,7 +157,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando hechizos: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_skills() -> Skills:
         """
         Obtiene todas las habilidades disponibles.
@@ -178,7 +174,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando skills: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_alignments() -> Alignments:
         """
         Obtiene todos los alineamientos disponibles.
@@ -192,7 +187,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando alignments: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_backgrounds() -> Backgrounds:
         """
         Obtiene todos los trasfondos disponibles.
@@ -206,7 +200,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando backgrounds: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_languages() -> Languages:
         """
         Obtiene todos los idiomas disponibles.
@@ -220,7 +213,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando languages: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_proficiencies() -> Proficiencies:
         """
         Obtiene todas las competencias disponibles.
@@ -234,7 +226,6 @@ class DnD5eApiClient:
             raise ValueError(f"Error validando proficiencies: {e}")
     
     @staticmethod
-    @lru_cache(maxsize=1)
     async def get_equipment() -> Equipments:
         """
         Obtiene todos los objetos de equipamiento disponibles.

@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from domain.entities.api_data.dnd5e.dnd5e import ResultsTemplate
+from src.domain.entities.api_data.dnd5e.dnd5e import ResultsTemplate
 
 
 @dataclass
