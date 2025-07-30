@@ -34,14 +34,17 @@ class DataManager {
             const textSpan = button.querySelector('.selection-text');
             const type = button.dataset.selectionType;
             if (textSpan && type) {
-                // Restaurar texto placeholder
-                const placeholders = {
-                    'race': 'Selecciona una raza',
-                    'class': 'Selecciona una clase', 
-                    'background': 'Selecciona un trasfondo',
-                    'alignment': 'Selecciona un alineamiento'
-                };
-                textSpan.textContent = placeholders[type] || 'Seleccionar';
+                // Obtener texto placeholder desde elementos de traducción ocultos
+                const placeholderElement = document.getElementById(`${type}-placeholder-text`);
+                if (placeholderElement) {
+                    textSpan.textContent = placeholderElement.textContent;
+                } else {
+                    // Fallback: obtener desde atributos data o texto original del HTML
+                    const originalText = textSpan.getAttribute('data-original-text');
+                    if (originalText) {
+                        textSpan.textContent = originalText;
+                    }
+                }
                 button.classList.remove('selected');
             }
         });

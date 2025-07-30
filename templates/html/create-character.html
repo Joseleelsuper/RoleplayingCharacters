@@ -105,7 +105,6 @@
                         <div class="form-group-enhanced">
                             <label for="character-name" class="form-label-enhanced">
                                 {{ _('create_character.basic.character_name') }} *
-                                <span class="label-tooltip" title="{{ _('create_character.basic.character_name_tooltip') }}">ℹ️</span>
                             </label>
                             <input type="text" id="character-name" name="character_name" class="form-control-enhanced" 
                                    placeholder="{{ _('create_character.basic.character_name_placeholder') }}" required 
@@ -122,10 +121,9 @@
                         <div class="form-group-enhanced">
                             <label for="race-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.race') }} *
-                                <span class="label-tooltip" title="{{ _('create_character.basic.race_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="race-button" class="selection-button" data-selection-type="race" aria-describedby="race-error">
-                                <span class="selection-text">{{ _('create_character.basic.race_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.race_placeholder') }}">{{ _('create_character.basic.race_placeholder') }}</span>
                                 <span class="selection-icon">📖</span>
                             </button>
                             <input type="hidden" id="race" name="race_id" required>
@@ -135,10 +133,9 @@
                         <div class="form-group-enhanced">
                             <label for="class-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.class') }} *
-                                <span class="label-tooltip" title="{{ _('create_character.basic.class_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="class-button" class="selection-button" data-selection-type="class" aria-describedby="class-error">
-                                <span class="selection-text">{{ _('create_character.basic.class_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.class_placeholder') }}">{{ _('create_character.basic.class_placeholder') }}</span>
                                 <span class="selection-icon">⚔️</span>
                             </button>
                             <input type="hidden" id="character-class" name="class_id" required>
@@ -148,10 +145,9 @@
                         <div class="form-group-enhanced">
                             <label for="background-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.background') }}
-                                <span class="label-tooltip" title="{{ _('create_character.basic.background_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="background-button" class="selection-button" data-selection-type="background" aria-describedby="background-error">
-                                <span class="selection-text">{{ _('create_character.basic.background_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.background_placeholder') }}">{{ _('create_character.basic.background_placeholder') }}</span>
                                 <span class="selection-icon">📜</span>
                             </button>
                             <input type="hidden" id="background" name="background_id">
@@ -161,10 +157,9 @@
                         <div class="form-group-enhanced">
                             <label for="alignment-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.alignment') }}
-                                <span class="label-tooltip" title="{{ _('create_character.basic.alignment_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="alignment-button" class="selection-button" data-selection-type="alignment" aria-describedby="alignment-error">
-                                <span class="selection-text">{{ _('create_character.basic.alignment_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.alignment_placeholder') }}">{{ _('create_character.basic.alignment_placeholder') }}</span>
                                 <span class="selection-icon">⚖️</span>
                             </button>
                             <input type="hidden" id="alignment" name="alignment_id">
@@ -255,7 +250,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="strength">+</button>
                             </div>
                             <div class="attribute-modifier" id="strength-modifier">-1</div>
-                            <small id="strength-help" class="sr-only">{{ _('create_character.attributes.strength_help') }}</small>
+                            <div class="attribute-help" id="strength-help">{{ _('create_character.attributes.strength_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -270,7 +265,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="dexterity">+</button>
                             </div>
                             <div class="attribute-modifier" id="dexterity-modifier">-1</div>
-                            <small id="dexterity-help" class="sr-only">{{ _('create_character.attributes.dexterity_help') }}</small>
+                            <div class="attribute-help" id="dexterity-help">{{ _('create_character.attributes.dexterity_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -285,7 +280,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="constitution">+</button>
                             </div>
                             <div class="attribute-modifier" id="constitution-modifier">-1</div>
-                            <small id="constitution-help" class="sr-only">{{ _('create_character.attributes.constitution_help') }}</small>
+                            <div class="attribute-help" id="constitution-help">{{ _('create_character.attributes.constitution_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -300,7 +295,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="intelligence">+</button>
                             </div>
                             <div class="attribute-modifier" id="intelligence-modifier">-1</div>
-                            <small id="intelligence-help" class="sr-only">{{ _('create_character.attributes.intelligence_help') }}</small>
+                            <div class="attribute-help" id="intelligence-help">{{ _('create_character.attributes.intelligence_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -315,7 +310,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="wisdom">+</button>
                             </div>
                             <div class="attribute-modifier" id="wisdom-modifier">-1</div>
-                            <small id="wisdom-help" class="sr-only">{{ _('create_character.attributes.wisdom_help') }}</small>
+                            <div class="attribute-help" id="wisdom-help">{{ _('create_character.attributes.wisdom_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -330,7 +325,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="charisma">+</button>
                             </div>
                             <div class="attribute-modifier" id="charisma-modifier">-1</div>
-                            <small id="charisma-help" class="sr-only">{{ _('create_character.attributes.charisma_help') }}</small>
+                            <div class="attribute-help" id="charisma-help">{{ _('create_character.attributes.charisma_help') }}</div>
                         </div>
                     </div>
                 </div>
@@ -548,7 +543,6 @@
             </div>
             <div class="overlay-body">
                 <div class="overlay-info" id="overlay-info">
-                    <span class="info-icon">ℹ️</span>
                     <span class="info-text" id="overlay-info-text">{{ _('create_character.overlay.default_info') }}</span>
                 </div>
                 <div class="search-container">
@@ -572,6 +566,10 @@
         <span id="overlay-race-description">{{ _('create_character.overlay.race.description') }}</span>
         <span id="overlay-class-description">{{ _('create_character.overlay.class.description') }}</span>
         <span id="overlay-background-description">{{ _('create_character.overlay.background.description') }}</span>
+        <span id="race-placeholder-text">{{ _('create_character.basic.race_placeholder') }}</span>
+        <span id="class-placeholder-text">{{ _('create_character.basic.class_placeholder') }}</span>
+        <span id="background-placeholder-text">{{ _('create_character.basic.background_placeholder') }}</span>
+        <span id="alignment-placeholder-text">{{ _('create_character.basic.alignment_placeholder') }}</span>
         <span id="overlay-alignment-description">{{ _('create_character.overlay.alignment.description') }}</span>
         <span id="overlay-default-info">{{ _('create_character.overlay.default_info') }}</span>
     </div>

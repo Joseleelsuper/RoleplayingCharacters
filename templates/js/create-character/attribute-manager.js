@@ -126,15 +126,7 @@ class AttributeManager {
         this.updateAttributeButtonStates();
     }
     
-    setupAttributeControls() {
-        this.attributeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const attribute = button.dataset.attribute;
-                const isIncrease = button.classList.contains('increase');
-                this.modifyAttribute(attribute, isIncrease ? 1 : -1);
-            });
-        });
-    }
+
     
     updateModifier(attribute, value) {
         const modifierElement = document.getElementById(`${attribute}-modifier`);
@@ -210,6 +202,14 @@ class AttributeManager {
                     if (input) {
                         input.value = values[i];
                         this.updateModifier(attr, values[i]);
+                        
+                        // Notificar cambio individual de atributo
+                        document.dispatchEvent(new CustomEvent('attributeChanged', {
+                            detail: {
+                                attribute: attr,
+                                value: values[i]
+                            }
+                        }));
                     }
                 });
                 
@@ -219,9 +219,6 @@ class AttributeManager {
                 
                 // Opcionalmente, mostrar qué tipo de build se generó
                 console.log('Generated attribute distribution');
-                
-                // Notificar cambio en todos los atributos
-                document.dispatchEvent(new CustomEvent('attributesReset'));
             });
         }
 
@@ -249,14 +246,19 @@ class AttributeManager {
                     if (input) {
                         input.value = defaultValue;
                         this.updateModifier(attr, defaultValue);
+                        
+                        // Notificar cambio individual de atributo
+                        document.dispatchEvent(new CustomEvent('attributeChanged', {
+                            detail: {
+                                attribute: attr,
+                                value: defaultValue
+                            }
+                        }));
                     }
                 });
                 
                 this.updateAttributePointsRemaining();
                 this.updateAttributeButtonStates();
-                
-                // Notificar cambio en todos los atributos
-                document.dispatchEvent(new CustomEvent('attributesReset'));
             });
         }
     }
