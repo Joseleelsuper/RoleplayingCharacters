@@ -28,6 +28,22 @@ class GameTypeSelector {
         this.selectedGameTypeInput = document.getElementById('selected-game-type');
         this.customConfig = document.getElementById('custom-attribute-config');
         this.setupGameTypeSelection();
+        
+        // Seleccionar D&D 5e por defecto después de un pequeño delay
+        setTimeout(() => {
+            this.selectDefaultGameType();
+        }, 100);
+    }
+    
+    selectDefaultGameType() {
+        // Buscar la carta de D&D 5e y seleccionarla por defecto
+        const dnd5eCard = Array.from(this.gameTypeCards).find(card => 
+            card.dataset.gameType === 'dnd5e'
+        );
+        
+        if (dnd5eCard) {
+            this.selectGameType(dnd5eCard);
+        }
     }
     
     setupGameTypeSelection() {

@@ -29,11 +29,8 @@ class DataManager {
         
         // Escuchar cambios de tipo de juego
         document.addEventListener('gameTypeSelected', (event) => {
-            this.populateFormWithFilteredData(event.detail.gameType);
+            this.loadDataForGameType(event.detail.gameType);
         });
-        
-        // Cargar datos
-        this.loadAllData();
     }
     
     clearAll() {
@@ -55,8 +52,11 @@ class DataManager {
         });
     }
     
-    async loadAllData() {
+    async loadDataForGameType(gameType) {
         try {
+            // Limpiar datos existentes
+            this.clearAll();
+            
             const endpoints = {
                 races: '/api/races',
                 classes: '/api/classes',
@@ -71,7 +71,8 @@ class DataManager {
             
             const data = {};
             const promises = Object.entries(endpoints).map(async ([key, url]) => {
-                const response = await fetch(url);
+                const urlWithGameType = `${url}?game_type=${gameType}`;
+                const response = await fetch(urlWithGameType);
                 data[key] = await response.json();
             });
             
@@ -80,9 +81,12 @@ class DataManager {
             // Guardar los datos completos
             this.allData = data;
             
+            // Poblar formulario directamente
+            this.populateFormWithData(data);
+            
             // Notificar que los datos se han cargado
             document.dispatchEvent(new CustomEvent('dataLoaded', {
-                detail: { success: true }
+                detail: { success: true, gameType: gameType }
             }));
         } catch (err) {
             console.error('Error loading data:', err);
@@ -90,6 +94,11 @@ class DataManager {
                 detail: { success: false, error: err }
             }));
         }
+    }
+    
+    async loadAllData() {
+        // Método mantenido para compatibilidad, pero ahora carga datos personalizados por defecto
+        await this.loadDataForGameType('custom');
     }
     
     filterDataByGameType(gameType) {
@@ -118,33 +127,34 @@ class DataManager {
         return filteredData;
     }
     
-    populateFormWithFilteredData(gameType) {
-        // Limpiar datos existentes
-        this.clearAll();
-        
-        // Obtener datos filtrados
-        const filteredData = this.filterDataByGameType(gameType);
-        if (!filteredData) return;
+    populateFormWithData(data) {
+        if (!data) return;
         
         // Poblar selects
-        this.populateSelect(this.selects.race, filteredData.races);
-        this.populateSelect(this.selects.class, filteredData.classes);
-        this.populateSelect(this.selects.background, filteredData.backgrounds);
-        this.populateSelect(this.selects.alignment, filteredData.alignments);
+        this.populateSelect(this.selects.race, data.races);
+        this.populateSelect(this.selects.class, data.classes);
+        this.populateSelect(this.selects.background, data.backgrounds);
+        this.populateSelect(this.selects.alignment, data.alignments);
         
         // Poblar listas
-        this.populateSkills(filteredData.skills);
-        this.populateLanguages(filteredData.languages);
-        this.populateProficiencies(filteredData.proficiencies);
-        this.populateEquipment(filteredData.items);
-        this.populateSpells(filteredData.spells);
+        this.populateSkills(data.skills);
+        this.populateLanguages(data.languages);
+        this.populateProficiencies(data.proficiencies);
+        this.populateEquipment(data.items);
+        this.populateSpells(data.spells);
         
         this.dataPopulated = true;
         
         // Notificar que se han poblado los datos
         document.dispatchEvent(new CustomEvent('dataPopulated', {
-            detail: { gameType: gameType }
+            detail: { success: true }
         }));
+    }
+    
+    populateFormWithFilteredData(gameType) {
+        // Método mantenido para compatibilidad
+        // Ahora simplemente carga datos para el tipo de juego especificado
+        this.loadDataForGameType(gameType);
     }
     
     populateSelect(select, options) {
