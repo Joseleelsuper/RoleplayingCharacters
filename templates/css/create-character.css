@@ -918,14 +918,15 @@
 .level-reset-notification {
     margin-top: var(--spacing-sm);
     padding: var(--spacing-sm) var(--spacing-md);
-    background: linear-gradient(135deg, var(--warning-50), var(--warning-100));
-    border: 1px solid var(--warning-300);
+    background: var(--surface-warning, rgba(245, 158, 11, 0.1));
+    border: 1px solid var(--border-warning, rgba(245, 158, 11, 0.3));
     border-radius: var(--radius-md);
-    color: var(--warning-800);
+    color: var(--text-warning, #d97706);
     font-size: var(--font-size-sm);
     font-weight: 500;
     animation: slideInNotification 0.3s ease-out, fadeOutNotification 0.5s ease-in 2.5s forwards;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+    backdrop-filter: blur(4px);
 }
 
 @keyframes slideInNotification {
