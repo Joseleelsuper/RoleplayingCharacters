@@ -112,15 +112,16 @@ class AttributeManager {
     init() {
         this.attributeSystemSelect = document.getElementById('attribute-system');
         this.customConfig = document.getElementById('custom-attribute-config');
-        this.attributeButtons = document.querySelectorAll('.attribute-btn');
+        this.attributeButtons = document.querySelectorAll('.attribute-btn:not(.decrease-5):not(.increase-5)');
+        this.attributeButtons5 = document.querySelectorAll('.attribute-btn.decrease-5, .attribute-btn.increase-5');
         this.attributePointsRemaining = document.getElementById('points-remaining');
         this.randomStatsBtn = document.getElementById('random-attributes-btn');
         this.defaultStatsBtn = document.getElementById('default-attributes-btn');
         
         this.setupAttributeControls();
+        this.setupAttributeControls5();
         this.setupAttributeSystemSelector();
         this.setupRandomButtons();
-        this.setupCustomConfigInputs();
         this.updateAttributePointsRemaining();
         this.updateAttributeButtonStates();
     }
@@ -130,62 +131,7 @@ class AttributeManager {
             button.addEventListener('click', () => {
                 const attribute = button.dataset.attribute;
                 const isIncrease = button.classList.contains('increase');
-                const input = document.getElementById(attribute);
-                if (!input) return;
-                
-                // Usar los límites del sistema actual
-                const system = this.attributeSystems[this.currentAttributeSystem];
-                const min = system.minAttr;
-                const max = system.maxAttr;
-                
-                // Verificar si es un atributo principal o secundario
-                if (['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].includes(attribute)) {
-                    // Calcular puntos usados antes del cambio
-                    let oldValue = parseInt(input.value);
-                    let newValue = oldValue;
-                    
-                    if (isIncrease && oldValue < max) {
-                        newValue = oldValue + 1;
-                    } else if (!isIncrease && oldValue > min) {
-                        newValue = oldValue - 1;
-                    }
-                    
-                    // Verificar si hay suficientes puntos
-                    let currentCost = this.pointBuyCost(oldValue);
-                    let newCost = this.pointBuyCost(newValue);
-                    let costDifference = newCost - currentCost;
-                    
-                    let totalPointsUsed = this.getTotalAttributePoints();
-                    let availablePoints = this.attributeSystems[this.currentAttributeSystem].pointsLimit - totalPointsUsed;
-                    
-                    if (availablePoints >= costDifference) {
-                        input.value = newValue;
-                        this.updateModifier(attribute, newValue);
-                        this.updateAttributePointsRemaining();
-                    }
-                } else {
-                    // Para atributos secundarios como level o experience
-                    let value = parseInt(input.value);
-                    
-                    if (isIncrease) {
-                        input.value = Math.min(value + 1, parseInt(input.max));
-                    } else if (!isIncrease) {
-                        input.value = Math.max(value - 1, parseInt(input.min));
-                    }
-                    
-                    // Actualizar modificador si existe
-                    this.updateModifier(attribute, parseInt(input.value));
-                }
-                
-                this.updateAttributeButtonStates();
-                
-                // Notificar cambio de atributo
-                document.dispatchEvent(new CustomEvent('attributeChanged', { 
-                    detail: { 
-                        attribute: attribute,
-                        value: parseInt(input.value)
-                    } 
-                }));
+                this.modifyAttribute(attribute, isIncrease ? 1 : -1);
             });
         });
     }
@@ -370,76 +316,148 @@ class AttributeManager {
         }
     }
     
-    setupCustomConfigInputs() {
-        const customMin = document.getElementById('custom-min');
-        const customMax = document.getElementById('custom-max');
-        const customPoints = document.getElementById('custom-points');
-        
-        if (customMin && customMax && customPoints) {
-            // Inicializar con los valores actuales
-            this.updateCustomSystem(
-                parseInt(customMin.value),
-                parseInt(customMax.value),
-                parseInt(customPoints.value)
-            );
-            
-            // Configurar eventos de cambio
-            customMin.addEventListener('change', () => {
-                this.updateCustomFromInputs();
-            });
-            
-            customMax.addEventListener('change', () => {
-                this.updateCustomFromInputs();
-            });
-            
-            customPoints.addEventListener('change', () => {
-                this.updateCustomFromInputs();
-            });
-            
-            // Asegurar que los eventos de input también actualicen los valores inmediatamente
-            customMin.addEventListener('input', () => {
-                this.updateCustomFromInputs();
-            });
-            
-            customMax.addEventListener('input', () => {
-                this.updateCustomFromInputs();
-            });
-            
-            customPoints.addEventListener('input', () => {
-                this.updateCustomFromInputs();
-            });
-        }
-    }
-    
-    updateCustomFromInputs() {
-        const customMin = document.getElementById('custom-min');
-        const customMax = document.getElementById('custom-max');
-        const customPoints = document.getElementById('custom-points');
-        
-        if (customMin && customMax && customPoints) {
-            const minVal = parseInt(customMin.value) || 1;
-            const maxVal = parseInt(customMax.value) || 15;
-            const pointsVal = parseInt(customPoints.value) || 27;
-            
-            // Validar valores - solo verificamos que sean números positivos y que min <= max
-            if (minVal < 1) customMin.value = 1;
-            if (minVal > maxVal) customMin.value = maxVal;
-            if (pointsVal < 1) customPoints.value = 1;
-            
-            // Actualizar sistema con valores validados
-            this.updateCustomSystem(
-                parseInt(customMin.value),
-                parseInt(customMax.value),
-                parseInt(customPoints.value)
-            );
-            
-            // Si el sistema actual es custom, actualizar inmediatamente todos los campos
-            if (this.currentAttributeSystem === 'custom') {
-                this.updateAttributeLimits();
-                this.updateAttributePointsRemaining();
+    setupAttributeControls() {
+        this.attributeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const attribute = button.dataset.attribute;
+                const isIncrease = button.classList.contains('increase');
+                const input = document.getElementById(attribute);
+                if (!input) return;
+
+                // Usar los límites del sistema actual
+                const system = this.attributeSystems[this.currentAttributeSystem];
+                const min = system.minAttr;
+                const max = system.maxAttr;
+
+                // Verificar si es un atributo principal o secundario
+                if (["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"].includes(attribute)) {
+                    // Calcular puntos usados antes del cambio
+                    let oldValue = parseInt(input.value);
+                    let newValue = oldValue;
+
+                    if (isIncrease && oldValue < max) {
+                        newValue = oldValue + 1;
+                    } else if (!isIncrease && oldValue > min) {
+                        newValue = oldValue - 1;
+                    }
+
+                    // Verificar si hay suficientes puntos
+                    let currentCost = this.pointBuyCost(oldValue);
+                    let newCost = this.pointBuyCost(newValue);
+                    let costDifference = newCost - currentCost;
+
+                    let totalPointsUsed = this.getTotalAttributePoints();
+                    let availablePoints = this.attributeSystems[this.currentAttributeSystem].pointsLimit - totalPointsUsed;
+
+                    if (availablePoints >= costDifference) {
+                        input.value = newValue;
+                        this.updateModifier(attribute, newValue);
+                        this.updateAttributePointsRemaining();
+                    }
+                } else {
+                    // Para atributos secundarios como level o experience
+                    let value = parseInt(input.value);
+                    if (isNaN(value)) value = 0;
+                    
+                    if (isIncrease) {
+                        input.value = value + 1;
+                    } else {
+                        // Evitar valores negativos
+                        input.value = Math.max(0, value - 1);
+                    }
+                    this.updateModifier(attribute, parseInt(input.value));
+                }
+
                 this.updateAttributeButtonStates();
+
+                // Notificar cambio de atributo
+                document.dispatchEvent(new CustomEvent('attributeChanged', {
+                    detail: {
+                        attribute: attribute,
+                        value: parseInt(input.value)
+                    }
+                }));
+            });
+        });
+    }
+
+    setupAttributeControls5() {
+        this.attributeButtons5.forEach(button => {
+            button.addEventListener('click', () => {
+                const attribute = button.dataset.attribute;
+                const isIncrease = button.classList.contains('increase-5');
+                const step = isIncrease ? 5 : -5;
+                
+                // Usamos modifyAttribute directamente para evitar lógica duplicada
+                // El evento attributeChanged ya se dispara dentro de modifyAttribute
+                this.modifyAttribute(attribute, step);
+            });
+        });
+    }
+
+    /**
+     * Modifica el atributo indicado en el paso dado (+1, -1, +5, -5), gestionando puntos y límites.
+     */
+    modifyAttribute(attribute, step) {
+        const input = document.getElementById(attribute);
+        if (!input) return;
+        const system = this.attributeSystems[this.currentAttributeSystem];
+        const min = system.minAttr;
+        const max = system.maxAttr;
+
+        if (["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"].includes(attribute)) {
+            let oldValue = parseInt(input.value);
+            let newValue = oldValue;
+            let pointsUsed = this.getTotalAttributePoints();
+            let pointsLimit = system.pointsLimit;
+
+            if (step !== 0) {
+                let direction = step > 0 ? 1 : -1;
+                let absStep = Math.abs(step);
+                for (let i = 0; i < absStep; i++) {
+                    let candidate = newValue + direction;
+                    if (candidate < min || candidate > max) break;
+                    let currentCost = this.pointBuyCost(newValue);
+                    let nextCost = this.pointBuyCost(candidate);
+                    let diff = nextCost - currentCost;
+                    if (direction > 0) {
+                        if ((pointsLimit - pointsUsed) < diff) break;
+                        newValue = candidate;
+                        pointsUsed += diff;
+                    } else {
+                        newValue = candidate;
+                        pointsUsed += diff;
+                    }
+                }
             }
+
+            if (newValue !== oldValue) {
+                input.value = newValue;
+                this.updateModifier(attribute, newValue);
+                this.updateAttributePointsRemaining();
+            }
+        } else {
+            // Para atributos secundarios como level o experience
+            let value = parseInt(input.value);
+            if (isNaN(value)) value = 0;
+            
+            // Aplicar el incremento completo para atributos secundarios
+            let newValue = value + step;
+            if (newValue < 0) newValue = 0;
+            
+            input.value = newValue;
+            
+            this.updateModifier(attribute, newValue);
         }
+
+        this.updateAttributeButtonStates();
+
+        document.dispatchEvent(new CustomEvent('attributeChanged', {
+            detail: {
+                attribute: attribute,
+                value: parseInt(input.value)
+            }
+        }));
     }
     
     updateCustomSystem(minAttr, maxAttr, pointsLimit) {
@@ -551,13 +569,13 @@ class AttributeManager {
         const defaultBtnText = document.getElementById('default-attributes-btn');
         
         if (randomBtnText) {
-            // Usar el texto de traducción para "Aleatorio"
-            randomBtnText.innerHTML = `<i class="icon-dice"></i> ${randomBtnText.dataset.text || 'Random'}`;
+            // Usar el texto de traducción para "Aleatorio" con emoji de dados
+            randomBtnText.innerHTML = `🎲 ${randomBtnText.dataset.text || 'Random'}`;
         }
         
         if (defaultBtnText) {
-            // Usar el texto de traducción para "Por Defecto"
-            defaultBtnText.innerHTML = `<i class="icon-reset"></i> ${defaultBtnText.dataset.text || 'Default'}`;
+            // Usar el texto de traducción para "Por Defecto" con emoji de reinicio
+            defaultBtnText.innerHTML = `🔄 ${defaultBtnText.dataset.text || 'Default'}`;
         }
     }
     
@@ -689,7 +707,5 @@ class AttributeManager {
     }
 }
 
-// Exportar para uso global
-window.attributeManager = new AttributeManager();
 // Exportar para uso global
 window.attributeManager = new AttributeManager();

@@ -10,13 +10,8 @@ class DataManager {
     }
     
     init() {
-        // Cachear referencias a los elementos
-        this.selects = {
-            race: document.getElementById('race'),
-            class: document.getElementById('character-class'),
-            background: document.getElementById('background'),
-            alignment: document.getElementById('alignment')
-        };
+        // Cachear referencias a los elementos (ahora solo contenedores)
+        this.selects = {}; // Ya no usamos selects, pero mantenemos para compatibilidad
         
         this.containers = {
             skillsList: document.getElementById('skills-list'),
@@ -29,24 +24,31 @@ class DataManager {
         
         // Escuchar cambios de tipo de juego
         document.addEventListener('gameTypeSelected', (event) => {
-            this.populateFormWithFilteredData(event.detail.gameType);
+            this.loadDataForGameType(event.detail.gameType);
         });
-        
-        // Cargar datos
-        this.loadAllData();
     }
     
     clearAll() {
-        // Limpiar selectores
-        Object.values(this.selects).forEach(select => {
-            if (select) {
-                const firstOption = select.querySelector('option');
-                if (firstOption) {
-                    select.innerHTML = firstOption.outerHTML;
-                } else {
-                    select.innerHTML = '';
-                }
+        // Limpiar botones de selección
+        document.querySelectorAll('.selection-button').forEach(button => {
+            const textSpan = button.querySelector('.selection-text');
+            const type = button.dataset.selectionType;
+            if (textSpan && type) {
+                // Restaurar texto placeholder
+                const placeholders = {
+                    'race': 'Selecciona una raza',
+                    'class': 'Selecciona una clase', 
+                    'background': 'Selecciona un trasfondo',
+                    'alignment': 'Selecciona un alineamiento'
+                };
+                textSpan.textContent = placeholders[type] || 'Seleccionar';
+                button.classList.remove('selected');
             }
+        });
+        
+        // Limpiar inputs ocultos
+        document.querySelectorAll('input[type="hidden"][name$="_id"]').forEach(input => {
+            input.value = '';
         });
         
         // Limpiar contenedores
@@ -55,8 +57,11 @@ class DataManager {
         });
     }
     
-    async loadAllData() {
+    async loadDataForGameType(gameType) {
         try {
+            // Limpiar datos existentes
+            this.clearAll();
+            
             const endpoints = {
                 races: '/api/races',
                 classes: '/api/classes',
@@ -71,7 +76,8 @@ class DataManager {
             
             const data = {};
             const promises = Object.entries(endpoints).map(async ([key, url]) => {
-                const response = await fetch(url);
+                const urlWithGameType = `${url}?game_type=${gameType}`;
+                const response = await fetch(urlWithGameType);
                 data[key] = await response.json();
             });
             
@@ -80,9 +86,12 @@ class DataManager {
             // Guardar los datos completos
             this.allData = data;
             
+            // Poblar formulario directamente
+            this.populateFormWithData(data);
+            
             // Notificar que los datos se han cargado
             document.dispatchEvent(new CustomEvent('dataLoaded', {
-                detail: { success: true }
+                detail: { success: true, gameType: gameType }
             }));
         } catch (err) {
             console.error('Error loading data:', err);
@@ -90,6 +99,11 @@ class DataManager {
                 detail: { success: false, error: err }
             }));
         }
+    }
+    
+    async loadAllData() {
+        // Método mantenido para compatibilidad, pero ahora carga datos personalizados por defecto
+        await this.loadDataForGameType('custom');
     }
     
     filterDataByGameType(gameType) {
@@ -118,44 +132,37 @@ class DataManager {
         return filteredData;
     }
     
-    populateFormWithFilteredData(gameType) {
-        // Limpiar datos existentes
-        this.clearAll();
+    populateFormWithData(data) {
+        if (!data) return;
         
-        // Obtener datos filtrados
-        const filteredData = this.filterDataByGameType(gameType);
-        if (!filteredData) return;
-        
-        // Poblar selects
-        this.populateSelect(this.selects.race, filteredData.races);
-        this.populateSelect(this.selects.class, filteredData.classes);
-        this.populateSelect(this.selects.background, filteredData.backgrounds);
-        this.populateSelect(this.selects.alignment, filteredData.alignments);
+        // Los datos ahora se manejan directamente en el overlay
+        // No necesitamos poblar selects
         
         // Poblar listas
-        this.populateSkills(filteredData.skills);
-        this.populateLanguages(filteredData.languages);
-        this.populateProficiencies(filteredData.proficiencies);
-        this.populateEquipment(filteredData.items);
-        this.populateSpells(filteredData.spells);
+        this.populateSkills(data.skills);
+        this.populateLanguages(data.languages);
+        this.populateProficiencies(data.proficiencies);
+        this.populateEquipment(data.items);
+        this.populateSpells(data.spells);
         
         this.dataPopulated = true;
         
         // Notificar que se han poblado los datos
         document.dispatchEvent(new CustomEvent('dataPopulated', {
-            detail: { gameType: gameType }
+            detail: { success: true }
         }));
     }
     
+    populateFormWithFilteredData(gameType) {
+        // Método mantenido para compatibilidad
+        // Ahora simplemente carga datos para el tipo de juego especificado
+        this.loadDataForGameType(gameType);
+    }
+    
     populateSelect(select, options) {
-        if (!select || !options) return;
-        
-        options.forEach(opt => {
-            const option = document.createElement('option');
-            option.value = opt.id;
-            option.textContent = opt.name;
-            select.appendChild(option);
-        });
+        // Método mantenido para compatibilidad, pero ya no se usa
+        // Los datos se manejan ahora en selection-overlay.js
+        return;
     }
     
     populateSkills(skills) {
@@ -295,9 +302,9 @@ class DataManager {
         
         if (!startingContainer || !additionalContainer || !items) return;
         
-        // Dividir items en equipamiento inicial y adicional
-        const startingItems = items.filter(item => ['weapon', 'armor', 'gear'].includes(item.type));
-        const additionalItems = items.filter(item => item.type === 'magic' || item.rarity !== 'common');
+        // Dividir items: primeros 50 en equipamiento inicial, resto en adicional
+        const startingItems = items.slice(0, 50);
+        const additionalItems = items.slice(50);
         
         startingItems.forEach(item => {
             const itemElement = this.createEquipmentItem(item, startingContainer);
