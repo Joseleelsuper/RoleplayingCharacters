@@ -631,9 +631,10 @@
 }
 
 .attribute-btn:hover:not(:disabled) {
-    background: var(--selected-border);
+    background: var(--primary-600);
     color: var(--text-inverse);
     transform: scale(1.1);
+    box-shadow: var(--shadow-md);
 }
 
 .attribute-btn:disabled {
@@ -706,6 +707,16 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
     border-color: var(--primary-300);
+    background: var(--primary-100);
+    color: var(--primary-700);
+}
+
+.skill-item:hover *,
+.language-item:hover *,
+.proficiency-item:hover *,
+.equipment-item:hover *,
+.spell-item:hover * {
+    color: var(--primary-700);
 }
 
 .skill-item.selected, .language-item.selected, .proficiency-item.selected, 
@@ -1079,9 +1090,15 @@ p.error-description {
 
 .selection-button:hover {
     border-color: var(--primary-400);
-    background: var(--primary-50);
+    background: var(--primary-100);
+    color: var(--primary-700);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
+}
+
+.selection-button:hover .selection-text,
+.selection-button:hover .selection-icon {
+    color: var(--primary-700);
 }
 
 .selection-button.selected {
@@ -1249,9 +1266,17 @@ p.error-description {
 
 .option-card:hover {
     border-color: var(--primary-400);
-    background: var(--primary-50);
+    background: linear-gradient(135deg, var(--primary-100), var(--secondary-100));
+    color: var(--primary-700);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+}
+
+.option-card:hover .option-icon,
+.option-card:hover .option-title,
+.option-card:hover .option-subtitle,
+.option-card:hover .option-description {
+    color: var(--primary-700);
 }
 
 .option-card.selected {
