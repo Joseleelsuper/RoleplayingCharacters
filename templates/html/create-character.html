@@ -547,8 +547,12 @@
                 <button type="button" class="overlay-close" id="overlay-close">&times;</button>
             </div>
             <div class="overlay-body">
+                <div class="overlay-info" id="overlay-info">
+                    <span class="info-icon">ℹ️</span>
+                    <span class="info-text" id="overlay-info-text">{{ _('create_character.overlay.default_info') }}</span>
+                </div>
                 <div class="search-container">
-                    <input type="text" id="overlay-search" class="overlay-search" placeholder="Buscar...">
+                    <input type="text" id="overlay-search" class="overlay-search" placeholder="{{ _('create_character.overlay.search_placeholder') }}">
                 </div>
                 <div id="overlay-options" class="overlay-options">
                     <!-- Options will be loaded dynamically -->
@@ -558,6 +562,19 @@
     </div>
 
     {% include 'objects/footer.html' %}
+    
+    <!-- Hidden translation elements for JavaScript -->
+    <div id="translations" style="display: none;">
+        <span id="overlay-race-title">{{ _('create_character.overlay.race.title') }}</span>
+        <span id="overlay-class-title">{{ _('create_character.overlay.class.title') }}</span>
+        <span id="overlay-background-title">{{ _('create_character.overlay.background.title') }}</span>
+        <span id="overlay-alignment-title">{{ _('create_character.overlay.alignment.title') }}</span>
+        <span id="overlay-race-description">{{ _('create_character.overlay.race.description') }}</span>
+        <span id="overlay-class-description">{{ _('create_character.overlay.class.description') }}</span>
+        <span id="overlay-background-description">{{ _('create_character.overlay.background.description') }}</span>
+        <span id="overlay-alignment-description">{{ _('create_character.overlay.alignment.description') }}</span>
+        <span id="overlay-default-info">{{ _('create_character.overlay.default_info') }}</span>
+    </div>
     
     <!-- Componentes JS separados -->
     <script src="/templates/js/create-character/game-type-selector.js"></script>

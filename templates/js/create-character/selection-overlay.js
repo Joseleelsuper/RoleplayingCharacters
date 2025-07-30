@@ -19,6 +19,7 @@ class SelectionOverlay {
         this.overlayTitle = document.getElementById('overlay-title');
         this.overlayOptions = document.getElementById('overlay-options');
         this.overlaySearch = document.getElementById('overlay-search');
+        this.overlayInfoText = document.getElementById('overlay-info-text');
         
         // Event listeners
         document.getElementById('overlay-close').addEventListener('click', () => this.close());
@@ -61,6 +62,9 @@ class SelectionOverlay {
         // Set title
         this.overlayTitle.textContent = this.getTitle(type);
         
+        // Set info text
+        this.updateInfoText(type);
+        
         // Clear search
         this.overlaySearch.value = '';
         
@@ -90,13 +94,23 @@ class SelectionOverlay {
     }
 
     getTitle(type) {
-        const titles = {
-            'race': 'Seleccionar Raza',
-            'class': 'Seleccionar Clase',
-            'background': 'Seleccionar Trasfondo',
-            'alignment': 'Seleccionar Alineamiento'
-        };
-        return titles[type] || 'Seleccionar';
+        const titleElement = document.getElementById(`overlay-${type}-title`);
+        return titleElement ? titleElement.textContent : 'Seleccionar';
+    }
+    
+    updateInfoText(type) {
+        if (this.overlayInfoText) {
+            const descriptionElement = document.getElementById(`overlay-${type}-description`);
+            const defaultInfoElement = document.getElementById('overlay-default-info');
+            
+            if (descriptionElement) {
+                this.overlayInfoText.textContent = descriptionElement.textContent;
+            } else if (defaultInfoElement) {
+                this.overlayInfoText.textContent = defaultInfoElement.textContent;
+            } else {
+                this.overlayInfoText.textContent = 'Selecciona una opción de la lista';
+            }
+        }
     }
 
     filterOptions(searchTerm) {
