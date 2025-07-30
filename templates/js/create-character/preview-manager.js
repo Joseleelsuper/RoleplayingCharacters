@@ -83,8 +83,10 @@ class PreviewManager {
     
     setupInputListeners() {
         const nameInput = document.getElementById('character-name');
-        const raceSelect = document.getElementById('race');
-        const classSelect = document.getElementById('character-class');
+        const raceInput = document.getElementById('race');
+        const classInput = document.getElementById('character-class');
+        const backgroundInput = document.getElementById('background');
+        const alignmentInput = document.getElementById('alignment');
         
         if (nameInput) {
             nameInput.addEventListener('input', () => {
@@ -94,19 +96,34 @@ class PreviewManager {
             });
         }
         
-        if (raceSelect) {
-            raceSelect.addEventListener('change', () => {
-                const selectedOption = raceSelect.options[raceSelect.selectedIndex];
-                this.character.race = selectedOption.textContent;
+        // Escuchar cambios en los campos ocultos
+        if (raceInput) {
+            raceInput.addEventListener('change', () => {
+                this.character.race = this.getOptionName('races', raceInput.value);
                 this.updatePreview();
                 this.checkCompletionStatus();
             });
         }
         
-        if (classSelect) {
-            classSelect.addEventListener('change', () => {
-                const selectedOption = classSelect.options[classSelect.selectedIndex];
-                this.character.class = selectedOption.textContent;
+        if (classInput) {
+            classInput.addEventListener('change', () => {
+                this.character.class = this.getOptionName('classes', classInput.value);
+                this.updatePreview();
+                this.checkCompletionStatus();
+            });
+        }
+        
+        if (backgroundInput) {
+            backgroundInput.addEventListener('change', () => {
+                this.character.background = this.getOptionName('backgrounds', backgroundInput.value);
+                this.updatePreview();
+                this.checkCompletionStatus();
+            });
+        }
+        
+        if (alignmentInput) {
+            alignmentInput.addEventListener('change', () => {
+                this.character.alignment = this.getOptionName('alignments', alignmentInput.value);
                 this.updatePreview();
                 this.checkCompletionStatus();
             });
@@ -243,6 +260,18 @@ class PreviewManager {
     updateSpells(spells) {
         this.character.spells = spells;
         this.checkCompletionStatus();
+    }
+    
+    getOptionName(dataType, optionId) {
+        if (!optionId || !window.dataManager || !window.dataManager.allData) {
+            return 'No definido';
+        }
+        
+        const data = window.dataManager.allData[dataType];
+        if (!data) return 'No definido';
+        
+        const option = data.find(item => (item.id || item.index) === optionId);
+        return option ? option.name : 'No definido';
     }
     
     // Obtener el objeto de personaje completo

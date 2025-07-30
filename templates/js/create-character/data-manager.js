@@ -10,13 +10,8 @@ class DataManager {
     }
     
     init() {
-        // Cachear referencias a los elementos
-        this.selects = {
-            race: document.getElementById('race'),
-            class: document.getElementById('character-class'),
-            background: document.getElementById('background'),
-            alignment: document.getElementById('alignment')
-        };
+        // Cachear referencias a los elementos (ahora solo contenedores)
+        this.selects = {}; // Ya no usamos selects, pero mantenemos para compatibilidad
         
         this.containers = {
             skillsList: document.getElementById('skills-list'),
@@ -34,16 +29,26 @@ class DataManager {
     }
     
     clearAll() {
-        // Limpiar selectores
-        Object.values(this.selects).forEach(select => {
-            if (select) {
-                const firstOption = select.querySelector('option');
-                if (firstOption) {
-                    select.innerHTML = firstOption.outerHTML;
-                } else {
-                    select.innerHTML = '';
-                }
+        // Limpiar botones de selección
+        document.querySelectorAll('.selection-button').forEach(button => {
+            const textSpan = button.querySelector('.selection-text');
+            const type = button.dataset.selectionType;
+            if (textSpan && type) {
+                // Restaurar texto placeholder
+                const placeholders = {
+                    'race': 'Selecciona una raza',
+                    'class': 'Selecciona una clase', 
+                    'background': 'Selecciona un trasfondo',
+                    'alignment': 'Selecciona un alineamiento'
+                };
+                textSpan.textContent = placeholders[type] || 'Seleccionar';
+                button.classList.remove('selected');
             }
+        });
+        
+        // Limpiar inputs ocultos
+        document.querySelectorAll('input[type="hidden"][name$="_id"]').forEach(input => {
+            input.value = '';
         });
         
         // Limpiar contenedores
@@ -130,11 +135,8 @@ class DataManager {
     populateFormWithData(data) {
         if (!data) return;
         
-        // Poblar selects
-        this.populateSelect(this.selects.race, data.races);
-        this.populateSelect(this.selects.class, data.classes);
-        this.populateSelect(this.selects.background, data.backgrounds);
-        this.populateSelect(this.selects.alignment, data.alignments);
+        // Los datos ahora se manejan directamente en el overlay
+        // No necesitamos poblar selects
         
         // Poblar listas
         this.populateSkills(data.skills);
@@ -158,14 +160,9 @@ class DataManager {
     }
     
     populateSelect(select, options) {
-        if (!select || !options) return;
-        
-        options.forEach(opt => {
-            const option = document.createElement('option');
-            option.value = opt.id;
-            option.textContent = opt.name;
-            select.appendChild(option);
-        });
+        // Método mantenido para compatibilidad, pero ya no se usa
+        // Los datos se manejan ahora en selection-overlay.js
+        return;
     }
     
     populateSkills(skills) {
@@ -305,9 +302,9 @@ class DataManager {
         
         if (!startingContainer || !additionalContainer || !items) return;
         
-        // Dividir items en equipamiento inicial y adicional
-        const startingItems = items.filter(item => ['weapon', 'armor', 'gear'].includes(item.type));
-        const additionalItems = items.filter(item => item.type === 'magic' || item.rarity !== 'common');
+        // Dividir items: primeros 50 en equipamiento inicial, resto en adicional
+        const startingItems = items.slice(0, 50);
+        const additionalItems = items.slice(50);
         
         startingItems.forEach(item => {
             const itemElement = this.createEquipmentItem(item, startingContainer);
