@@ -135,9 +135,7 @@ class AttributeManager {
         // Escuchar cambios en el nivel para actualizar puntos ASI
         document.addEventListener('attributeChanged', (event) => {
             if (event.detail.attribute === 'level') {
-                this.updateAttributePointsRemaining();
-                this.updateAttributeButtonStates();
-                this.updateASIInfo();
+                this.handleLevelChange();
             }
         });
         
@@ -145,10 +143,95 @@ class AttributeManager {
         const levelInput = document.getElementById('level');
         if (levelInput) {
             levelInput.addEventListener('change', () => {
-                this.updateAttributePointsRemaining();
-                this.updateAttributeButtonStates();
-                this.updateASIInfo();
+                this.handleLevelChange();
             });
+        }
+    }
+    
+    /**
+     * Maneja los cambios de nivel, incluyendo reseteo automático si es necesario
+     */
+    handleLevelChange() {
+        // Verificar si los puntos actuales exceden el límite después del cambio de nivel
+        const basePointsLimit = this.attributeSystems[this.currentAttributeSystem].pointsLimit;
+        const asiPoints = this.getASIPoints();
+        const totalPointsLimit = basePointsLimit + asiPoints;
+        const usedPoints = this.getTotalAttributePoints();
+        
+        // Si se están usando más puntos de los disponibles, resetear a valores por defecto
+        if (usedPoints > totalPointsLimit) {
+            this.resetToDefaultValues();
+        }
+        
+        this.updateAttributePointsRemaining();
+        this.updateAttributeButtonStates();
+        this.updateASIInfo();
+    }
+    
+    /**
+     * Resetea todos los atributos a sus valores por defecto
+     */
+    resetToDefaultValues() {
+        const attrs = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+        const system = this.attributeSystems[this.currentAttributeSystem];
+        
+        // Encontrar el valor que da modificador +0 en este sistema
+        let defaultValue = 10;
+        for (let i = system.minAttr; i <= system.maxAttr; i++) {
+            const modifier = Math.floor((i - 10) / 2);
+            if (modifier === 0) {
+                defaultValue = i;
+                break;
+            }
+        }
+        
+        // Aplicar valores por defecto a todos los atributos
+        attrs.forEach(attr => {
+            const input = document.getElementById(attr);
+            if (input) {
+                input.value = defaultValue;
+                this.updateModifier(attr, defaultValue);
+                
+                // Notificar cambio individual de atributo
+                document.dispatchEvent(new CustomEvent('attributeChanged', {
+                    detail: {
+                        attribute: attr,
+                        value: defaultValue
+                    }
+                }));
+            }
+        });
+        
+        // Mostrar mensaje informativo al usuario
+        const isSpanish = document.documentElement.lang === 'es';
+        const message = isSpanish ? 
+            'Los atributos se han restablecido a valores por defecto debido a la reducción de nivel.' :
+            'Attributes have been reset to default values due to level reduction.';
+        
+        // Crear notificación temporal
+        this.showTemporaryNotification(message);
+    }
+    
+    /**
+     * Muestra una notificación temporal al usuario
+     */
+    showTemporaryNotification(message) {
+        // Crear elemento de notificación
+        const notification = document.createElement('div');
+        notification.className = 'level-reset-notification';
+        notification.textContent = message;
+        
+        // Insertar en la interfaz
+        const pointsInfo = document.querySelector('.point-buy-info');
+        if (pointsInfo) {
+            pointsInfo.appendChild(notification);
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
         }
     }
     
@@ -302,12 +385,14 @@ class AttributeManager {
                 const system = this.attributeSystems[this.currentAttributeSystem];
                 const minAttr = system.minAttr;
                 const maxAttr = system.maxAttr;
-                const pointsLimit = system.pointsLimit;
+                const basePointsLimit = system.pointsLimit;
+                const asiPoints = this.getASIPoints();
+                const totalPointsLimit = basePointsLimit + asiPoints;
                 
                 let values = Array(6).fill(minAttr);
                 
-                // Usar un algoritmo de distribución mejorado
-                values = this.generateRandomAttributeDistribution(attrs.length, minAttr, maxAttr, pointsLimit);
+                // Usar un algoritmo de distribución mejorado con puntos totales incluyendo ASI
+                values = this.generateRandomAttributeDistribution(attrs.length, minAttr, maxAttr, totalPointsLimit);
                 
                 // Aplicar los valores generados a los inputs y actualizar modificadores
                 attrs.forEach((attr, i) => {
