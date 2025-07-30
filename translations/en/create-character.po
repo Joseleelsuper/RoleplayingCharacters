@@ -86,6 +86,37 @@ msgstr "Custom"
 msgid "create_character.game_type.custom_desc"
 msgstr "Create a character with access to all available options from all game systems."
 
+# Selection Overlays
+msgid "create_character.overlay.race.title"
+msgstr "Select Race"
+
+msgid "create_character.overlay.class.title"
+msgstr "Select Class"
+
+msgid "create_character.overlay.background.title"
+msgstr "Select Background"
+
+msgid "create_character.overlay.alignment.title"
+msgstr "Select Alignment"
+
+msgid "create_character.overlay.race.description"
+msgstr "Race determines your character's physical characteristics and innate abilities. Each race provides bonuses to specific attributes and unique traits."
+
+msgid "create_character.overlay.class.description"
+msgstr "Class defines your character's profession and primary abilities. It determines hit points, proficiencies, and special abilities they can learn."
+
+msgid "create_character.overlay.background.description"
+msgstr "Background represents your character's life before becoming an adventurer. It provides additional proficiencies, languages, and starting equipment."
+
+msgid "create_character.overlay.alignment.description"
+msgstr "Alignment reflects your character's moral and ethical perspective. It influences how they interact with the world and other characters."
+
+msgid "create_character.overlay.default_info"
+msgstr "Select an option from the list"
+
+msgid "create_character.overlay.search_placeholder"
+msgstr "Search..."
+
 # Basic Information Section
 msgid "create_character.basic.title"
 msgstr "Basic Information"

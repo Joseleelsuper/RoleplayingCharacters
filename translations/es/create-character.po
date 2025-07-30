@@ -386,3 +386,34 @@ msgstr "Personalizado"
 
 msgid "create_character.game_type.custom_desc"
 msgstr "Crea un personaje con acceso a todas las opciones disponibles de todos los sistemas de juego."
+
+# Selection Overlays
+msgid "create_character.overlay.race.title"
+msgstr "Seleccionar Raza"
+
+msgid "create_character.overlay.class.title"
+msgstr "Seleccionar Clase"
+
+msgid "create_character.overlay.background.title"
+msgstr "Seleccionar Trasfondo"
+
+msgid "create_character.overlay.alignment.title"
+msgstr "Seleccionar Alineamiento"
+
+msgid "create_character.overlay.race.description"
+msgstr "La raza determina las características físicas y habilidades innatas de tu personaje. Cada raza proporciona bonificaciones a atributos específicos y rasgos únicos."
+
+msgid "create_character.overlay.class.description"
+msgstr "La clase define la profesión y habilidades principales de tu personaje. Determina los puntos de vida, competencias y habilidades especiales que puede aprender."
+
+msgid "create_character.overlay.background.description"
+msgstr "El trasfondo representa la vida de tu personaje antes de convertirse en aventurero. Proporciona competencias adicionales, idiomas y equipo inicial."
+
+msgid "create_character.overlay.alignment.description"
+msgstr "El alineamiento refleja la perspectiva moral y ética de tu personaje. Influye en cómo interactúa con el mundo y otros personajes."
+
+msgid "create_character.overlay.default_info"
+msgstr "Selecciona una opción de la lista"
+
+msgid "create_character.overlay.search_placeholder"
+msgstr "Buscar..."
