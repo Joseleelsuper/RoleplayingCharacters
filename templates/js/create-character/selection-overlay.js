@@ -350,6 +350,21 @@ class SelectionOverlay {
             window.previewManager.updatePreview();
         }
         
+        // Dispatch specific events for skill manager
+        if (this.currentType === 'class') {
+            document.dispatchEvent(new CustomEvent('classSelected', {
+                detail: { class: item, id: this.selectedValue, name: item.name }
+            }));
+        } else if (this.currentType === 'race') {
+            document.dispatchEvent(new CustomEvent('raceSelected', {
+                detail: { race: item, id: this.selectedValue, name: item.name }
+            }));
+        } else if (this.currentType === 'background') {
+            document.dispatchEvent(new CustomEvent('backgroundSelected', {
+                detail: { background: item, id: this.selectedValue, name: item.name }
+            }));
+        }
+        
         this.close();
     }
 

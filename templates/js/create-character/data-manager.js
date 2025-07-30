@@ -58,6 +58,11 @@ class DataManager {
         Object.values(this.containers).forEach(container => {
             if (container) container.innerHTML = '';
         });
+        
+        // Limpiar habilidades seleccionadas
+        if (window.skillManager) {
+            window.skillManager.clearAllSkills();
+        }
     }
     
     async loadDataForGameType(gameType) {
