@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
         window.navigationManager.init();
     }
     
+    if (window.skillManager) {
+        window.skillManager.init();
+    }
+    
     // Prevenir envío del formulario por defecto
     const form = document.getElementById('character-form');
     if (form) {
