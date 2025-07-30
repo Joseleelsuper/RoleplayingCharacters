@@ -883,6 +883,36 @@
     font-size: var(--font-size-base);
 }
 
+/* ASI (Ability Score Improvement) Information */
+.asi-info {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+    border: 1px solid var(--primary-200);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+}
+
+.asi-points {
+    color: var(--primary-700);
+    font-weight: 600;
+}
+
+.asi-points strong {
+    color: var(--primary-800);
+    font-size: var(--font-size-md);
+}
+
+.asi-next {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.asi-next strong {
+    color: var(--primary-600);
+    font-weight: 600;
+}
+
 .btn-sm {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: var(--font-size-sm);
