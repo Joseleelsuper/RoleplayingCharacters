@@ -173,11 +173,14 @@ class SearchManager {
     }
 }
 
-// Inicializar el manager cuando el DOM esté listo
-let searchManager;
+// Exportar para uso global
+window.searchManager = new SearchManager();
 
-document.addEventListener('DOMContentLoaded', () => {
-    searchManager = new SearchManager();
+// Escuchar cuando se cargan los datos para refrescar las búsquedas
+document.addEventListener('dataPopulated', () => {
+    if (window.searchManager) {
+        window.searchManager.refreshContainers();
+    }
 });
 
 // Exportar para uso en otros módulos

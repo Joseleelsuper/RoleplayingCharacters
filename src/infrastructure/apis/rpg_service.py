@@ -318,7 +318,7 @@ class RPGDataService:
                 if hasattr(spells, 'results'):
                     return [{"id": s.index, 
                             "name": s.name, 
-                            "level": 0, 
+                            "level": getattr(s, 'level', 0), 
                             "school": "", 
                             "source": "dnd5e"} 
                            for s in spells.results]
