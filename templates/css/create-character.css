@@ -17,12 +17,22 @@
     grid-template-columns: 1fr 320px;
     gap: var(--spacing-2xl);
     align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 @media (max-width: 1024px) {
     .character-form {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
+        padding: 0 var(--spacing-md);
+    }
+}
+
+@media (max-width: 768px) {
+    .character-form {
+        padding: 0 var(--spacing-sm);
     }
 }
 
@@ -119,10 +129,25 @@
 .form-section {
     padding: var(--spacing-2xl);
     animation: fadeIn 0.3s ease-in-out;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .form-section.hidden {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .form-section {
+        padding: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .form-section {
+        padding: var(--spacing-md);
+    }
 }
 
 @keyframes fadeIn {
@@ -1030,6 +1055,34 @@
     margin: var(--spacing-md) auto;
 }
 
+/* Search containers */
+.search-container {
+    margin-bottom: var(--spacing-md);
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-normal);
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(var(--primary-500-rgb, 59, 130, 246), 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
 /* Estilos mejorados para las secciones de selección */
 .skills-container, .languages-container, .proficiencies-container, 
 .equipment-container, .spells-container {
@@ -1038,20 +1091,45 @@
     padding: var(--spacing-lg);
     max-height: 400px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.skills-list, .languages-list, .proficiencies-list, 
-.equipment-list, .spells-list {
+/* Definición base ya está en la sección unificada arriba */
+
+/* Layout unificado para todas las secciones */
+.skills-layout, .equipment-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.skills-section, .proficiencies-section, .starting-equipment, .additional-equipment {
+    width: 100%;
+}
+
+/* Listas unificadas - 3 columnas para todos los elementos */
+.skills-list, .languages-list, .proficiencies-list, .equipment-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-md);
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Spells layout - 2 columns */
-.spells-layout {
+/* Spells layout - unificado con el resto */
+.spells-layout-three-columns {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.spells-list {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .spell-level-container {
@@ -1065,13 +1143,84 @@
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-sm);
     border-bottom: 2px solid var(--primary-200);
+    grid-column: 1 / -1;
 }
 
-/* Responsive adjustments for spells */
+/* Los elementos de hechizos dentro de cada nivel se distribuyen en columnas */
+.spell-level-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .skills-list, .languages-list, .proficiencies-list, 
+    .equipment-list, .spells-list, .spell-level-container {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
-    .spells-layout {
+    .skills-list, .languages-list, .proficiencies-list, 
+    .equipment-list, .spells-list, .spell-level-container {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: var(--spacing-sm);
+    }
+    
+    .skills-container, .languages-container, .proficiencies-container, 
+    .equipment-container, .spells-container {
+        padding: var(--spacing-md);
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .skills-list, .languages-list, .proficiencies-list, 
+    .equipment-list, .spells-list, .spell-level-container {
         grid-template-columns: 1fr;
     }
+    
+    .skills-layout, .equipment-layout {
+        gap: var(--spacing-lg);
+    }
+}
+
+/* No results message */
+.no-results-message {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-xl);
+    margin: var(--spacing-lg) 0;
+}
+
+.no-results-content {
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.no-results-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    opacity: 0.6;
+}
+
+.no-results-text {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-secondary);
+}
+
+.no-results-hint {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    font-style: italic;
 }
 
 .skill-item, .language-item, .proficiency-item, 

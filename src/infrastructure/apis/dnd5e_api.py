@@ -45,16 +45,10 @@ class DnD5eApiClient:
         """
         try:
             url = f"{DnD5eApiClient.BASE_URL}{endpoint}"
-            print(f"Solicitando: {url}")
             async with httpx.AsyncClient() as client:
                 response = await client.get(url)
                 response.raise_for_status()
                 data = response.json()
-                print(f"Respuesta recibida de {url}: Estructura: {list(data.keys()) if isinstance(data, dict) else 'No es un diccionario'}")
-                if isinstance(data, dict) and "results" in data:
-                    print(f"Cantidad de resultados: {len(data['results'])}")
-                    if data["results"] and len(data["results"]) > 0:
-                        print(f"Primer resultado: {data['results'][0]}")
                 return data
         except Exception as e:
             print(f"Error al obtener recurso de API {endpoint}: {e}")

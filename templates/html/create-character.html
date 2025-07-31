@@ -351,6 +351,9 @@
                                 🎯 {{ _('create_character.skills.skills') }}
                                 <span class="skill-points">{{ _('create_character.skills.skill_points') }} <strong id="skill-points-remaining">4</strong></span>
                             </h3>
+                            <div class="search-container">
+                                <input type="text" id="skills-search" class="search-input" placeholder="Buscar habilidades..." autocomplete="off">
+                            </div>
                             <div class="skills-container">
                                 <div class="skills-list" id="skills-list">
                                     <!-- Skills will be loaded dynamically -->
@@ -360,6 +363,9 @@
                         
                         <div class="proficiencies-section">
                             <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
+                            <div class="search-container">
+                                <input type="text" id="languages-search" class="search-input" placeholder="Buscar idiomas..." autocomplete="off">
+                            </div>
                             <div class="languages-container">
                                 <div class="languages-list" id="languages-list">
                                     <!-- Languages will be loaded dynamically -->
@@ -367,6 +373,9 @@
                             </div>
                             
                             <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
+                            <div class="search-container">
+                                <input type="text" id="proficiencies-search" class="search-input" placeholder="Buscar competencias..." autocomplete="off">
+                            </div>
                             <div class="proficiencies-container">
                                 <div class="proficiencies-list" id="proficiencies-list">
                                     <!-- Proficiencies will be loaded dynamically -->
@@ -386,6 +395,9 @@
                     <div class="equipment-layout">
                         <div class="starting-equipment">
                             <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
+                            <div class="search-container">
+                                <input type="text" id="starting-equipment-search" class="search-input" placeholder="Buscar equipamiento inicial..." autocomplete="off">
+                            </div>
                             <div class="equipment-container">
                                 <div class="equipment-list" id="starting-equipment-list">
                                     <!-- Starting equipment will be loaded dynamically -->
@@ -395,6 +407,9 @@
                         
                         <div class="additional-equipment">
                             <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
+                            <div class="search-container">
+                                <input type="text" id="additional-equipment-search" class="search-input" placeholder="Buscar equipamiento adicional..." autocomplete="off">
+                            </div>
                             <div class="equipment-container">
                                 <div class="equipment-list" id="additional-equipment-list">
                                     <!-- Additional equipment will be loaded dynamically -->
@@ -411,16 +426,12 @@
                         {{ _('create_character.spells.title') }}
                     </h2>
                     
-                    <div id="spells-content" class="spells-layout">
-                        <div class="spell-slots-info">
-                            <h3 class="subsection-title">📜 {{ _('create_character.spells.info') }}</h3>
-                            <div class="spell-slots-container" id="spell-slots-container">
-                                <!-- Spell slots will be shown if class is a spellcaster -->
-                            </div>
-                        </div>
-                        
+                    <div id="spells-content" class="spells-layout-three-columns">
                         <div class="spell-selection">
                             <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
+                            <div class="search-container">
+                                <input type="text" id="spells-search" class="search-input" placeholder="Buscar hechizos..." autocomplete="off">
+                            </div>
                             <div class="spells-container">
                                 <div class="spells-list" id="spells-list">
                                     <!-- Spells will be loaded dynamically -->
@@ -590,6 +601,7 @@
     <script src="/templates/js/create-character/preview-manager.js"></script>
     <script src="/templates/js/create-character/navigation-manager.js"></script>
     <script src="/templates/js/create-character/skill-manager.js"></script>
+    <script src="/templates/js/create-character/search-manager.js"></script>
     <script src="/templates/js/create-character/create-character.js"></script>
 </body>
 </html>
