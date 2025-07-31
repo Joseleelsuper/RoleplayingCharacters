@@ -352,7 +352,7 @@
                                 <span class="skill-points">{{ _('create_character.skills.skill_points') }} <strong id="skill-points-remaining">4</strong></span>
                             </h3>
                             <div class="search-container">
-                                <input type="text" id="skills-search" class="search-input" placeholder="Buscar habilidades..." autocomplete="off">
+                                <input type="text" id="skills-search" class="search-input" placeholder="{{ _('create_character.skills.search_placeholder') }}" autocomplete="off">
                             </div>
                             <div class="skills-container">
                                 <div class="skills-list" id="skills-list">
@@ -364,7 +364,7 @@
                         <div class="proficiencies-section">
                             <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
                             <div class="search-container">
-                                <input type="text" id="languages-search" class="search-input" placeholder="Buscar idiomas..." autocomplete="off">
+                                <input type="text" id="languages-search" class="search-input" placeholder="{{ _('create_character.languages.search_placeholder') }}" autocomplete="off">
                             </div>
                             <div class="languages-container">
                                 <div class="languages-list" id="languages-list">
@@ -374,7 +374,7 @@
                             
                             <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
                             <div class="search-container">
-                                <input type="text" id="proficiencies-search" class="search-input" placeholder="Buscar competencias..." autocomplete="off">
+                                <input type="text" id="proficiencies-search" class="search-input" placeholder="{{ _('create_character.proficiencies.search_placeholder') }}" autocomplete="off">
                             </div>
                             <div class="proficiencies-container">
                                 <div class="proficiencies-list" id="proficiencies-list">
@@ -396,7 +396,7 @@
                         <div class="starting-equipment">
                             <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
                             <div class="search-container">
-                                <input type="text" id="starting-equipment-search" class="search-input" placeholder="Buscar equipamiento inicial..." autocomplete="off">
+                                <input type="text" id="starting-equipment-search" class="search-input" placeholder="{{ _('create_character.equipment.search_placeholder') }}" autocomplete="off">
                             </div>
                             <div class="equipment-container">
                                 <div class="equipment-list" id="starting-equipment-list">
@@ -408,7 +408,7 @@
                         <div class="additional-equipment">
                             <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
                             <div class="search-container">
-                                <input type="text" id="additional-equipment-search" class="search-input" placeholder="Buscar equipamiento adicional..." autocomplete="off">
+                                <input type="text" id="additional-equipment-search" class="search-input" placeholder="{{ _('create_character.equipment.additional_search_placeholder') }}" autocomplete="off">
                             </div>
                             <div class="equipment-container">
                                 <div class="equipment-list" id="additional-equipment-list">
@@ -430,7 +430,7 @@
                         <div class="spell-selection">
                             <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
                             <div class="search-container">
-                                <input type="text" id="spells-search" class="search-input" placeholder="Buscar hechizos..." autocomplete="off">
+                                <input type="text" id="spells-search" class="search-input" placeholder="{{ _('create_character.spells.search_placeholder') }}" autocomplete="off">
                             </div>
                             <div class="spells-container">
                                 <div class="spells-list" id="spells-list">
@@ -591,6 +591,9 @@
         <span id="alignment-placeholder-text">{{ _('create_character.basic.alignment_placeholder') }}</span>
         <span id="overlay-alignment-description">{{ _('create_character.overlay.alignment.description') }}</span>
         <span id="overlay-default-info">{{ _('create_character.overlay.default_info') }}</span>
+        <span id="spell-cantrips-title">{{ _('create_character.spells.cantrips') }}</span>
+        <span id="spell-level-title">{{ _('create_character.spells.level') }}</span>
+        <span id="spell-removed-message">{{ _('create_character.spells.removed_on_level_change') }}</span>
     </div>
     
     <!-- Componentes JS separados -->

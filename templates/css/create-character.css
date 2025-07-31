@@ -1109,7 +1109,7 @@
     width: 100%;
 }
 
-/* Listas unificadas - 3 columnas para todos los elementos */
+/* Listas unificadas - layout base para todas las secciones */
 .skills-list, .languages-list, .proficiencies-list, .equipment-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -1118,22 +1118,29 @@
     box-sizing: border-box;
 }
 
-/* Spells layout - unificado con el resto */
+/* Layout específico para hechizos - contenedores flexibles */
 .spells-layout-three-columns {
     width: 100%;
     box-sizing: border-box;
 }
 
 .spells-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--spacing-md);
     width: 100%;
     box-sizing: border-box;
 }
 
 .spell-level-container {
+    flex: 1;
+    min-width: 280px;
     margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    padding: var(--spacing-md);
+    background-color: var(--surface-secondary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .spell-level-title {
@@ -1147,7 +1154,7 @@
 }
 
 /* Los elementos de hechizos dentro de cada nivel se distribuyen en columnas */
-.spell-level-container {
+.spell-level-container .spell-items {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-md);
@@ -1155,17 +1162,17 @@
     box-sizing: border-box;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments unificados */
 @media (max-width: 1024px) {
     .skills-list, .languages-list, .proficiencies-list, 
-    .equipment-list, .spells-list, .spell-level-container {
+    .equipment-list, .spell-level-container .spell-items {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 }
 
 @media (max-width: 768px) {
     .skills-list, .languages-list, .proficiencies-list, 
-    .equipment-list, .spells-list, .spell-level-container {
+    .equipment-list, .spell-level-container .spell-items {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: var(--spacing-sm);
     }
@@ -1175,16 +1182,25 @@
         padding: var(--spacing-md);
         max-height: 300px;
     }
+    
+    .spell-level-container {
+        min-width: 240px;
+    }
 }
 
 @media (max-width: 480px) {
     .skills-list, .languages-list, .proficiencies-list, 
-    .equipment-list, .spells-list, .spell-level-container {
+    .equipment-list, .spell-level-container .spell-items {
         grid-template-columns: 1fr;
     }
     
     .skills-layout, .equipment-layout {
         gap: var(--spacing-lg);
+    }
+    
+    .spell-level-container {
+        min-width: 100%;
+        flex: none;
     }
 }
 

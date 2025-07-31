@@ -33,7 +33,7 @@ class DataManager {
         if (levelInput) {
             levelInput.addEventListener('change', () => {
                 if (this.currentSpells && this.getSelectedGameType() === 'dnd5e') {
-                    this.populateSpells(this.currentSpells);
+                    this.updateSpellsForLevelChange();
                 }
             });
         }
@@ -422,9 +422,15 @@ class DataManager {
                 
                 const levelTitle = document.createElement('h3');
                 levelTitle.classList.add('spell-level-title');
-                levelTitle.textContent = level === '0' ? 'Cantrips' : `Level ${level}`;
+                const cantripsTitle = document.getElementById('spell-cantrips-title')?.textContent || 'Cantrips';
+                const levelTitle_text = document.getElementById('spell-level-title')?.textContent || 'Level';
+                levelTitle.textContent = level === '0' ? cantripsTitle : `${levelTitle_text} ${level}`;
+                
+                const spellItemsContainer = document.createElement('div');
+                spellItemsContainer.classList.add('spell-items');
                 
                 levelContainer.appendChild(levelTitle);
+                levelContainer.appendChild(spellItemsContainer);
                 
                 levelSpells.forEach(spell => {
                     const spellItem = document.createElement('div');
@@ -443,12 +449,14 @@ class DataManager {
                     spellItem.appendChild(name);
                     
                     spellItem.addEventListener('click', () => {
-                        if (gameType === 'dnd5e' && !this.canSelectMoreSpells(spell.level)) {
+                        const checked = checkbox.classList.contains('checked');
+                        
+                        // Si está intentando seleccionar (no deseleccionar) y ha alcanzado el límite
+                        if (gameType === 'dnd5e' && !checked && !this.canSelectMoreSpells(spell.level)) {
                             this.showSpellLimitMessage(spell.level);
                             return;
                         }
                         
-                        const checked = checkbox.classList.contains('checked');
                         if (!checked) {
                             checkbox.classList.add('checked');
                             spellItem.classList.add('selected');
@@ -467,7 +475,7 @@ class DataManager {
                         }));
                     });
                     
-                    levelContainer.appendChild(spellItem);
+                    spellItemsContainer.appendChild(spellItem);
                 });
                 
                 container.appendChild(levelContainer);
@@ -538,18 +546,18 @@ class DataManager {
         const characterLevel = this.getCharacterLevel();
         const selectedSpells = document.querySelectorAll('.spell-item.selected');
         
-        // Límites básicos de hechizos conocidos para casters completos
+        // Límites mejorados de hechizos conocidos para casters completos (basado en Wizard)
         const spellsKnownLimits = {
-            0: Math.min(4, Math.floor(characterLevel / 3) + 3), // Cantrips
-            1: Math.min(6, characterLevel + 1), // Hechizos de nivel 1+
-            2: Math.min(4, Math.max(0, characterLevel - 2)),
-            3: Math.min(4, Math.max(0, characterLevel - 4)),
-            4: Math.min(3, Math.max(0, characterLevel - 6)),
-            5: Math.min(3, Math.max(0, characterLevel - 8)),
-            6: Math.min(2, Math.max(0, characterLevel - 10)),
-            7: Math.min(2, Math.max(0, characterLevel - 12)),
-            8: Math.min(1, Math.max(0, characterLevel - 14)),
-            9: Math.min(1, Math.max(0, characterLevel - 16))
+            0: this.getCantripsKnown(characterLevel), // Cantrips
+            1: this.getSpellsKnownForLevel(characterLevel, 1),
+            2: this.getSpellsKnownForLevel(characterLevel, 2),
+            3: this.getSpellsKnownForLevel(characterLevel, 3),
+            4: this.getSpellsKnownForLevel(characterLevel, 4),
+            5: this.getSpellsKnownForLevel(characterLevel, 5),
+            6: this.getSpellsKnownForLevel(characterLevel, 6),
+            7: this.getSpellsKnownForLevel(characterLevel, 7),
+            8: this.getSpellsKnownForLevel(characterLevel, 8),
+            9: this.getSpellsKnownForLevel(characterLevel, 9)
         };
         
         const currentCount = Array.from(selectedSpells).filter(spell => 
@@ -558,6 +566,108 @@ class DataManager {
         
         const limit = spellsKnownLimits[spellLevel] || 0;
         return currentCount < limit;
+    }
+    
+    // Obtener número de cantrips conocidos según el nivel
+    getCantripsKnown(characterLevel) {
+        if (characterLevel >= 17) return 4;
+        if (characterLevel >= 10) return 4;
+        if (characterLevel >= 4) return 3;
+        return 3;
+    }
+    
+    // Obtener número de hechizos conocidos para un nivel específico
+    getSpellsKnownForLevel(characterLevel, spellLevel) {
+        // Verificar si el personaje puede lanzar hechizos de este nivel
+        const spellSlots = this.getSpellSlotsForLevel(characterLevel);
+        if (spellLevel >= spellSlots.length || spellSlots[spellLevel] === 0) {
+            return 0; // No puede lanzar hechizos de este nivel
+        }
+        
+        // Límites generosos para permitir flexibilidad en la selección
+        // Basado en que un wizard puede aprender 2 hechizos por nivel + hechizos encontrados
+        const baseSpellsPerLevel = Math.max(0, (characterLevel - spellLevel + 1) * 2);
+        
+        // Límites máximos razonables por nivel de hechizo
+        const maxLimits = {
+            1: 8,  // Muchos hechizos de nivel 1
+            2: 6,  // Buen número de hechizos de nivel 2
+            3: 5,  // Hechizos de nivel 3
+            4: 4,  // Hechizos de nivel 4
+            5: 4,  // Hechizos de nivel 5
+            6: 3,  // Hechizos de nivel 6
+            7: 3,  // Hechizos de nivel 7
+            8: 2,  // Hechizos de nivel 8
+            9: 2   // Hechizos de nivel 9
+        };
+        
+        return Math.min(baseSpellsPerLevel, maxLimits[spellLevel] || 2);
+    }
+    
+    // Actualizar hechizos cuando cambia el nivel del personaje
+    updateSpellsForLevelChange() {
+        if (!this.currentSpells) return;
+        
+        const characterLevel = this.getCharacterLevel();
+        const characterClass = this.getCharacterClass();
+        
+        // Obtener hechizos actualmente seleccionados
+        const selectedSpells = new Set();
+        document.querySelectorAll('.spell-item.selected').forEach(item => {
+            selectedSpells.add({
+                id: item.dataset.id,
+                level: parseInt(item.dataset.level)
+            });
+        });
+        
+        // Filtrar hechizos según el nuevo nivel
+        const filteredSpells = this.filterSpellsByDnD5eRules(this.currentSpells, characterLevel, characterClass);
+        const validSpellIds = new Set(filteredSpells.map(spell => spell.id));
+        
+        // Verificar qué hechizos seleccionados ya no son válidos
+        const invalidSelections = [];
+        selectedSpells.forEach(spell => {
+            if (!validSpellIds.has(spell.id)) {
+                invalidSelections.push(spell);
+            }
+        });
+        
+        // Mostrar mensaje si hay hechizos que se van a remover
+        if (invalidSelections.length > 0) {
+            const message = document.createElement('div');
+            message.className = 'spell-limit-message';
+            message.style.backgroundColor = '#ffc107';
+            message.style.color = '#000';
+            
+            const messageTemplate = document.getElementById('spell-removed-message')?.textContent || 
+                'Se han removido {count} hechizo(s) que ya no están disponibles para tu nivel actual.';
+            message.textContent = messageTemplate.replace('{count}', invalidSelections.length);
+            
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 4000);
+        }
+        
+        // Re-poblar los hechizos
+        this.populateSpells(this.currentSpells);
+        
+        // Restaurar selecciones válidas
+        setTimeout(() => {
+            selectedSpells.forEach(spell => {
+                if (validSpellIds.has(spell.id)) {
+                    const spellElement = document.querySelector(`[data-id="${spell.id}"]`);
+                    if (spellElement && this.canSelectMoreSpells(spell.level)) {
+                        const checkbox = spellElement.querySelector('.spell-checkbox');
+                        if (checkbox) {
+                            checkbox.classList.add('checked');
+                            spellElement.classList.add('selected');
+                        }
+                    }
+                }
+            });
+        }, 100);
     }
     
     // Mostrar mensaje de límite de hechizos
