@@ -166,6 +166,23 @@ class AttributeManager {
         this.updateAttributePointsRemaining();
         this.updateAttributeButtonStates();
         this.updateASIInfo();
+        
+        // Notificar cambio de nivel para actualizar hechizos
+        const currentLevel = this.getCurrentLevel();
+        console.log('Disparando evento levelChanged con nivel:', currentLevel);
+        document.dispatchEvent(new CustomEvent('levelChanged', {
+            detail: {
+                level: currentLevel
+            }
+        }));
+    }
+    
+    /**
+     * Obtiene el nivel actual del personaje
+     */
+    getCurrentLevel() {
+        const levelInput = document.getElementById('level');
+        return levelInput ? parseInt(levelInput.value) || 1 : 1;
     }
     
     /**

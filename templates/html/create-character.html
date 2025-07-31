@@ -394,7 +394,10 @@
                     
                     <div class="equipment-layout">
                         <div class="starting-equipment">
-                            <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
+                                <div class="equipment-counter" id="starting-equipment-counter">0/6</div>
+                            </div>
                             <div class="search-container">
                                 <input type="text" id="starting-equipment-search" class="search-input" placeholder="{{ _('create_character.equipment.search_placeholder') }}" autocomplete="off">
                             </div>
@@ -406,7 +409,10 @@
                         </div>
                         
                         <div class="additional-equipment">
-                            <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
+                                <div class="equipment-counter" id="additional-equipment-counter">0/8</div>
+                            </div>
                             <div class="search-container">
                                 <input type="text" id="additional-equipment-search" class="search-input" placeholder="{{ _('create_character.equipment.additional_search_placeholder') }}" autocomplete="off">
                             </div>

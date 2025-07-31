@@ -1109,6 +1109,39 @@
     width: 100%;
 }
 
+/* Subsection headers con contadores */
+.subsection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.equipment-counter {
+    background: var(--primary-100);
+    color: var(--primary-700);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    border: 1px solid var(--primary-200);
+    min-width: 50px;
+    text-align: center;
+    transition: all var(--transition-normal);
+}
+
+.equipment-counter.limit-reached {
+    background: var(--error-100);
+    color: var(--error-700);
+    border-color: var(--error-200);
+}
+
+.equipment-counter.limit-warning {
+    background: var(--warning-100);
+    color: var(--warning-700);
+    border-color: var(--warning-200);
+}
+
 /* Listas unificadas - layout base para todas las secciones */
 .skills-list, .languages-list, .proficiencies-list, .equipment-list {
     display: grid;
@@ -1273,6 +1306,33 @@
 .equipment-item.selected, .spell-item.selected {
     background: var(--selected-gradient);
     border-color: var(--selected-border);
+}
+
+/* Estilos para hechizos no disponibles */
+.spell-item.spell-unavailable {
+    background: var(--surface-muted, #f8f9fa);
+    border-color: var(--border-muted, #e9ecef);
+    color: var(--text-muted, #6c757d);
+    cursor: not-allowed;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.spell-item.spell-unavailable:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border-muted, #e9ecef);
+    background: var(--surface-muted, #f8f9fa);
+    color: var(--text-muted, #6c757d);
+}
+
+.spell-item.spell-unavailable * {
+    color: var(--text-muted, #6c757d) !important;
+}
+
+.spell-item.spell-unavailable .spell-checkbox {
+    border-color: var(--border-muted, #e9ecef);
+    background: transparent;
 }
 
 .skill-checkbox, .language-checkbox, .proficiency-checkbox, 

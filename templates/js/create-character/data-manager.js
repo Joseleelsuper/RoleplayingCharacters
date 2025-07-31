@@ -36,7 +36,58 @@ class DataManager {
                     this.updateSpellsForLevelChange();
                 }
             });
+            
+            // También escuchar el input event para cambios en tiempo real
+            levelInput.addEventListener('input', () => {
+                if (this.currentSpells && this.getSelectedGameType() === 'dnd5e') {
+                    this.updateSpellsForLevelChange();
+                }
+            });
         }
+        
+        // Escuchar eventos de cambio de nivel desde AttributeManager
+        document.addEventListener('levelChanged', (event) => {
+            console.log('Evento levelChanged recibido:', event.detail);
+            if (this.currentSpells && this.getSelectedGameType() === 'dnd5e') {
+                this.updateSpellsForLevelChange();
+            }
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateEquipmentLimitsDisplay();
+            }
+        });
+        
+        // Escuchar eventos de cambio de atributos
+        document.addEventListener('attributeChanged', (event) => {
+            console.log('Evento attributeChanged recibido:', event.detail);
+            if (event.detail.attribute === 'level' && this.currentSpells && this.getSelectedGameType() === 'dnd5e') {
+                this.updateSpellsForLevelChange();
+            }
+            if (event.detail.attribute === 'level' && this.getSelectedGameType() === 'dnd5e') {
+                this.updateEquipmentLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cambios de clase para actualizar límites de equipamiento
+        document.addEventListener('classChanged', (event) => {
+            console.log('Evento classChanged recibido:', event.detail);
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateEquipmentLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cambios en la selección de equipamiento
+        document.addEventListener('equipmentToggled', (event) => {
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateEquipmentLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cuando se carga equipamiento para inicializar contadores
+        document.addEventListener('equipmentLoaded', (event) => {
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateEquipmentLimitsDisplay();
+            }
+        });
     }
     
     clearAll() {
@@ -321,6 +372,10 @@ class DataManager {
         
         if (!startingContainer || !additionalContainer || !items) return;
         
+        // Limpiar contenedores antes de poblar
+        startingContainer.innerHTML = '';
+        additionalContainer.innerHTML = '';
+        
         // Dividir items: primeros 50 en equipamiento inicial, resto en adicional
         const startingItems = items.slice(0, 50);
         const additionalItems = items.slice(50);
@@ -334,6 +389,15 @@ class DataManager {
             const itemElement = this.createEquipmentItem(item, additionalContainer);
             additionalContainer.appendChild(itemElement);
         });
+        
+        // Disparar evento para notificar que el equipamiento se ha cargado
+        document.dispatchEvent(new CustomEvent('equipmentLoaded', {
+            detail: {
+                startingItems: startingItems.length,
+                additionalItems: additionalItems.length,
+                totalItems: items.length
+            }
+        }));
     }
     
     createEquipmentItem(item, container) {
@@ -358,6 +422,14 @@ class DataManager {
         
         itemElement.addEventListener('click', () => {
             const checked = checkbox.classList.contains('checked');
+            const isStarting = container === this.containers.startingEquipmentList;
+            
+            // Verificar límites antes de seleccionar
+            if (!checked && !this.canSelectMoreEquipment(isStarting)) {
+                this.showEquipmentLimitMessage(isStarting);
+                return;
+            }
+            
             if (!checked) {
                 checkbox.classList.add('checked');
                 itemElement.classList.add('selected');
@@ -373,7 +445,7 @@ class DataManager {
                     type: item.type,
                     rarity: item.rarity,
                     selected: !checked,
-                    isStarting: container === this.containers.startingEquipmentList
+                    isStarting: isStarting
                 }
             }));
         });
@@ -381,12 +453,14 @@ class DataManager {
         return itemElement;
     }
     
-    populateSpells(spells) {
+    populateSpells(spells, skipFiltering = false) {
         const container = this.containers.spellsList;
         if (!container || !spells) return;
         
-        // Almacenar hechizos para re-filtrar cuando cambie el nivel
-        this.currentSpells = spells;
+        // Solo almacenar hechizos originales si no estamos en modo de filtrado
+        if (!skipFiltering) {
+            this.currentSpells = spells;
+        }
         
         // Limpiar contenedor antes de poblar
         container.innerHTML = '';
@@ -396,16 +470,21 @@ class DataManager {
         const characterLevel = this.getCharacterLevel();
         const characterClass = this.getCharacterClass();
         
-        // Filtrar hechizos según las reglas de D&D 5e
-        let filteredSpells = spells;
-        if (gameType === 'dnd5e') {
-            filteredSpells = this.filterSpellsByDnD5eRules(spells, characterLevel, characterClass);
+        // Usar todos los hechizos, pero determinar cuáles están disponibles
+        let availableSpells = [];
+        if (gameType === 'dnd5e' && !skipFiltering) {
+            availableSpells = this.filterSpellsByDnD5eRules(spells, characterLevel, characterClass);
+        } else {
+            availableSpells = spells;
         }
         
-        // Agrupar hechizos por nivel
+        // Crear un Set de IDs de hechizos disponibles para búsqueda rápida
+        const availableSpellIds = new Set(availableSpells.map(spell => spell.id));
+        
+        // Agrupar TODOS los hechizos por nivel (no solo los disponibles)
         const spellsByLevel = {};
         
-        filteredSpells.forEach(spell => {
+        spells.forEach(spell => {
             const level = spell.level || 0;
             if (!spellsByLevel[level]) {
                 spellsByLevel[level] = [];
@@ -438,6 +517,17 @@ class DataManager {
                     spellItem.dataset.id = spell.id;
                     spellItem.dataset.level = spell.level;
                     
+                    // Verificar si el hechizo está disponible para el nivel actual
+                    const isAvailable = availableSpellIds.has(spell.id);
+                    
+                    // Aplicar estilos según disponibilidad
+                    if (!isAvailable) {
+                        spellItem.classList.add('spell-unavailable');
+                        spellItem.style.opacity = '0.4';
+                        spellItem.style.pointerEvents = 'none';
+                        spellItem.title = `Este hechizo requiere nivel ${this.getMinimumLevelForSpell(spell.level)} o superior`;
+                    }
+                    
                     const checkbox = document.createElement('div');
                     checkbox.classList.add('spell-checkbox');
                     
@@ -448,32 +538,35 @@ class DataManager {
                     spellItem.appendChild(checkbox);
                     spellItem.appendChild(name);
                     
-                    spellItem.addEventListener('click', () => {
-                        const checked = checkbox.classList.contains('checked');
-                        
-                        // Si está intentando seleccionar (no deseleccionar) y ha alcanzado el límite
-                        if (gameType === 'dnd5e' && !checked && !this.canSelectMoreSpells(spell.level)) {
-                            this.showSpellLimitMessage(spell.level);
-                            return;
-                        }
-                        
-                        if (!checked) {
-                            checkbox.classList.add('checked');
-                            spellItem.classList.add('selected');
-                        } else {
-                            checkbox.classList.remove('checked');
-                            spellItem.classList.remove('selected');
-                        }
-                        
-                        document.dispatchEvent(new CustomEvent('spellToggled', {
-                            detail: {
-                                id: spell.id,
-                                name: spell.name,
-                                level: spell.level,
-                                selected: !checked
+                    // Solo agregar event listener si el hechizo está disponible
+                    if (isAvailable) {
+                        spellItem.addEventListener('click', () => {
+                            const checked = checkbox.classList.contains('checked');
+                            
+                            // Si está intentando seleccionar (no deseleccionar) y ha alcanzado el límite
+                            if (gameType === 'dnd5e' && !checked && !this.canSelectMoreSpells(spell.level)) {
+                                this.showSpellLimitMessage(spell.level);
+                                return;
                             }
-                        }));
-                    });
+                            
+                            if (!checked) {
+                                checkbox.classList.add('checked');
+                                spellItem.classList.add('selected');
+                            } else {
+                                checkbox.classList.remove('checked');
+                                spellItem.classList.remove('selected');
+                            }
+                            
+                            document.dispatchEvent(new CustomEvent('spellToggled', {
+                                detail: {
+                                    id: spell.id,
+                                    name: spell.name,
+                                    level: spell.level,
+                                    selected: !checked
+                                }
+                            }));
+                        });
+                    }
                     
                     spellItemsContainer.appendChild(spellItem);
                 });
@@ -524,6 +617,24 @@ class DataManager {
         };
         
         return spellSlotTable[Math.min(characterLevel, 20)] || spellSlotTable[1];
+    }
+    
+    getMinimumLevelForSpell(spellLevel) {
+        // Mapeo de nivel de hechizo al nivel mínimo de personaje requerido
+        const minimumLevels = {
+            0: 1,  // Cantrips disponibles desde nivel 1
+            1: 1,  // Hechizos de nivel 1 disponibles desde nivel 1
+            2: 3,  // Hechizos de nivel 2 disponibles desde nivel 3
+            3: 5,  // Hechizos de nivel 3 disponibles desde nivel 5
+            4: 7,  // Hechizos de nivel 4 disponibles desde nivel 7
+            5: 9,  // Hechizos de nivel 5 disponibles desde nivel 9
+            6: 11, // Hechizos de nivel 6 disponibles desde nivel 11
+            7: 13, // Hechizos de nivel 7 disponibles desde nivel 13
+            8: 15, // Hechizos de nivel 8 disponibles desde nivel 15
+            9: 17  // Hechizos de nivel 9 disponibles desde nivel 17
+        };
+        
+        return minimumLevels[spellLevel] || 1;
     }
     
     // Filtrar hechizos según las reglas de D&D 5e
@@ -611,26 +722,41 @@ class DataManager {
         const characterLevel = this.getCharacterLevel();
         const characterClass = this.getCharacterClass();
         
+        console.log(`Actualizando hechizos para nivel ${characterLevel}`);
+        
         // Obtener hechizos actualmente seleccionados
-        const selectedSpells = new Set();
+        const selectedSpells = [];
         document.querySelectorAll('.spell-item.selected').forEach(item => {
-            selectedSpells.add({
+            selectedSpells.push({
                 id: item.dataset.id,
-                level: parseInt(item.dataset.level)
+                level: parseInt(item.dataset.level),
+                name: item.querySelector('.spell-name')?.textContent || 'Unknown'
             });
         });
+        
+        console.log('Hechizos seleccionados antes del cambio:', selectedSpells);
         
         // Filtrar hechizos según el nuevo nivel
         const filteredSpells = this.filterSpellsByDnD5eRules(this.currentSpells, characterLevel, characterClass);
         const validSpellIds = new Set(filteredSpells.map(spell => spell.id));
         
+        console.log(`Hechizos disponibles para nivel ${characterLevel}:`, filteredSpells.length);
+        console.log('Niveles de hechizos disponibles:', [...new Set(filteredSpells.map(s => s.level))].sort((a, b) => a - b));
+        
         // Verificar qué hechizos seleccionados ya no son válidos
         const invalidSelections = [];
+        const validSelections = [];
+        
         selectedSpells.forEach(spell => {
             if (!validSpellIds.has(spell.id)) {
                 invalidSelections.push(spell);
+            } else {
+                validSelections.push(spell);
             }
         });
+        
+        console.log('Hechizos inválidos que se removerán:', invalidSelections);
+        console.log('Hechizos válidos que se mantendrán:', validSelections);
         
         // Mostrar mensaje si hay hechizos que se van a remover
         if (invalidSelections.length > 0) {
@@ -646,28 +772,42 @@ class DataManager {
             document.body.appendChild(message);
             
             setTimeout(() => {
-                message.remove();
+                if (message.parentNode) {
+                    message.remove();
+                }
             }, 4000);
         }
         
-        // Re-poblar los hechizos
-        this.populateSpells(this.currentSpells);
+        // Re-poblar todos los hechizos (no solo los filtrados) para mostrar disponibilidad visual
+        this.populateSpells(this.currentSpells, false);
         
-        // Restaurar selecciones válidas
+        // Restaurar selecciones válidas después de un breve delay
         setTimeout(() => {
-            selectedSpells.forEach(spell => {
-                if (validSpellIds.has(spell.id)) {
-                    const spellElement = document.querySelector(`[data-id="${spell.id}"]`);
-                    if (spellElement && this.canSelectMoreSpells(spell.level)) {
-                        const checkbox = spellElement.querySelector('.spell-checkbox');
-                        if (checkbox) {
-                            checkbox.classList.add('checked');
-                            spellElement.classList.add('selected');
-                        }
+            console.log('Restaurando selecciones válidas...');
+            validSelections.forEach(spell => {
+                const spellElement = document.querySelector(`[data-id="${spell.id}"]`);
+                if (spellElement) {
+                    const checkbox = spellElement.querySelector('.spell-checkbox');
+                    if (checkbox) {
+                        checkbox.classList.add('checked');
+                        spellElement.classList.add('selected');
+                        console.log(`Restaurado hechizo: ${spell.name}`);
                     }
+                } else {
+                    console.log(`No se encontró elemento para hechizo: ${spell.name}`);
                 }
             });
-        }, 100);
+            
+            // Disparar evento para notificar cambios en hechizos
+            document.dispatchEvent(new CustomEvent('spellsUpdated', {
+                detail: {
+                    level: characterLevel,
+                    availableSpells: filteredSpells.length,
+                    selectedSpells: validSelections.length,
+                    removedSpells: invalidSelections.length
+                }
+            }));
+        }, 150);
     }
     
     // Mostrar mensaje de límite de hechizos
@@ -684,7 +824,158 @@ class DataManager {
             message.remove();
         }, 3000);
     }
+    
+    // Verificar si se puede seleccionar más equipamiento
+     canSelectMoreEquipment(isStarting) {
+         const gameType = this.getSelectedGameType();
+         
+         // Solo aplicar límites para D&D 5e
+         if (gameType !== 'dnd5e') {
+             return true;
+         }
+         
+         const selectedEquipment = document.querySelectorAll('.equipment-item.selected');
+         const startingEquipment = Array.from(selectedEquipment).filter(item => {
+             const container = item.closest('#starting-equipment-list');
+             return container !== null;
+         });
+         const additionalEquipment = Array.from(selectedEquipment).filter(item => {
+             const container = item.closest('#additional-equipment-list');
+             return container !== null;
+         });
+         
+         const limits = this.getEquipmentLimits();
+         
+         if (isStarting) {
+             return startingEquipment.length < limits.starting;
+         } else {
+             return additionalEquipment.length < limits.additional;
+         }
+     }
+     
+     // Obtener límites de equipamiento según las reglas de D&D 5e
+     getEquipmentLimits() {
+         const characterClass = this.getCharacterClass();
+         const characterLevel = this.getCharacterLevel();
+         
+         // Límites base según las reglas de D&D 5e
+         let startingLimit = 6; // Equipamiento inicial estándar
+         let additionalLimit = 8; // Equipamiento adicional base
+         
+         // Ajustar según la clase (basado en las reglas oficiales)
+         const classLimits = {
+             'fighter': { starting: 8, additional: 12 }, // Más armas y armaduras
+             'paladin': { starting: 8, additional: 12 }, // Similar a fighter
+             'ranger': { starting: 7, additional: 10 }, // Equipamiento de exploración
+             'rogue': { starting: 6, additional: 10 }, // Herramientas especializadas
+             'wizard': { starting: 4, additional: 8 }, // Menos equipamiento físico
+             'sorcerer': { starting: 4, additional: 8 }, // Similar a wizard
+             'warlock': { starting: 5, additional: 9 }, // Equipamiento mágico
+             'cleric': { starting: 6, additional: 10 }, // Equipamiento religioso
+             'druid': { starting: 5, additional: 9 }, // Equipamiento natural
+             'bard': { starting: 6, additional: 10 }, // Instrumentos y herramientas
+             'barbarian': { starting: 5, additional: 8 }, // Equipamiento simple
+             'monk': { starting: 4, additional: 6 } // Equipamiento mínimo
+         };
+         
+         if (characterClass && classLimits[characterClass.toLowerCase()]) {
+             const limits = classLimits[characterClass.toLowerCase()];
+             startingLimit = limits.starting;
+             additionalLimit = limits.additional;
+         }
+         
+         // Ajustar según el nivel (más nivel = más capacidad de carga)
+         if (characterLevel >= 5) {
+             additionalLimit += 2;
+         }
+         if (characterLevel >= 10) {
+             additionalLimit += 2;
+         }
+         if (characterLevel >= 15) {
+             additionalLimit += 2;
+         }
+         
+         return {
+             starting: startingLimit,
+             additional: additionalLimit
+         };
+     }
+     
+     // Actualizar la visualización de límites de equipamiento
+      updateEquipmentLimitsDisplay() {
+          const gameType = this.getSelectedGameType();
+          if (gameType !== 'dnd5e') return;
+          
+          const limits = this.getEquipmentLimits();
+          
+          // Actualizar contadores en la UI si existen
+          const startingCounter = document.querySelector('#starting-equipment-counter');
+          const additionalCounter = document.querySelector('#additional-equipment-counter');
+          
+          if (startingCounter) {
+              const selectedStarting = document.querySelectorAll('#starting-equipment-list .equipment-item.selected').length;
+              startingCounter.textContent = `${selectedStarting}/${limits.starting}`;
+              
+              // Aplicar clases CSS según el estado
+              startingCounter.classList.remove('limit-reached', 'limit-warning');
+              if (selectedStarting >= limits.starting) {
+                  startingCounter.classList.add('limit-reached');
+              } else if (selectedStarting >= limits.starting - 1) {
+                  startingCounter.classList.add('limit-warning');
+              }
+          }
+          
+          if (additionalCounter) {
+              const selectedAdditional = document.querySelectorAll('#additional-equipment-list .equipment-item.selected').length;
+              additionalCounter.textContent = `${selectedAdditional}/${limits.additional}`;
+              
+              // Aplicar clases CSS según el estado
+              additionalCounter.classList.remove('limit-reached', 'limit-warning');
+              if (selectedAdditional >= limits.additional) {
+                  additionalCounter.classList.add('limit-reached');
+              } else if (selectedAdditional >= limits.additional - 1) {
+                  additionalCounter.classList.add('limit-warning');
+              }
+          }
+          
+          // Disparar evento para notificar cambios en límites
+          document.dispatchEvent(new CustomEvent('equipmentLimitsUpdated', {
+              detail: {
+                  limits: limits,
+                  characterLevel: this.getCharacterLevel(),
+                  characterClass: this.getCharacterClass()
+              }
+          }));
+      }
+    
+    // Mostrar mensaje de límite de equipamiento
+     showEquipmentLimitMessage(isStarting) {
+         const limits = this.getEquipmentLimits();
+         const message = document.createElement('div');
+         message.className = 'spell-limit-message'; // Reutilizar estilos
+         
+         if (isStarting) {
+             message.textContent = `Has alcanzado el límite de equipamiento inicial (${limits.starting} items)`;
+         } else {
+             message.textContent = `Has alcanzado el límite de equipamiento adicional (${limits.additional} items)`;
+         }
+         
+         document.body.appendChild(message);
+         
+         setTimeout(() => {
+             message.remove();
+         }, 3000);
+     }
 }
 
 // Exportar para uso global
 window.dataManager = new DataManager();
+
+// Inicializar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        window.dataManager.init();
+    });
+} else {
+    window.dataManager.init();
+}
