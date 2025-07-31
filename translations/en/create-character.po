@@ -312,6 +312,39 @@ msgstr "Spellcasting Information"
 msgid "create_character.spells.known"
 msgstr "Known Spells"
 
+msgid "create_character.spells.cantrips"
+msgstr "Cantrips"
+
+msgid "create_character.spells.level"
+msgstr "Level"
+
+msgid "create_character.spells.search_placeholder"
+msgstr "Search spells..."
+
+msgid "create_character.spells.limit_cantrips"
+msgstr "You have reached the cantrip limit for your level"
+
+msgid "create_character.spells.limit_level"
+msgstr "You have reached the level {level} spell limit for your level"
+
+msgid "create_character.spells.removed_on_level_change"
+msgstr "{count} spell(s) that are no longer available for your current level have been removed"
+
+msgid "create_character.skills.search_placeholder"
+msgstr "Search skills..."
+
+msgid "create_character.languages.search_placeholder"
+msgstr "Search languages..."
+
+msgid "create_character.proficiencies.search_placeholder"
+msgstr "Search proficiencies..."
+
+msgid "create_character.equipment.search_placeholder"
+msgstr "Search starting equipment..."
+
+msgid "create_character.equipment.additional_search_placeholder"
+msgstr "Search additional equipment..."
+
 # Character Preview
 msgid "create_character.preview.label"
 msgstr "Character preview"
