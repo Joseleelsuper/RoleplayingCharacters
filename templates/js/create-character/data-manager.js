@@ -53,6 +53,10 @@ class DataManager {
             }
             if (this.getSelectedGameType() === 'dnd5e') {
                 this.updateEquipmentLimitsDisplay();
+                this.updateSkillsLimitsDisplay();
+                this.updateLanguagesLimitsDisplay();
+                this.updateProficienciesLimitsDisplay();
+                this.updateSpellsLimitsDisplay();
             }
         });
         
@@ -64,6 +68,10 @@ class DataManager {
             }
             if (event.detail.attribute === 'level' && this.getSelectedGameType() === 'dnd5e') {
                 this.updateEquipmentLimitsDisplay();
+                this.updateSkillsLimitsDisplay();
+                this.updateLanguagesLimitsDisplay();
+                this.updateProficienciesLimitsDisplay();
+                this.updateSpellsLimitsDisplay();
             }
         });
         
@@ -72,6 +80,10 @@ class DataManager {
             console.log('Evento classChanged recibido:', event.detail);
             if (this.getSelectedGameType() === 'dnd5e') {
                 this.updateEquipmentLimitsDisplay();
+                this.updateSkillsLimitsDisplay();
+                this.updateLanguagesLimitsDisplay();
+                this.updateProficienciesLimitsDisplay();
+                this.updateSpellsLimitsDisplay();
             }
         });
         
@@ -86,6 +98,45 @@ class DataManager {
         document.addEventListener('equipmentLoaded', (event) => {
             if (this.getSelectedGameType() === 'dnd5e') {
                 this.updateEquipmentLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cuando se cargan datos para inicializar todos los contadores
+        document.addEventListener('dataLoaded', (event) => {
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateEquipmentLimitsDisplay();
+                this.updateSkillsLimitsDisplay();
+                this.updateLanguagesLimitsDisplay();
+                this.updateProficienciesLimitsDisplay();
+                this.updateSpellsLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cambios en la selección de habilidades
+        document.addEventListener('skillToggled', (event) => {
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateSkillsLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cambios en la selección de idiomas
+        document.addEventListener('languageToggled', (event) => {
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateLanguagesLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cambios en la selección de competencias
+        document.addEventListener('proficiencyToggled', (event) => {
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateProficienciesLimitsDisplay();
+            }
+        });
+        
+        // Escuchar cambios en la selección de hechizos
+        document.addEventListener('spellToggled', (event) => {
+            if (this.getSelectedGameType() === 'dnd5e') {
+                this.updateSpellsLimitsDisplay();
             }
         });
     }
@@ -896,10 +947,134 @@ class DataManager {
          }
          
          return {
-             starting: startingLimit,
-             additional: additionalLimit
-         };
-     }
+              starting: startingLimit,
+              additional: additionalLimit
+          };
+      }
+      
+      // Obtener límites de habilidades según las reglas de D&D 5e
+      getSkillsLimits() {
+          const characterClass = this.getCharacterClass();
+          const characterLevel = this.getCharacterLevel();
+          
+          // Límites base según las reglas de D&D 5e
+          let skillsLimit = 4; // Límite base estándar
+          
+          // Ajustar según la clase
+          const classSkillLimits = {
+              'rogue': 6, // Los rogues tienen más habilidades
+              'ranger': 5, // Los rangers tienen habilidades adicionales
+              'bard': 5, // Los bardos son versátiles
+              'fighter': 3, // Los fighters tienen menos habilidades
+              'wizard': 3, // Los wizards se enfocan en magia
+              'sorcerer': 3, // Similar a wizard
+              'warlock': 3, // Similar a wizard
+              'barbarian': 3, // Enfoque en combate
+              'monk': 3, // Enfoque en disciplina
+              'paladin': 3, // Enfoque en combate y magia
+              'cleric': 4, // Equilibrado
+              'druid': 4 // Equilibrado
+          };
+          
+          if (characterClass && classSkillLimits[characterClass.toLowerCase()]) {
+              skillsLimit = classSkillLimits[characterClass.toLowerCase()];
+          }
+          
+          return skillsLimit;
+      }
+      
+      // Obtener límites de idiomas según las reglas de D&D 5e
+      getLanguagesLimits() {
+          const characterClass = this.getCharacterClass();
+          const characterLevel = this.getCharacterLevel();
+          
+          // Límite base: 2 idiomas adicionales (además del común)
+          let languagesLimit = 2;
+          
+          // Ajustar según la clase
+          const classLanguageLimits = {
+              'bard': 3, // Los bardos aprenden más idiomas
+              'cleric': 3, // Los clérigos tienen conocimiento religioso
+              'druid': 2, // Druídico + otro
+              'wizard': 3, // Estudio académico
+              'warlock': 2, // Conocimiento sobrenatural
+              'sorcerer': 2, // Magia innata
+              'fighter': 1, // Enfoque en combate
+              'barbarian': 1, // Cultura tribal
+              'monk': 2, // Disciplina monástica
+              'paladin': 2, // Entrenamiento religioso
+              'ranger': 2, // Exploración
+              'rogue': 2 // Versatilidad
+          };
+          
+          if (characterClass && classLanguageLimits[characterClass.toLowerCase()]) {
+              languagesLimit = classLanguageLimits[characterClass.toLowerCase()];
+          }
+          
+          return languagesLimit;
+      }
+      
+      // Obtener límites de competencias según las reglas de D&D 5e
+      getProficienciesLimits() {
+          const characterClass = this.getCharacterClass();
+          const characterLevel = this.getCharacterLevel();
+          
+          // Límite base: 3 competencias adicionales
+          let proficienciesLimit = 3;
+          
+          // Ajustar según la clase
+          const classProficiencyLimits = {
+              'fighter': 5, // Muchas armas y armaduras
+              'paladin': 5, // Similar a fighter
+              'ranger': 4, // Armas y herramientas de supervivencia
+              'rogue': 4, // Herramientas especializadas
+              'bard': 4, // Instrumentos y herramientas
+              'cleric': 3, // Equipamiento religioso
+              'druid': 2, // Equipamiento natural limitado
+              'wizard': 2, // Pocas competencias físicas
+              'sorcerer': 2, // Similar a wizard
+              'warlock': 2, // Conocimiento sobrenatural
+              'barbarian': 3, // Armas simples
+              'monk': 2 // Armas monásticas específicas
+          };
+          
+          if (characterClass && classProficiencyLimits[characterClass.toLowerCase()]) {
+              proficienciesLimit = classProficiencyLimits[characterClass.toLowerCase()];
+          }
+          
+          return proficienciesLimit;
+      }
+      
+      // Obtener límites de hechizos según las reglas de D&D 5e
+      getSpellsLimits() {
+          const characterClass = this.getCharacterClass();
+          const characterLevel = this.getCharacterLevel();
+          
+          // Límite base: 6 hechizos conocidos
+          let spellsLimit = 6;
+          
+          // Ajustar según la clase y nivel
+          const classSpellLimits = {
+              'wizard': Math.min(2 + characterLevel, 20), // Los wizards aprenden muchos hechizos
+              'sorcerer': Math.min(2 + Math.floor(characterLevel / 2), 15), // Hechizos conocidos limitados
+              'warlock': Math.min(2 + Math.floor(characterLevel / 3), 10), // Pocos hechizos pero poderosos
+              'bard': Math.min(4 + Math.floor(characterLevel / 2), 18), // Versatilidad mágica
+              'cleric': Math.min(3 + Math.floor(characterLevel / 2), 15), // Magia divina
+              'druid': Math.min(3 + Math.floor(characterLevel / 2), 15), // Magia natural
+              'paladin': Math.max(0, Math.min(Math.floor((characterLevel - 1) / 2), 8)), // Magia a partir de nivel 2
+              'ranger': Math.max(0, Math.min(Math.floor((characterLevel - 1) / 2), 8)), // Similar a paladin
+              'fighter': characterLevel >= 3 ? Math.min(3 + Math.floor(characterLevel / 4), 6) : 0, // Eldritch Knight
+              'rogue': characterLevel >= 3 ? Math.min(3 + Math.floor(characterLevel / 4), 6) : 0, // Arcane Trickster
+              'barbarian': 0, // No usan magia
+              'monk': 0 // No usan magia tradicional
+          };
+          
+          if (characterClass && classSpellLimits[characterClass.toLowerCase()] !== undefined) {
+              spellsLimit = classSpellLimits[characterClass.toLowerCase()];
+          }
+          
+          return spellsLimit;
+      }
      
      // Actualizar la visualización de límites de equipamiento
       updateEquipmentLimitsDisplay() {
@@ -946,9 +1121,97 @@ class DataManager {
                   characterClass: this.getCharacterClass()
               }
           }));
-      }
-    
-    // Mostrar mensaje de límite de equipamiento
+       }
+       
+       // Actualizar la visualización de límites de habilidades
+       updateSkillsLimitsDisplay() {
+           const gameType = this.getSelectedGameType();
+           if (gameType !== 'dnd5e') return;
+           
+           const limit = this.getSkillsLimits();
+           const counter = document.querySelector('#skills-counter');
+           
+           if (counter) {
+               const selected = document.querySelectorAll('#skills-list .skill-item.selected').length;
+               counter.textContent = `${selected}/${limit}`;
+               
+               // Aplicar clases CSS según el estado
+               counter.classList.remove('limit-reached', 'limit-warning');
+               if (selected >= limit) {
+                   counter.classList.add('limit-reached');
+               } else if (selected >= limit - 1) {
+                   counter.classList.add('limit-warning');
+               }
+           }
+       }
+       
+       // Actualizar la visualización de límites de idiomas
+       updateLanguagesLimitsDisplay() {
+           const gameType = this.getSelectedGameType();
+           if (gameType !== 'dnd5e') return;
+           
+           const limit = this.getLanguagesLimits();
+           const counter = document.querySelector('#languages-counter');
+           
+           if (counter) {
+               const selected = document.querySelectorAll('#languages-list .language-item.selected').length;
+               counter.textContent = `${selected}/${limit}`;
+               
+               // Aplicar clases CSS según el estado
+               counter.classList.remove('limit-reached', 'limit-warning');
+               if (selected >= limit) {
+                   counter.classList.add('limit-reached');
+               } else if (selected >= limit - 1) {
+                   counter.classList.add('limit-warning');
+               }
+           }
+       }
+       
+       // Actualizar la visualización de límites de competencias
+       updateProficienciesLimitsDisplay() {
+           const gameType = this.getSelectedGameType();
+           if (gameType !== 'dnd5e') return;
+           
+           const limit = this.getProficienciesLimits();
+           const counter = document.querySelector('#proficiencies-counter');
+           
+           if (counter) {
+               const selected = document.querySelectorAll('#proficiencies-list .proficiency-item.selected').length;
+               counter.textContent = `${selected}/${limit}`;
+               
+               // Aplicar clases CSS según el estado
+               counter.classList.remove('limit-reached', 'limit-warning');
+               if (selected >= limit) {
+                   counter.classList.add('limit-reached');
+               } else if (selected >= limit - 1) {
+                   counter.classList.add('limit-warning');
+               }
+           }
+       }
+       
+       // Actualizar la visualización de límites de hechizos
+       updateSpellsLimitsDisplay() {
+           const gameType = this.getSelectedGameType();
+           if (gameType !== 'dnd5e') return;
+           
+           const limit = this.getSpellsLimits();
+           const counter = document.querySelector('#spells-counter');
+           
+           if (counter) {
+               const selected = document.querySelectorAll('#spells-list .spell-item.selected').length;
+               counter.textContent = `${selected}/${limit}`;
+               
+               // Aplicar clases CSS según el estado
+               counter.classList.remove('limit-reached', 'limit-warning');
+               if (selected >= limit) {
+                   counter.classList.add('limit-reached');
+               } else if (selected >= limit - 1) {
+                   counter.classList.add('limit-warning');
+               }
+           }
+       }
+      
+      // Mostrar mensaje de límite de equipamiento
      showEquipmentLimitMessage(isStarting) {
          const limits = this.getEquipmentLimits();
          const message = document.createElement('div');

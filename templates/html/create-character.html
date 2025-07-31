@@ -347,10 +347,10 @@
                     
                     <div class="skills-layout">
                         <div class="skills-section">
-                            <h3 class="subsection-title">
-                                🎯 {{ _('create_character.skills.skills') }}
-                                <span class="skill-points">{{ _('create_character.skills.skill_points') }} <strong id="skill-points-remaining">4</strong></span>
-                            </h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">🎯 {{ _('create_character.skills.skills') }}</h3>
+                                <div class="equipment-counter" id="skills-counter">0/4</div>
+                            </div>
                             <div class="search-container">
                                 <input type="text" id="skills-search" class="search-input" placeholder="{{ _('create_character.skills.search_placeholder') }}" autocomplete="off">
                             </div>
@@ -362,7 +362,10 @@
                         </div>
                         
                         <div class="proficiencies-section">
-                            <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
+                                <div class="equipment-counter" id="languages-counter">0/2</div>
+                            </div>
                             <div class="search-container">
                                 <input type="text" id="languages-search" class="search-input" placeholder="{{ _('create_character.languages.search_placeholder') }}" autocomplete="off">
                             </div>
@@ -372,7 +375,10 @@
                                 </div>
                             </div>
                             
-                            <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
+                                <div class="equipment-counter" id="proficiencies-counter">0/3</div>
+                            </div>
                             <div class="search-container">
                                 <input type="text" id="proficiencies-search" class="search-input" placeholder="{{ _('create_character.proficiencies.search_placeholder') }}" autocomplete="off">
                             </div>
@@ -434,7 +440,10 @@
                     
                     <div id="spells-content" class="spells-layout-three-columns">
                         <div class="spell-selection">
-                            <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
+                                <div class="equipment-counter" id="spells-counter">0/6</div>
+                            </div>
                             <div class="search-container">
                                 <input type="text" id="spells-search" class="search-input" placeholder="{{ _('create_character.spells.search_placeholder') }}" autocomplete="off">
                             </div>
