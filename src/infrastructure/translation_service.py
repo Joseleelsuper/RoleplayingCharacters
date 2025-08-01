@@ -10,6 +10,7 @@ import gettext
 from pathlib import Path
 from typing import Any, Dict, Union, List
 from fastapi import Request
+
 from src.infrastructure.i18n import I18nConfig
 
 
