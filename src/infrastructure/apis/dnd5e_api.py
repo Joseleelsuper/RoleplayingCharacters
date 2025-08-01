@@ -8,7 +8,7 @@ Este módulo implementa el cliente para consumir la API pública de D&D 5e (dnd5
 import httpx
 from typing import Dict, List, Any, Optional, TypeVar, Callable
 import asyncio
-from functools import lru_cache
+
 from src.domain.entities.api_data.dnd5e.races import Races
 from src.domain.entities.api_data.dnd5e.classes import Classes
 from src.domain.entities.api_data.dnd5e.spells import Spells

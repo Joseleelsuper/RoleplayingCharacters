@@ -17,7 +17,7 @@ from starlette.requests import Request as StarletteRequest
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import uvicorn
 
-from .infrastructure.translation_service import translation_service
+from src.infrastructure.translation_service import translation_service
 from src.infrastructure.i18n import I18nConfig
 from src.infrastructure.config import settings
 from src.infrastructure.web.home_controller import router as home_router
