@@ -177,12 +177,56 @@ class NavigationManager {
     validateForm() {
         // Validar todo el formulario al intentar crear el personaje
         let isValid = true;
+        let errors = [];
         
         // Validar selección de tipo de juego (único requisito obligatorio)
         if (!window.gameTypeSelector?.isGameTypeSelected()) {
             window.gameTypeSelector?.showGameTypeError();
             this.goToStep(1); // Ir al paso de selección de tipo de juego
             isValid = false;
+            errors.push('Debe seleccionar un tipo de juego');
+        }
+        
+        // Validar límites de equipamiento
+        if (window.dataManager) {
+            const equipmentValidation = this.validateEquipmentLimits();
+            if (!equipmentValidation.isValid) {
+                isValid = false;
+                errors.push(...equipmentValidation.errors);
+            }
+            
+            // Validar límites de habilidades
+            const skillsValidation = this.validateSkillsLimits();
+            if (!skillsValidation.isValid) {
+                isValid = false;
+                errors.push(...skillsValidation.errors);
+            }
+            
+            // Validar límites de idiomas
+            const languagesValidation = this.validateLanguagesLimits();
+            if (!languagesValidation.isValid) {
+                isValid = false;
+                errors.push(...languagesValidation.errors);
+            }
+            
+            // Validar límites de competencias
+            const proficienciesValidation = this.validateProficienciesLimits();
+            if (!proficienciesValidation.isValid) {
+                isValid = false;
+                errors.push(...proficienciesValidation.errors);
+            }
+            
+            // Validar límites de hechizos
+            const spellsValidation = this.validateSpellsLimits();
+            if (!spellsValidation.isValid) {
+                isValid = false;
+                errors.push(...spellsValidation.errors);
+            }
+        }
+        
+        // Mostrar errores si los hay
+        if (!isValid && errors.length > 0) {
+            this.showValidationErrors(errors);
         }
         
         return isValid;
@@ -266,6 +310,107 @@ class NavigationManager {
     }
     
     showError(message) {
+        alert(message);
+    }
+    
+    validateEquipmentLimits() {
+        const errors = [];
+        let isValid = true;
+        
+        if (!window.dataManager) return { isValid: true, errors: [] };
+        
+        const limits = window.dataManager.getEquipmentLimits();
+        const selectedStarting = document.querySelectorAll('#starting-equipment-list .equipment-item input[type="checkbox"]:checked').length;
+        const selectedAdditional = document.querySelectorAll('#additional-equipment-list .equipment-item input[type="checkbox"]:checked').length;
+        
+        if (selectedStarting > limits.starting) {
+            isValid = false;
+            errors.push(`Equipamiento inicial: ${selectedStarting}/${limits.starting} (excede el límite)`);
+        }
+        
+        if (selectedAdditional > limits.additional) {
+            isValid = false;
+            errors.push(`Equipamiento adicional: ${selectedAdditional}/${limits.additional} (excede el límite)`);
+        }
+        
+        return { isValid, errors };
+    }
+    
+    validateSkillsLimits() {
+        const errors = [];
+        let isValid = true;
+        
+        if (!window.dataManager) return { isValid: true, errors: [] };
+        
+        const limits = window.dataManager.getSkillsLimits();
+        const selected = document.querySelectorAll('#skills-list .skill-item input[type="checkbox"]:checked').length;
+        
+        if (selected > limits) {
+            isValid = false;
+            errors.push(`Habilidades: ${selected}/${limits} (excede el límite)`);
+        }
+        
+        return { isValid, errors };
+    }
+    
+    validateLanguagesLimits() {
+        const errors = [];
+        let isValid = true;
+        
+        if (!window.dataManager) return { isValid: true, errors: [] };
+        
+        const limits = window.dataManager.getLanguagesLimits();
+        const selected = document.querySelectorAll('#languages-list .language-item input[type="checkbox"]:checked').length;
+        
+        if (selected > limits) {
+            isValid = false;
+            errors.push(`Idiomas: ${selected}/${limits} (excede el límite)`);
+        }
+        
+        return { isValid, errors };
+    }
+    
+    validateProficienciesLimits() {
+        const errors = [];
+        let isValid = true;
+        
+        if (!window.dataManager) return { isValid: true, errors: [] };
+        
+        const limits = window.dataManager.getProficienciesLimits();
+        const selected = document.querySelectorAll('#proficiencies-list .proficiency-item input[type="checkbox"]:checked').length;
+        
+        if (selected > limits) {
+            isValid = false;
+            errors.push(`Competencias: ${selected}/${limits} (excede el límite)`);
+        }
+        
+        return { isValid, errors };
+    }
+    
+    validateSpellsLimits() {
+        const errors = [];
+        let isValid = true;
+        
+        if (!window.dataManager) return { isValid: true, errors: [] };
+        
+        const limits = window.dataManager.getSpellsLimits();
+        const selected = document.querySelectorAll('#spells-list .spell-item input[type="checkbox"]:checked').length;
+        
+        if (selected > limits) {
+            isValid = false;
+            errors.push(`Hechizos: ${selected}/${limits} (excede el límite)`);
+        }
+        
+        return { isValid, errors };
+    }
+    
+    showValidationErrors(errors) {
+        let message = 'Se encontraron los siguientes errores de validación:\n\n';
+        errors.forEach((error, index) => {
+            message += `${index + 1}. ${error}\n`;
+        });
+        message += '\nPor favor, corrija estos errores antes de crear el personaje.';
+        
         alert(message);
     }
 }

@@ -122,19 +122,137 @@ class AttributeManager {
         this.setupAttributeControls5();
         this.setupAttributeSystemSelector();
         this.setupRandomButtons();
+        this.setupLevelListener();
         this.updateAttributePointsRemaining();
         this.updateAttributeButtonStates();
+        this.updateASIInfo();
     }
     
-    setupAttributeControls() {
-        this.attributeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const attribute = button.dataset.attribute;
-                const isIncrease = button.classList.contains('increase');
-                this.modifyAttribute(attribute, isIncrease ? 1 : -1);
-            });
+    /**
+     * Configura el listener para cambios de nivel para actualizar ASI
+     */
+    setupLevelListener() {
+        // Escuchar cambios en el nivel para actualizar puntos ASI
+        document.addEventListener('attributeChanged', (event) => {
+            if (event.detail.attribute === 'level') {
+                this.handleLevelChange();
+            }
         });
+        
+        // También escuchar cambios directos en el input de nivel
+        const levelInput = document.getElementById('level');
+        if (levelInput) {
+            levelInput.addEventListener('change', () => {
+                this.handleLevelChange();
+            });
+        }
     }
+    
+    /**
+     * Maneja los cambios de nivel, incluyendo reseteo automático si es necesario
+     */
+    handleLevelChange() {
+        // Verificar si los puntos actuales exceden el límite después del cambio de nivel
+        const basePointsLimit = this.attributeSystems[this.currentAttributeSystem].pointsLimit;
+        const asiPoints = this.getASIPoints();
+        const totalPointsLimit = basePointsLimit + asiPoints;
+        const usedPoints = this.getTotalAttributePoints();
+        
+        // Si se están usando más puntos de los disponibles, resetear a valores por defecto
+        if (usedPoints > totalPointsLimit) {
+            this.resetToDefaultValues();
+        }
+        
+        this.updateAttributePointsRemaining();
+        this.updateAttributeButtonStates();
+        this.updateASIInfo();
+        
+        // Notificar cambio de nivel para actualizar hechizos
+        const currentLevel = this.getCurrentLevel();
+        console.log('Disparando evento levelChanged con nivel:', currentLevel);
+        document.dispatchEvent(new CustomEvent('levelChanged', {
+            detail: {
+                level: currentLevel
+            }
+        }));
+    }
+    
+    /**
+     * Obtiene el nivel actual del personaje
+     */
+    getCurrentLevel() {
+        const levelInput = document.getElementById('level');
+        return levelInput ? parseInt(levelInput.value) || 1 : 1;
+    }
+    
+    /**
+     * Resetea todos los atributos a sus valores por defecto
+     */
+    resetToDefaultValues() {
+        const attrs = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+        const system = this.attributeSystems[this.currentAttributeSystem];
+        
+        // Encontrar el valor que da modificador +0 en este sistema
+        let defaultValue = 10;
+        for (let i = system.minAttr; i <= system.maxAttr; i++) {
+            const modifier = Math.floor((i - 10) / 2);
+            if (modifier === 0) {
+                defaultValue = i;
+                break;
+            }
+        }
+        
+        // Aplicar valores por defecto a todos los atributos
+        attrs.forEach(attr => {
+            const input = document.getElementById(attr);
+            if (input) {
+                input.value = defaultValue;
+                this.updateModifier(attr, defaultValue);
+                
+                // Notificar cambio individual de atributo
+                document.dispatchEvent(new CustomEvent('attributeChanged', {
+                    detail: {
+                        attribute: attr,
+                        value: defaultValue
+                    }
+                }));
+            }
+        });
+        
+        // Mostrar mensaje informativo al usuario
+        const isSpanish = document.documentElement.lang === 'es';
+        const message = isSpanish ? 
+            'Los atributos se han restablecido a valores por defecto debido a la reducción de nivel.' :
+            'Attributes have been reset to default values due to level reduction.';
+        
+        // Crear notificación temporal
+        this.showTemporaryNotification(message);
+    }
+    
+    /**
+     * Muestra una notificación temporal al usuario
+     */
+    showTemporaryNotification(message) {
+        // Crear elemento de notificación
+        const notification = document.createElement('div');
+        notification.className = 'level-reset-notification';
+        notification.textContent = message;
+        
+        // Insertar en la interfaz
+        const pointsInfo = document.querySelector('.point-buy-info');
+        if (pointsInfo) {
+            pointsInfo.appendChild(notification);
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    }
+    
+
     
     updateModifier(attribute, value) {
         const modifierElement = document.getElementById(`${attribute}-modifier`);
@@ -181,11 +299,98 @@ class AttributeManager {
     }
     
     updateAttributePointsRemaining() {
-        const pointsLimit = this.attributeSystems[this.currentAttributeSystem].pointsLimit;
+        const basePointsLimit = this.attributeSystems[this.currentAttributeSystem].pointsLimit;
+        const asiPoints = this.getASIPoints();
+        const totalPointsLimit = basePointsLimit + asiPoints;
         const used = this.getTotalAttributePoints();
         
         if (this.attributePointsRemaining) {
-            this.attributePointsRemaining.textContent = pointsLimit - used;
+            this.attributePointsRemaining.textContent = totalPointsLimit - used;
+        }
+    }
+    
+    /**
+     * Calcula los puntos de ASI (Ability Score Improvement) basados en el nivel del personaje
+     * En D&D 5e, los personajes obtienen ASI en niveles 4, 8, 12, 16, 19
+     * Cada ASI otorga 2 puntos para distribuir en atributos
+     */
+    getASIPoints() {
+        // Solo aplicar ASI para D&D 5e
+        if (this.currentAttributeSystem !== 'dnd5e') {
+            return 0;
+        }
+        
+        const levelInput = document.getElementById('level');
+        if (!levelInput) return 0;
+        
+        const level = parseInt(levelInput.value) || 1;
+        const asiLevels = [4, 8, 12, 16, 19]; // Niveles estándar de ASI en D&D 5e
+        
+        let asiCount = 0;
+        for (const asiLevel of asiLevels) {
+            if (level >= asiLevel) {
+                asiCount++;
+            } else {
+                break;
+            }
+        }
+        
+        // Cada ASI otorga 2 puntos para distribuir
+        return asiCount * 2;
+    }
+    
+    /**
+     * Actualiza la información de ASI en la interfaz
+     */
+    updateASIInfo() {
+        if (this.currentAttributeSystem !== 'dnd5e') {
+            // Ocultar información de ASI para otros sistemas
+            const asiInfo = document.querySelector('.asi-info');
+            if (asiInfo) {
+                asiInfo.style.display = 'none';
+            }
+            return;
+        }
+        
+        const levelInput = document.getElementById('level');
+        if (!levelInput) return;
+        
+        const level = parseInt(levelInput.value) || 1;
+        const asiPoints = this.getASIPoints();
+        
+        // Crear o actualizar el indicador de ASI
+        let asiInfo = document.querySelector('.asi-info');
+        if (!asiInfo) {
+            asiInfo = document.createElement('div');
+            asiInfo.className = 'asi-info';
+            
+            // Insertar después del indicador de puntos restantes
+            const pointsInfo = document.querySelector('.point-buy-info');
+            if (pointsInfo) {
+                pointsInfo.appendChild(asiInfo);
+            }
+        }
+        
+        if (asiInfo) {
+            asiInfo.style.display = 'block';
+            const isSpanish = document.documentElement.lang === 'es';
+            
+            if (asiPoints > 0) {
+                asiInfo.innerHTML = `<span class="asi-points">${isSpanish ? 'Puntos ASI' : 'ASI Points'}: <strong>+${asiPoints}</strong></span>`;
+                asiInfo.title = isSpanish ? 
+                    `Puntos adicionales por Mejoras de Puntuación de Habilidad (niveles 4, 8, 12, 16, 19)` :
+                    `Additional points from Ability Score Improvements (levels 4, 8, 12, 16, 19)`;
+            } else {
+                const nextASI = [4, 8, 12, 16, 19].find(asiLevel => level < asiLevel);
+                if (nextASI) {
+                    asiInfo.innerHTML = `<span class="asi-next">${isSpanish ? 'Próximo ASI' : 'Next ASI'}: <strong>${isSpanish ? 'Nivel' : 'Level'} ${nextASI}</strong></span>`;
+                    asiInfo.title = isSpanish ? 
+                        `Obtendrás 2 puntos adicionales de atributo en el nivel ${nextASI}` :
+                        `You will gain 2 additional attribute points at level ${nextASI}`;
+                } else {
+                    asiInfo.innerHTML = '';
+                }
+            }
         }
     }
     
@@ -197,12 +402,14 @@ class AttributeManager {
                 const system = this.attributeSystems[this.currentAttributeSystem];
                 const minAttr = system.minAttr;
                 const maxAttr = system.maxAttr;
-                const pointsLimit = system.pointsLimit;
+                const basePointsLimit = system.pointsLimit;
+                const asiPoints = this.getASIPoints();
+                const totalPointsLimit = basePointsLimit + asiPoints;
                 
                 let values = Array(6).fill(minAttr);
                 
-                // Usar un algoritmo de distribución mejorado
-                values = this.generateRandomAttributeDistribution(attrs.length, minAttr, maxAttr, pointsLimit);
+                // Usar un algoritmo de distribución mejorado con puntos totales incluyendo ASI
+                values = this.generateRandomAttributeDistribution(attrs.length, minAttr, maxAttr, totalPointsLimit);
                 
                 // Aplicar los valores generados a los inputs y actualizar modificadores
                 attrs.forEach((attr, i) => {
@@ -210,6 +417,14 @@ class AttributeManager {
                     if (input) {
                         input.value = values[i];
                         this.updateModifier(attr, values[i]);
+                        
+                        // Notificar cambio individual de atributo
+                        document.dispatchEvent(new CustomEvent('attributeChanged', {
+                            detail: {
+                                attribute: attr,
+                                value: values[i]
+                            }
+                        }));
                     }
                 });
                 
@@ -219,9 +434,6 @@ class AttributeManager {
                 
                 // Opcionalmente, mostrar qué tipo de build se generó
                 console.log('Generated attribute distribution');
-                
-                // Notificar cambio en todos los atributos
-                document.dispatchEvent(new CustomEvent('attributesReset'));
             });
         }
 
@@ -249,14 +461,19 @@ class AttributeManager {
                     if (input) {
                         input.value = defaultValue;
                         this.updateModifier(attr, defaultValue);
+                        
+                        // Notificar cambio individual de atributo
+                        document.dispatchEvent(new CustomEvent('attributeChanged', {
+                            detail: {
+                                attribute: attr,
+                                value: defaultValue
+                            }
+                        }));
                     }
                 });
                 
                 this.updateAttributePointsRemaining();
                 this.updateAttributeButtonStates();
-                
-                // Notificar cambio en todos los atributos
-                document.dispatchEvent(new CustomEvent('attributesReset'));
             });
         }
     }
@@ -347,7 +564,10 @@ class AttributeManager {
                     let costDifference = newCost - currentCost;
 
                     let totalPointsUsed = this.getTotalAttributePoints();
-                    let availablePoints = this.attributeSystems[this.currentAttributeSystem].pointsLimit - totalPointsUsed;
+                    let basePointsLimit = this.attributeSystems[this.currentAttributeSystem].pointsLimit;
+                    let asiPoints = this.getASIPoints();
+                    let totalPointsLimit = basePointsLimit + asiPoints;
+                    let availablePoints = totalPointsLimit - totalPointsUsed;
 
                     if (availablePoints >= costDifference) {
                         input.value = newValue;
@@ -409,7 +629,9 @@ class AttributeManager {
             let oldValue = parseInt(input.value);
             let newValue = oldValue;
             let pointsUsed = this.getTotalAttributePoints();
-            let pointsLimit = system.pointsLimit;
+            let basePointsLimit = system.pointsLimit;
+            let asiPoints = this.getASIPoints();
+            let pointsLimit = basePointsLimit + asiPoints;
 
             if (step !== 0) {
                 let direction = step > 0 ? 1 : -1;
@@ -506,6 +728,9 @@ class AttributeManager {
             
             // Actualizar etiquetas de los botones
             this.updateAttributeButtonLabels();
+            
+            // Actualizar información de ASI
+            this.updateASIInfo();
         }
     }
     

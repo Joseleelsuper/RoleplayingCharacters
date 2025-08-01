@@ -34,7 +34,7 @@ class Settings:
     postgres_url: Optional[str] = os.getenv("POSTGRES_URL")
     postgres_user: str = os.getenv("POSTGRES_USER", "postgres")
     postgres_host: str = os.getenv(
-        "POSTGRES_HOST", "db.jtmlavskczvyblwgamaw.supabase.co"
+        "POSTGRES_HOST", ""
     )
     postgres_password: Optional[str] = os.getenv("POSTGRES_PASSWORD")
     postgres_database: str = os.getenv("POSTGRES_DATABASE", "postgres")
@@ -43,13 +43,13 @@ class Settings:
 
     # Configuración Supabase
     supabase_url: str = os.getenv(
-        "SUPABASE_URL", "https://jtmlavskczvyblwgamaw.supabase.co"
+        "SUPABASE_URL", ""
     )
     supabase_anon_key: Optional[str] = os.getenv("SUPABASE_ANON_KEY")
     supabase_jwt_secret: Optional[str] = os.getenv("SUPABASE_JWT_SECRET")
     supabase_service_role_key: Optional[str] = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
     next_public_supabase_url: str = os.getenv(
-        "NEXT_PUBLIC_SUPABASE_URL", "https://jtmlavskczvyblwgamaw.supabase.co"
+        "NEXT_PUBLIC_SUPABASE_URL", ""
     )
     next_public_supabase_anon_key: Optional[str] = os.getenv(
         "NEXT_PUBLIC_SUPABASE_ANON_KEY"

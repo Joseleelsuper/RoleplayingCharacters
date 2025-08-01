@@ -105,7 +105,6 @@
                         <div class="form-group-enhanced">
                             <label for="character-name" class="form-label-enhanced">
                                 {{ _('create_character.basic.character_name') }} *
-                                <span class="label-tooltip" title="{{ _('create_character.basic.character_name_tooltip') }}">ℹ️</span>
                             </label>
                             <input type="text" id="character-name" name="character_name" class="form-control-enhanced" 
                                    placeholder="{{ _('create_character.basic.character_name_placeholder') }}" required 
@@ -122,10 +121,9 @@
                         <div class="form-group-enhanced">
                             <label for="race-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.race') }} *
-                                <span class="label-tooltip" title="{{ _('create_character.basic.race_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="race-button" class="selection-button" data-selection-type="race" aria-describedby="race-error">
-                                <span class="selection-text">{{ _('create_character.basic.race_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.race_placeholder') }}">{{ _('create_character.basic.race_placeholder') }}</span>
                                 <span class="selection-icon">📖</span>
                             </button>
                             <input type="hidden" id="race" name="race_id" required>
@@ -135,10 +133,9 @@
                         <div class="form-group-enhanced">
                             <label for="class-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.class') }} *
-                                <span class="label-tooltip" title="{{ _('create_character.basic.class_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="class-button" class="selection-button" data-selection-type="class" aria-describedby="class-error">
-                                <span class="selection-text">{{ _('create_character.basic.class_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.class_placeholder') }}">{{ _('create_character.basic.class_placeholder') }}</span>
                                 <span class="selection-icon">⚔️</span>
                             </button>
                             <input type="hidden" id="character-class" name="class_id" required>
@@ -148,10 +145,9 @@
                         <div class="form-group-enhanced">
                             <label for="background-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.background') }}
-                                <span class="label-tooltip" title="{{ _('create_character.basic.background_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="background-button" class="selection-button" data-selection-type="background" aria-describedby="background-error">
-                                <span class="selection-text">{{ _('create_character.basic.background_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.background_placeholder') }}">{{ _('create_character.basic.background_placeholder') }}</span>
                                 <span class="selection-icon">📜</span>
                             </button>
                             <input type="hidden" id="background" name="background_id">
@@ -161,10 +157,9 @@
                         <div class="form-group-enhanced">
                             <label for="alignment-button" class="form-label-enhanced">
                                 {{ _('create_character.basic.alignment') }}
-                                <span class="label-tooltip" title="{{ _('create_character.basic.alignment_tooltip') }}">ℹ️</span>
                             </label>
                             <button type="button" id="alignment-button" class="selection-button" data-selection-type="alignment" aria-describedby="alignment-error">
-                                <span class="selection-text">{{ _('create_character.basic.alignment_placeholder') }}</span>
+                                <span class="selection-text" data-original-text="{{ _('create_character.basic.alignment_placeholder') }}">{{ _('create_character.basic.alignment_placeholder') }}</span>
                                 <span class="selection-icon">⚖️</span>
                             </button>
                             <input type="hidden" id="alignment" name="alignment_id">
@@ -192,13 +187,21 @@
                             <label for="experience" class="attribute-label">
                                 {{ _('create_character.basic.experience') }}
                             </label>
-                            <div class="attribute-controls">
-                                <button type="button" class="attribute-btn decrease-5" data-attribute="experience">−5</button>
-                                <button type="button" class="attribute-btn decrease" data-attribute="experience">−</button>
-                                <input type="number" id="experience" name="experience" class="attribute-input" 
+                            <div class="attribute-controls experience-controls">
+                                <input type="number" id="experience" name="experience" class="attribute-input experience-display" 
                                        value="0" min="0" max="999999" data-cost="0" readonly>
-                                <button type="button" class="attribute-btn increase" data-attribute="experience">+</button>
-                                <button type="button" class="attribute-btn increase-5" data-attribute="experience">+5</button>
+                                <div class="experience-slider-container">
+                                    <div class="slider-controls">
+                                        <button type="button" class="slider-btn decrease" id="exp-decrease-btn">−</button>
+                                        <input type="range" id="experience-slider" class="experience-slider" 
+                                               min="0" max="100" value="0" step="1">
+                                        <button type="button" class="slider-btn increase" id="exp-increase-btn">+</button>
+                                    </div>
+                                    <div class="experience-slider-labels">
+                                        <span class="slider-label-start">Nivel actual</span>
+                                        <span class="slider-label-end">Siguiente nivel</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="attribute-modifier" id="experience-modifier"></div>
                         </div>
@@ -255,7 +258,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="strength">+</button>
                             </div>
                             <div class="attribute-modifier" id="strength-modifier">-1</div>
-                            <small id="strength-help" class="sr-only">{{ _('create_character.attributes.strength_help') }}</small>
+                            <div class="attribute-help" id="strength-help">{{ _('create_character.attributes.strength_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -270,7 +273,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="dexterity">+</button>
                             </div>
                             <div class="attribute-modifier" id="dexterity-modifier">-1</div>
-                            <small id="dexterity-help" class="sr-only">{{ _('create_character.attributes.dexterity_help') }}</small>
+                            <div class="attribute-help" id="dexterity-help">{{ _('create_character.attributes.dexterity_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -285,7 +288,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="constitution">+</button>
                             </div>
                             <div class="attribute-modifier" id="constitution-modifier">-1</div>
-                            <small id="constitution-help" class="sr-only">{{ _('create_character.attributes.constitution_help') }}</small>
+                            <div class="attribute-help" id="constitution-help">{{ _('create_character.attributes.constitution_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -300,7 +303,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="intelligence">+</button>
                             </div>
                             <div class="attribute-modifier" id="intelligence-modifier">-1</div>
-                            <small id="intelligence-help" class="sr-only">{{ _('create_character.attributes.intelligence_help') }}</small>
+                            <div class="attribute-help" id="intelligence-help">{{ _('create_character.attributes.intelligence_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -315,7 +318,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="wisdom">+</button>
                             </div>
                             <div class="attribute-modifier" id="wisdom-modifier">-1</div>
-                            <small id="wisdom-help" class="sr-only">{{ _('create_character.attributes.wisdom_help') }}</small>
+                            <div class="attribute-help" id="wisdom-help">{{ _('create_character.attributes.wisdom_help') }}</div>
                         </div>
 
                         <div class="attribute-item">
@@ -330,7 +333,7 @@
                                 <button type="button" class="attribute-btn increase" data-attribute="charisma">+</button>
                             </div>
                             <div class="attribute-modifier" id="charisma-modifier">-1</div>
-                            <small id="charisma-help" class="sr-only">{{ _('create_character.attributes.charisma_help') }}</small>
+                            <div class="attribute-help" id="charisma-help">{{ _('create_character.attributes.charisma_help') }}</div>
                         </div>
                     </div>
                 </div>
@@ -344,10 +347,13 @@
                     
                     <div class="skills-layout">
                         <div class="skills-section">
-                            <h3 class="subsection-title">
-                                🎯 {{ _('create_character.skills.skills') }}
-                                <span class="skill-points">{{ _('create_character.skills.skill_points') }} <strong id="skill-points-remaining">4</strong></span>
-                            </h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">🎯 {{ _('create_character.skills.skills') }}</h3>
+                                <div class="equipment-counter" id="skills-counter">0/4</div>
+                            </div>
+                            <div class="search-container">
+                                <input type="text" id="skills-search" class="search-input" placeholder="{{ _('create_character.skills.search_placeholder') }}" autocomplete="off">
+                            </div>
                             <div class="skills-container">
                                 <div class="skills-list" id="skills-list">
                                     <!-- Skills will be loaded dynamically -->
@@ -356,14 +362,26 @@
                         </div>
                         
                         <div class="proficiencies-section">
-                            <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">🗣️ {{ _('create_character.skills.languages') }}</h3>
+                                <div class="equipment-counter" id="languages-counter">0/2</div>
+                            </div>
+                            <div class="search-container">
+                                <input type="text" id="languages-search" class="search-input" placeholder="{{ _('create_character.languages.search_placeholder') }}" autocomplete="off">
+                            </div>
                             <div class="languages-container">
                                 <div class="languages-list" id="languages-list">
                                     <!-- Languages will be loaded dynamically -->
                                 </div>
                             </div>
                             
-                            <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">⚔️ {{ _('create_character.skills.proficiencies') }}</h3>
+                                <div class="equipment-counter" id="proficiencies-counter">0/3</div>
+                            </div>
+                            <div class="search-container">
+                                <input type="text" id="proficiencies-search" class="search-input" placeholder="{{ _('create_character.proficiencies.search_placeholder') }}" autocomplete="off">
+                            </div>
                             <div class="proficiencies-container">
                                 <div class="proficiencies-list" id="proficiencies-list">
                                     <!-- Proficiencies will be loaded dynamically -->
@@ -382,7 +400,13 @@
                     
                     <div class="equipment-layout">
                         <div class="starting-equipment">
-                            <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">🎒 {{ _('create_character.equipment.starting') }}</h3>
+                                <div class="equipment-counter" id="starting-equipment-counter">0/6</div>
+                            </div>
+                            <div class="search-container">
+                                <input type="text" id="starting-equipment-search" class="search-input" placeholder="{{ _('create_character.equipment.search_placeholder') }}" autocomplete="off">
+                            </div>
                             <div class="equipment-container">
                                 <div class="equipment-list" id="starting-equipment-list">
                                     <!-- Starting equipment will be loaded dynamically -->
@@ -391,7 +415,13 @@
                         </div>
                         
                         <div class="additional-equipment">
-                            <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">💰 {{ _('create_character.equipment.additional') }}</h3>
+                                <div class="equipment-counter" id="additional-equipment-counter">0/8</div>
+                            </div>
+                            <div class="search-container">
+                                <input type="text" id="additional-equipment-search" class="search-input" placeholder="{{ _('create_character.equipment.additional_search_placeholder') }}" autocomplete="off">
+                            </div>
                             <div class="equipment-container">
                                 <div class="equipment-list" id="additional-equipment-list">
                                     <!-- Additional equipment will be loaded dynamically -->
@@ -408,16 +438,15 @@
                         {{ _('create_character.spells.title') }}
                     </h2>
                     
-                    <div id="spells-content" class="spells-layout">
-                        <div class="spell-slots-info">
-                            <h3 class="subsection-title">📜 {{ _('create_character.spells.info') }}</h3>
-                            <div class="spell-slots-container" id="spell-slots-container">
-                                <!-- Spell slots will be shown if class is a spellcaster -->
-                            </div>
-                        </div>
-                        
+                    <div id="spells-content" class="spells-layout-three-columns">
                         <div class="spell-selection">
-                            <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
+                            <div class="subsection-header">
+                                <h3 class="subsection-title">✨ {{ _('create_character.spells.known') }}</h3>
+                                <div class="equipment-counter" id="spells-counter">0/6</div>
+                            </div>
+                            <div class="search-container">
+                                <input type="text" id="spells-search" class="search-input" placeholder="{{ _('create_character.spells.search_placeholder') }}" autocomplete="off">
+                            </div>
                             <div class="spells-container">
                                 <div class="spells-list" id="spells-list">
                                     <!-- Spells will be loaded dynamically -->
@@ -548,7 +577,6 @@
             </div>
             <div class="overlay-body">
                 <div class="overlay-info" id="overlay-info">
-                    <span class="info-icon">ℹ️</span>
                     <span class="info-text" id="overlay-info-text">{{ _('create_character.overlay.default_info') }}</span>
                 </div>
                 <div class="search-container">
@@ -572,8 +600,15 @@
         <span id="overlay-race-description">{{ _('create_character.overlay.race.description') }}</span>
         <span id="overlay-class-description">{{ _('create_character.overlay.class.description') }}</span>
         <span id="overlay-background-description">{{ _('create_character.overlay.background.description') }}</span>
+        <span id="race-placeholder-text">{{ _('create_character.basic.race_placeholder') }}</span>
+        <span id="class-placeholder-text">{{ _('create_character.basic.class_placeholder') }}</span>
+        <span id="background-placeholder-text">{{ _('create_character.basic.background_placeholder') }}</span>
+        <span id="alignment-placeholder-text">{{ _('create_character.basic.alignment_placeholder') }}</span>
         <span id="overlay-alignment-description">{{ _('create_character.overlay.alignment.description') }}</span>
         <span id="overlay-default-info">{{ _('create_character.overlay.default_info') }}</span>
+        <span id="spell-cantrips-title">{{ _('create_character.spells.cantrips') }}</span>
+        <span id="spell-level-title">{{ _('create_character.spells.level') }}</span>
+        <span id="spell-removed-message">{{ _('create_character.spells.removed_on_level_change') }}</span>
     </div>
     
     <!-- Componentes JS separados -->
@@ -583,6 +618,8 @@
     <script src="/templates/js/create-character/attribute-manager.js"></script>
     <script src="/templates/js/create-character/preview-manager.js"></script>
     <script src="/templates/js/create-character/navigation-manager.js"></script>
+    <script src="/templates/js/create-character/skill-manager.js"></script>
+    <script src="/templates/js/create-character/search-manager.js"></script>
     <script src="/templates/js/create-character/create-character.js"></script>
 </body>
 </html>

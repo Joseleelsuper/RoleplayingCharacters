@@ -10,6 +10,7 @@ from typing import Callable
 from functools import wraps
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
+
 from src.infrastructure.translation_service import translation_service
 from src.infrastructure.i18n import I18nConfig
 

@@ -259,6 +259,39 @@ msgstr "Información de Lanzamiento de Hechizos"
 msgid "create_character.spells.known"
 msgstr "Hechizos Conocidos"
 
+msgid "create_character.spells.cantrips"
+msgstr "Trucos de Magia"
+
+msgid "create_character.spells.level"
+msgstr "Nivel"
+
+msgid "create_character.spells.search_placeholder"
+msgstr "Buscar hechizos..."
+
+msgid "create_character.spells.limit_cantrips"
+msgstr "Has alcanzado el límite de cantrips para tu nivel"
+
+msgid "create_character.spells.limit_level"
+msgstr "Has alcanzado el límite de hechizos de nivel {level} para tu nivel"
+
+msgid "create_character.spells.removed_on_level_change"
+msgstr "Se han removido {count} hechizo(s) que ya no están disponibles para tu nivel actual"
+
+msgid "create_character.skills.search_placeholder"
+msgstr "Buscar habilidades..."
+
+msgid "create_character.languages.search_placeholder"
+msgstr "Buscar idiomas..."
+
+msgid "create_character.proficiencies.search_placeholder"
+msgstr "Buscar competencias..."
+
+msgid "create_character.equipment.search_placeholder"
+msgstr "Buscar equipamiento inicial..."
+
+msgid "create_character.equipment.additional_search_placeholder"
+msgstr "Buscar equipamiento adicional..."
+
 # Character Preview
 msgid "create_character.preview.label"
 msgstr "Vista previa del personaje"
