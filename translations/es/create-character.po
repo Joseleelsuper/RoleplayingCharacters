@@ -292,6 +292,12 @@ msgstr "Buscar equipamiento inicial..."
 msgid "create_character.equipment.additional_search_placeholder"
 msgstr "Buscar equipamiento adicional..."
 
+msgid "create_character.equipment.limit_starting"
+msgstr "Has alcanzado el límite de equipamiento inicial ({count} items)"
+
+msgid "create_character.equipment.limit_additional"
+msgstr "Has alcanzado el límite de equipamiento adicional ({count} items)"
+
 # Character Preview
 msgid "create_character.preview.label"
 msgstr "Vista previa del personaje"
