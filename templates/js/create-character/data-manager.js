@@ -8,11 +8,13 @@ class DataManager {
         this.containers = {};
         this.dataPopulated = false;
         this.currentSpells = null; // Almacenar hechizos para re-filtrar cuando cambie el nivel
+        this.dataCache = new Map(); // Caché para evitar llamadas duplicadas a la API
+        this.loadingPromises = new Map(); // Promesas de carga en progreso
     }
     
     init() {
         // Cachear referencias a los elementos (ahora solo contenedores)
-        this.selects = {}; // Ya no usamos selects, pero mantenemos para compatibilidad
+        this.selects = {};
         
         this.containers = {
             skillsList: document.getElementById('skills-list'),
@@ -180,46 +182,86 @@ class DataManager {
     
     async loadDataForGameType(gameType) {
         try {
-            // Limpiar datos existentes
-            this.clearAll();
+            // Verificar si ya tenemos los datos en caché
+            if (this.dataCache.has(gameType)) {
+                console.log(`Usando datos en caché para ${gameType}`);
+                const cachedData = this.dataCache.get(gameType);
+                this.allData = cachedData;
+                this.populateFormWithData(cachedData);
+                
+                // Notificar que los datos se han cargado
+                document.dispatchEvent(new CustomEvent('dataLoaded', {
+                    detail: { success: true, gameType: gameType, fromCache: true }
+                }));
+                return;
+            }
             
-            const endpoints = {
-                races: '/api/races',
-                classes: '/api/classes',
-                backgrounds: '/api/backgrounds',
-                alignments: '/api/alignments',
-                skills: '/api/skills',
-                languages: '/api/languages',
-                proficiencies: '/api/proficiencies',
-                spells: '/api/spells',
-                items: '/api/items'
-            };
+            // Verificar si ya hay una carga en progreso para este gameType
+            if (this.loadingPromises.has(gameType)) {
+                console.log(`Esperando carga en progreso para ${gameType}`);
+                await this.loadingPromises.get(gameType);
+                return;
+            }
             
-            const data = {};
-            const promises = Object.entries(endpoints).map(async ([key, url]) => {
-                const urlWithGameType = `${url}?game_type=${gameType}`;
-                const response = await fetch(urlWithGameType);
-                data[key] = await response.json();
-            });
+            // Crear promesa de carga y almacenarla
+            const loadingPromise = this._loadDataFromAPI(gameType);
+            this.loadingPromises.set(gameType, loadingPromise);
             
-            await Promise.all(promises);
+            try {
+                await loadingPromise;
+            } finally {
+                // Limpiar la promesa de carga
+                this.loadingPromises.delete(gameType);
+            }
             
-            // Guardar los datos completos
-            this.allData = data;
-            
-            // Poblar formulario directamente
-            this.populateFormWithData(data);
-            
-            // Notificar que los datos se han cargado
-            document.dispatchEvent(new CustomEvent('dataLoaded', {
-                detail: { success: true, gameType: gameType }
-            }));
         } catch (err) {
             console.error('Error loading data:', err);
             document.dispatchEvent(new CustomEvent('dataLoaded', {
                 detail: { success: false, error: err }
             }));
         }
+    }
+    
+    async _loadDataFromAPI(gameType) {
+        console.log(`Cargando datos desde API para ${gameType}`);
+        
+        // Limpiar datos existentes
+        this.clearAll();
+        
+        const endpoints = {
+            races: '/api/races',
+            classes: '/api/classes',
+            backgrounds: '/api/backgrounds',
+            alignments: '/api/alignments',
+            skills: '/api/skills',
+            languages: '/api/languages',
+            proficiencies: '/api/proficiencies',
+            spells: '/api/spells',
+            items: '/api/items'
+        };
+        
+        const data = {};
+        const promises = Object.entries(endpoints).map(async ([key, url]) => {
+            const urlWithGameType = `${url}?game_type=${gameType}`;
+            const response = await fetch(urlWithGameType);
+            data[key] = await response.json();
+        });
+        
+        await Promise.all(promises);
+        
+        // Guardar en caché
+        this.dataCache.set(gameType, data);
+        
+        // Guardar los datos completos
+        this.allData = data;
+        
+        // Poblar formulario directamente
+        this.populateFormWithData(data);
+        
+        // Notificar que los datos se han cargado
+        document.dispatchEvent(new CustomEvent('dataLoaded', {
+            detail: { success: true, gameType: gameType, fromCache: false }
+        }));
     }
     
     async loadAllData() {
@@ -278,6 +320,31 @@ class DataManager {
         // Método mantenido para compatibilidad
         // Ahora simplemente carga datos para el tipo de juego especificado
         this.loadDataForGameType(gameType);
+    }
+    
+    /**
+     * Limpia el caché de datos para un gameType específico o todo el caché
+     * @param {string} gameType - Tipo de juego específico a limpiar, o null para limpiar todo
+     */
+    clearCache(gameType = null) {
+        if (gameType) {
+            this.dataCache.delete(gameType);
+            this.loadingPromises.delete(gameType);
+            console.log(`Caché limpiado para ${gameType}`);
+        } else {
+            this.dataCache.clear();
+            this.loadingPromises.clear();
+            console.log('Caché completamente limpiado');
+        }
+    }
+    
+    /**
+     * Verifica si hay datos en caché para un gameType
+     * @param {string} gameType - Tipo de juego a verificar
+     * @returns {boolean} - True si hay datos en caché
+     */
+    hasDataInCache(gameType) {
+        return this.dataCache.has(gameType);
     }
     
     populateSelect(select, options) {
@@ -865,9 +932,14 @@ class DataManager {
     showSpellLimitMessage(spellLevel) {
         const message = document.createElement('div');
         message.className = 'spell-limit-message';
-        message.textContent = spellLevel === 0 
-            ? `Has alcanzado el límite de cantrips para tu nivel`
-            : `Has alcanzado el límite de hechizos de nivel ${spellLevel} para tu nivel`;
+        
+        if (spellLevel === 0) {
+            const cantripsLimitText = document.getElementById('spell-limit-cantrips')?.textContent || 'Has alcanzado el límite de cantrips para tu nivel';
+            message.textContent = cantripsLimitText;
+        } else {
+            const levelLimitText = document.getElementById('spell-limit-level')?.textContent || 'Has alcanzado el límite de hechizos de nivel {level} para tu nivel';
+            message.textContent = levelLimitText.replace('{level}', spellLevel);
+        }
         
         document.body.appendChild(message);
         
@@ -1218,9 +1290,11 @@ class DataManager {
          message.className = 'spell-limit-message'; // Reutilizar estilos
          
          if (isStarting) {
-             message.textContent = `Has alcanzado el límite de equipamiento inicial (${limits.starting} items)`;
+             const startingLimitText = document.getElementById('equipment-limit-starting')?.textContent || 'Has alcanzado el límite de equipamiento inicial ({count} items)';
+             message.textContent = startingLimitText.replace('{count}', limits.starting);
          } else {
-             message.textContent = `Has alcanzado el límite de equipamiento adicional (${limits.additional} items)`;
+             const additionalLimitText = document.getElementById('equipment-limit-additional')?.textContent || 'Has alcanzado el límite de equipamiento adicional ({count} items)';
+             message.textContent = additionalLimitText.replace('{count}', limits.additional);
          }
          
          document.body.appendChild(message);
