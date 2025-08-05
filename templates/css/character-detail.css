@@ -1,0 +1,359 @@
+/* Estilos para la página de detalles del personaje */
+
+.my-character-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header del personaje */
+.character-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.character-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.avatar-icon {
+    font-size: 48px;
+    opacity: 0.8;
+}
+
+.character-info {
+    flex: 1;
+}
+
+.character-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.player-name {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0 0 15px 0;
+}
+
+.character-basic-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.info-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.anonymous-notice,
+.user-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.anonymous-icon,
+.user-icon {
+    font-size: 1.1rem;
+}
+
+.character-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-self: flex-start;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.btn-primary {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Contenido del personaje */
+.character-content {
+    display: grid;
+    gap: 25px;
+}
+
+.character-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+}
+
+/* Atributos */
+.attributes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.attribute-item {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.attribute-name {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.attribute-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.attribute-modifier {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
+}
+
+/* Listas generales */
+.skills-list,
+.languages-list,
+.proficiencies-list,
+.items-list,
+.spells-list {
+    display: grid;
+    gap: 12px;
+}
+
+.skill-item,
+.language-item,
+.proficiency-item,
+.item-item,
+.spell-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.skill-item:hover,
+.language-item:hover,
+.proficiency-item:hover,
+.item-item:hover,
+.spell-item:hover {
+    background: #e3f2fd;
+    transform: translateX(5px);
+}
+
+.skill-name,
+.language-name,
+.proficiency-name,
+.item-name,
+.spell-name {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.skill-description,
+.language-description,
+.proficiency-description,
+.item-description,
+.spell-description {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+.item-quantity,
+.spell-level {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+/* Trasfondo */
+.background-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.background-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.background-feature {
+    margin: 10px 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+.background-description {
+    margin: 10px 0 0 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .character-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .character-actions {
+        flex-direction: row;
+        justify-content: center;
+        align-self: stretch;
+    }
+    
+    .character-name {
+        font-size: 2rem;
+    }
+    
+    .attributes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .my-character-container {
+        padding: 15px;
+    }
+    
+    .character-section {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .attributes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .character-basic-info {
+        justify-content: center;
+    }
+    
+    .character-actions {
+        flex-direction: column;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.character-section {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.character-section:nth-child(1) { animation-delay: 0.1s; }
+.character-section:nth-child(2) { animation-delay: 0.2s; }
+.character-section:nth-child(3) { animation-delay: 0.3s; }
+.character-section:nth-child(4) { animation-delay: 0.4s; }
+.character-section:nth-child(5) { animation-delay: 0.5s; }
+.character-section:nth-child(6) { animation-delay: 0.6s; }

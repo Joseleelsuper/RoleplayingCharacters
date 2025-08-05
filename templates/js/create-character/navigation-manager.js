@@ -8,6 +8,43 @@ class NavigationManager {
         this.dataPopulated = false;
     }
     
+    validateCharacterData(characterData) {
+        // Validar campos requeridos
+        if (!characterData.name || characterData.name.trim() === '') {
+            return 'El nombre del personaje es requerido';
+        }
+        
+        if (!characterData.race_id) {
+            return 'Debes seleccionar una raza para tu personaje';
+        }
+        
+        if (!characterData.class_id) {
+            return 'Debes seleccionar una clase para tu personaje';
+        }
+        
+        if (!characterData.background_id) {
+            return 'Debes seleccionar un trasfondo para tu personaje';
+        }
+        
+        if (!characterData.alignment_id) {
+            return 'Debes seleccionar un alineamiento para tu personaje';
+        }
+        
+        if (!characterData.level || characterData.level < 1 || characterData.level > 20) {
+            return 'El nivel debe estar entre 1 y 20';
+        }
+        
+        // Validar atributos
+        const requiredAttributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+        for (const attr of requiredAttributes) {
+            if (!characterData.attributes[attr] || characterData.attributes[attr] < 3 || characterData.attributes[attr] > 18) {
+                return `El atributo ${attr} debe estar entre 3 y 18`;
+            }
+        }
+        
+        return null; // No hay errores
+    }
+    
     init() {
         this.tabs = document.querySelectorAll('.tab-button');
         this.sections = document.querySelectorAll('.form-section');
@@ -257,13 +294,50 @@ class NavigationManager {
         // Obtener personaje de la vista previa
         const character = window.previewManager?.getCharacter();
         
-        // Combinar datos del formulario con datos del personaje
-        const combinedData = {
-            ...Object.fromEntries(formData),
-            skills: character?.skills || [],
-            equipment: character?.equipment || [],
-            spells: character?.spells || []
+        // Estructurar los datos según el esquema esperado por la API
+        const characterData = {
+            name: formData.get('character_name') || '',
+            player_name: formData.get('player_name') || '',
+            level: parseInt(formData.get('level')) || 1,
+            experience: parseInt(formData.get('experience')) || 0,
+            alignment_id: formData.get('alignment_id') ? parseInt(formData.get('alignment_id')) : null,
+            race_id: formData.get('race_id') ? parseInt(formData.get('race_id')) : null,
+            class_id: formData.get('class_id') ? parseInt(formData.get('class_id')) : null,
+            background_id: formData.get('background_id') ? parseInt(formData.get('background_id')) : null,
+            is_anonymous: true, // Por defecto, los personajes son anónimos
+            
+            // Atributos
+            attributes: {
+                strength: parseInt(formData.get('strength')) || 10,
+                dexterity: parseInt(formData.get('dexterity')) || 10,
+                constitution: parseInt(formData.get('constitution')) || 10,
+                intelligence: parseInt(formData.get('intelligence')) || 10,
+                wisdom: parseInt(formData.get('wisdom')) || 10,
+                charisma: parseInt(formData.get('charisma')) || 10
+            },
+            
+            // Habilidades seleccionadas
+            skills: this.getSelectedSkills(),
+            
+            // Idiomas seleccionados
+            languages: this.getSelectedLanguages(),
+            
+            // Competencias seleccionadas
+            proficiencies: this.getSelectedProficiencies(),
+            
+            // Equipamiento seleccionado
+            items: this.getSelectedItems(),
+            
+            // Hechizos seleccionados
+            spells: this.getSelectedSpells()
         };
+        
+        // Validar datos antes de enviar
+        const validationError = this.validateCharacterData(characterData);
+        if (validationError) {
+            this.showError(validationError);
+            return;
+        }
         
         // Mostrar cargando
         this.showLoading();
@@ -274,22 +348,49 @@ class NavigationManager {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(combinedData)
+            body: JSON.stringify(characterData)
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error al crear el personaje');
+                return response.json().then(errorData => {
+                    // Manejar diferentes tipos de errores
+                    let errorMessage = 'Error al crear el personaje';
+                    
+                    if (errorData && typeof errorData === 'object') {
+                        if (errorData.detail) {
+                            errorMessage = errorData.detail;
+                        } else if (errorData.message) {
+                            errorMessage = errorData.message;
+                        } else if (Array.isArray(errorData)) {
+                            // Manejar errores de validación de FastAPI
+                            errorMessage = errorData.map(err => err.msg || err.message || 'Error de validación').join(', ');
+                        }
+                    }
+                    
+                    throw new Error(errorMessage);
+                }).catch(jsonError => {
+                    // Si no se puede parsear como JSON, usar el status text
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                });
             }
             return response.json();
         })
         .then((data) => {
-            // Redirigir a la página del personaje creado
-            window.location.href = `/characters/${data.id}`;
+            // Limpiar borrador guardado
+            localStorage.removeItem('character-draft');
+            
+            // Mostrar mensaje de éxito
+            this.showSuccess('¡Personaje creado exitosamente!');
+            
+            // Redirigir después de un breve delay
+            setTimeout(() => {
+                window.location.href = `/characters/${data.id}`;
+            }, 1500);
         })
         .catch(error => {
             console.error('Error:', error);
             this.hideLoading();
-            this.showError('Error al crear el personaje. Por favor, inténtalo de nuevo.');
+            this.showError(error.message || 'Error al crear el personaje. Por favor, inténtalo de nuevo.');
         });
     }
     
@@ -310,7 +411,138 @@ class NavigationManager {
     }
     
     showError(message) {
-        alert(message);
+        // Implementar mostrar error
+        console.error(message);
+        
+        // Crear o actualizar elemento de error
+        let errorElement = document.getElementById('form-error-message');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.id = 'form-error-message';
+            errorElement.className = 'alert alert-error';
+            errorElement.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #f44336;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 10000;
+                max-width: 400px;
+                word-wrap: break-word;
+            `;
+            document.body.appendChild(errorElement);
+        }
+        
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+        
+        // Auto-ocultar después de 5 segundos
+        setTimeout(() => {
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+        }, 5000);
+    }
+    
+    showSuccess(message) {
+        // Crear elemento de éxito
+        let successElement = document.getElementById('form-success-message');
+        if (!successElement) {
+            successElement = document.createElement('div');
+            successElement.id = 'form-success-message';
+            successElement.className = 'alert alert-success';
+            successElement.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 10000;
+                max-width: 400px;
+                word-wrap: break-word;
+            `;
+            document.body.appendChild(successElement);
+        }
+        
+        successElement.textContent = message;
+        successElement.style.display = 'block';
+        
+        // Auto-ocultar después de 3 segundos
+        setTimeout(() => {
+            if (successElement) {
+                successElement.style.display = 'none';
+            }
+        }, 3000);
+    }
+    
+    getSelectedSkills() {
+        const skills = [];
+        const skillCheckboxes = document.querySelectorAll('#skills-list input[type="checkbox"]:checked');
+        skillCheckboxes.forEach(checkbox => {
+            const skillId = parseInt(checkbox.value);
+            if (skillId) {
+                skills.push({ skill_id: skillId });
+            }
+        });
+        return skills;
+    }
+    
+    getSelectedLanguages() {
+        const languages = [];
+        const languageCheckboxes = document.querySelectorAll('#languages-list input[type="checkbox"]:checked');
+        languageCheckboxes.forEach(checkbox => {
+            const languageId = parseInt(checkbox.value);
+            if (languageId) {
+                languages.push({ language_id: languageId });
+            }
+        });
+        return languages;
+    }
+    
+    getSelectedProficiencies() {
+        const proficiencies = [];
+        const proficiencyCheckboxes = document.querySelectorAll('#proficiencies-list input[type="checkbox"]:checked');
+        proficiencyCheckboxes.forEach(checkbox => {
+            const proficiencyId = parseInt(checkbox.value);
+            if (proficiencyId) {
+                proficiencies.push({ proficiency_id: proficiencyId });
+            }
+        });
+        return proficiencies;
+    }
+    
+    getSelectedItems() {
+        const items = [];
+        const itemCheckboxes = document.querySelectorAll('#starting-equipment-list input[type="checkbox"]:checked, #additional-equipment-list input[type="checkbox"]:checked');
+        itemCheckboxes.forEach(checkbox => {
+            const itemId = parseInt(checkbox.value);
+            const quantity = parseInt(checkbox.dataset.quantity) || 1;
+            if (itemId) {
+                items.push({ 
+                    item_id: itemId,
+                    quantity: quantity
+                });
+            }
+        });
+        return items;
+    }
+    
+    getSelectedSpells() {
+        const spells = [];
+        const spellCheckboxes = document.querySelectorAll('#spells-list input[type="checkbox"]:checked');
+        spellCheckboxes.forEach(checkbox => {
+            const spellId = parseInt(checkbox.value);
+            if (spellId) {
+                spells.push({ spell_id: spellId });
+            }
+        });
+        return spells;
     }
     
     validateEquipmentLimits() {
