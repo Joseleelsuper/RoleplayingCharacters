@@ -1,15 +1,16 @@
-from sqlalchemy import Column, String, Integer, BigInteger, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, BigInteger, DateTime, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 import uuid
 from datetime import datetime
 from ..base import Base
+from ..character_class import ClassModel
 
 
 class CharacterModel(Base):
     __tablename__ = "characters"
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)  # Permitir usuarios anónimos
     name = Column(String(100), nullable=False)
     player_name = Column(String(100))
     level = Column(Integer, nullable=False, default=1)
@@ -18,6 +19,7 @@ class CharacterModel(Base):
     class_id = Column(PG_UUID(as_uuid=True), ForeignKey("classes.id"))
     background_id = Column(PG_UUID(as_uuid=True), ForeignKey("backgrounds.id"))
     experience = Column(BigInteger, nullable=False, default=0)
+    is_anonymous = Column(Boolean, nullable=False, default=False)  # Marcar si es anónimo
     created_at = Column(
         DateTime(timezone=True), default=datetime.utcnow, nullable=False
     )
@@ -25,6 +27,7 @@ class CharacterModel(Base):
         DateTime(timezone=True), default=datetime.utcnow, nullable=False
     )
     user = relationship("UserModel", back_populates="characters")
+    character_class = relationship("ClassModel", back_populates="characters")
     attributes = relationship(
         "AttributeModel", uselist=False, back_populates="character"
     )
