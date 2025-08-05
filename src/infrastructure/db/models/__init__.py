@@ -16,6 +16,7 @@ from .language import LanguageModel
 from .proficiency import ProficiencyModel
 from .item import ItemModel
 from .spell import SpellModel
+from .character_class import ClassModel
 
 __all__ = [
     "UserModel",
