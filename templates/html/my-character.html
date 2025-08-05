@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ character.name }} | Personaje</title>
+    <meta name="description" content="Detalles del personaje {{ character.name }}">
+    <link rel="stylesheet" href="/templates/css/my-character.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    {% include 'objects/header.html' %}
+    
+    <main class="my-character-container" role="main">
+        <div class="character-header">
+            <div class="character-avatar">
+                <div class="avatar-placeholder">
+                    <span class="avatar-icon">👤</span>
+                </div>
+            </div>
+            
+            <div class="character-info">
+                <h1 class="character-name">{{ character.name }}</h1>
+                {% if character.player_name %}
+                    <p class="player-name">Jugador: {{ character.player_name }}</p>
+                {% endif %}
+                
+                <div class="character-basic-info">
+                    {% if character.race %}
+                        <span class="info-badge">{{ character.race.name }}</span>
+                    {% endif %}
+                    {% if character.character_class %}
+                        <span class="info-badge">{{ character.character_class.name }}</span>
+                    {% endif %}
+                    <span class="info-badge">Nivel {{ character.level }}</span>
+                    {% if character.alignment %}
+                        <span class="info-badge">{{ character.alignment.name }}</span>
+                    {% endif %}
+                </div>
+                
+                {% if character.is_anonymous %}
+                    <div class="anonymous-notice">
+                        <span class="anonymous-icon">🔓</span>
+                        <span>Personaje anónimo - Disponible para descarga</span>
+                    </div>
+                {% else %}
+                    <div class="user-notice">
+                        <span class="user-icon">👤</span>
+                        <span>Creado por usuario registrado</span>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="character-actions">
+                <button type="button" class="btn btn-primary" onclick="downloadCharacter()">📥 Descargar</button>
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">← Volver</button>
+            </div>
+        </div>
+        
+        <div class="character-content">
+            <!-- Atributos -->
+            {% if character.attributes %}
+            <section class="character-section">
+                <h2 class="section-title">Atributos</h2>
+                <div class="attributes-grid">
+                    <div class="attribute-item">
+                        <span class="attribute-name">Fuerza</span>
+                        <span class="attribute-value">{{ character.attributes.strength }}</span>
+                        <span class="attribute-modifier">({{ '+' if (character.attributes.strength - 10) // 2 >= 0 else '' }}{{ (character.attributes.strength - 10) // 2 }})</span>
+                    </div>
+                    <div class="attribute-item">
+                        <span class="attribute-name">Destreza</span>
+                        <span class="attribute-value">{{ character.attributes.dexterity }}</span>
+                        <span class="attribute-modifier">({{ '+' if (character.attributes.dexterity - 10) // 2 >= 0 else '' }}{{ (character.attributes.dexterity - 10) // 2 }})</span>
+                    </div>
+                    <div class="attribute-item">
+                        <span class="attribute-name">Constitución</span>
+                        <span class="attribute-value">{{ character.attributes.constitution }}</span>
+                        <span class="attribute-modifier">({{ '+' if (character.attributes.constitution - 10) // 2 >= 0 else '' }}{{ (character.attributes.constitution - 10) // 2 }})</span>
+                    </div>
+                    <div class="attribute-item">
+                        <span class="attribute-name">Inteligencia</span>
+                        <span class="attribute-value">{{ character.attributes.intelligence }}</span>
+                        <span class="attribute-modifier">({{ '+' if (character.attributes.intelligence - 10) // 2 >= 0 else '' }}{{ (character.attributes.intelligence - 10) // 2 }})</span>
+                    </div>
+                    <div class="attribute-item">
+                        <span class="attribute-name">Sabiduría</span>
+                        <span class="attribute-value">{{ character.attributes.wisdom }}</span>
+                        <span class="attribute-modifier">({{ '+' if (character.attributes.wisdom - 10) // 2 >= 0 else '' }}{{ (character.attributes.wisdom - 10) // 2 }})</span>
+                    </div>
+                    <div class="attribute-item">
+                        <span class="attribute-name">Carisma</span>
+                        <span class="attribute-value">{{ character.attributes.charisma }}</span>
+                        <span class="attribute-modifier">({{ '+' if (character.attributes.charisma - 10) // 2 >= 0 else '' }}{{ (character.attributes.charisma - 10) // 2 }})</span>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Habilidades -->
+            {% if character.skills %}
+            <section class="character-section">
+                <h2 class="section-title">Habilidades</h2>
+                <div class="skills-list">
+                    {% for character_skill in character.skills %}
+                        <div class="skill-item">
+                            <span class="skill-name">{{ character_skill.skill.name }}</span>
+                            {% if character_skill.skill.description %}
+                                <span class="skill-description">{{ character_skill.skill.description }}</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Idiomas -->
+            {% if character.languages %}
+            <section class="character-section">
+                <h2 class="section-title">Idiomas</h2>
+                <div class="languages-list">
+                    {% for character_language in character.languages %}
+                        <div class="language-item">
+                            <span class="language-name">{{ character_language.language.name }}</span>
+                            {% if character_language.language.description %}
+                                <span class="language-description">{{ character_language.language.description }}</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Competencias -->
+            {% if character.proficiencies %}
+            <section class="character-section">
+                <h2 class="section-title">Competencias</h2>
+                <div class="proficiencies-list">
+                    {% for character_proficiency in character.proficiencies %}
+                        <div class="proficiency-item">
+                            <span class="proficiency-name">{{ character_proficiency.proficiency.name }}</span>
+                            {% if character_proficiency.proficiency.description %}
+                                <span class="proficiency-description">{{ character_proficiency.proficiency.description }}</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Equipamiento -->
+            {% if character.items %}
+            <section class="character-section">
+                <h2 class="section-title">Equipamiento</h2>
+                <div class="items-list">
+                    {% for character_item in character.items %}
+                        <div class="item-item">
+                            <span class="item-name">{{ character_item.item.name }}</span>
+                            <span class="item-quantity">x{{ character_item.quantity }}</span>
+                            {% if character_item.item.description %}
+                                <span class="item-description">{{ character_item.item.description }}</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Hechizos -->
+            {% if character.spells %}
+            <section class="character-section">
+                <h2 class="section-title">Hechizos</h2>
+                <div class="spells-list">
+                    {% for character_spell in character.spells %}
+                        <div class="spell-item">
+                            <span class="spell-name">{{ character_spell.spell.name }}</span>
+                            <span class="spell-level">Nivel {{ character_spell.spell.level }}</span>
+                            {% if character_spell.spell.description %}
+                                <span class="spell-description">{{ character_spell.spell.description }}</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Trasfondo -->
+            {% if character.background %}
+            <section class="character-section">
+                <h2 class="section-title">Trasfondo</h2>
+                <div class="background-info">
+                    <h3 class="background-name">{{ character.background.name }}</h3>
+                    {% if character.background.feature %}
+                        <p class="background-feature"><strong>Característica:</strong> {{ character.background.feature }}</p>
+                    {% endif %}
+                    {% if character.background.description %}
+                        <p class="background-description">{{ character.background.description }}</p>
+                    {% endif %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+    
+    <script>
+        function downloadCharacter() {
+            const characterData = {
+                id: {{ character.id }},
+                name: "{{ character.name }}",
+                player_name: "{{ character.player_name or '' }}",
+                level: {{ character.level }},
+                experience: {{ character.experience or 0 }},
+                race: "{{ character.race.name if character.race else '' }}",
+                character_class: "{{ character.character_class.name if character.character_class else '' }}",
+                background: "{{ character.background.name if character.background else '' }}",
+                alignment: "{{ character.alignment.name if character.alignment else '' }}",
+                {% if character.attributes %}
+                attributes: {
+                    strength: {{ character.attributes.strength }},
+                    dexterity: {{ character.attributes.dexterity }},
+                    constitution: {{ character.attributes.constitution }},
+                    intelligence: {{ character.attributes.intelligence }},
+                    wisdom: {{ character.attributes.wisdom }},
+                    charisma: {{ character.attributes.charisma }}
+                },
+                {% endif %}
+                skills: [{% for skill in character.skills %}"{{ skill.skill.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+                languages: [{% for lang in character.languages %}"{{ lang.language.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+                proficiencies: [{% for prof in character.proficiencies %}"{{ prof.proficiency.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+                items: [{% for item in character.items %}{"name": "{{ item.item.name }}", "quantity": {{ item.quantity }}}{% if not loop.last %}, {% endif %}{% endfor %}],
+                spells: [{% for spell in character.spells %}{"name": "{{ spell.spell.name }}", "level": {{ spell.spell.level }}}{% if not loop.last %}, {% endif %}{% endfor %}]
+            };
+            
+            const dataStr = JSON.stringify(characterData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${characterData.name.replace(/[^a-zA-Z0-9]/g, '_')}_character.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
