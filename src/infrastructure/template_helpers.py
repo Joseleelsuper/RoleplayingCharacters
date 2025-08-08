@@ -163,8 +163,8 @@ def render_template_with_translations(
     if context:
         base_context.update(context)
 
-    # Generar la respuesta con el template
-    response = templates.TemplateResponse(template_name, base_context)
+    # Generar la respuesta con el template (nueva firma: request primero)
+    response = templates.TemplateResponse(request, template_name, base_context)
 
     return response
 

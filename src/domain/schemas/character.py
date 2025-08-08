@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from uuid import UUID
@@ -75,8 +75,7 @@ class CharacterAttributesResponse(BaseModel):
     wisdom: int
     charisma: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CharacterResponse(BaseModel):
@@ -99,8 +98,7 @@ class CharacterResponse(BaseModel):
     attributes: Optional[CharacterAttributesResponse] = None
     username: Optional[str] = Field(None, description="Nombre de usuario del creador")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CharacterListResponse(BaseModel):
