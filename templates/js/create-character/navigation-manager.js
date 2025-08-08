@@ -63,6 +63,7 @@ class NavigationManager {
         this.setupNavigation();
         this.setupFormSubmission();
         this.setupErrorClearingListeners();
+        this.setupProgressListeners();
         
         // Escuchar eventos de cambio de tipo de juego
         document.addEventListener('gameTypeSelected', () => {
@@ -70,6 +71,8 @@ class NavigationManager {
             this.updateButtonStates();
             // Limpiar error si existe
             this.clearError('game-type-error');
+            // Actualizar progreso
+            this.updateProgressBar();
         });
     }
     
@@ -92,6 +95,57 @@ class NavigationManager {
             tab.addEventListener('click', () => {
                 this.goToStep(index + 1);
             });
+        });
+    }
+    
+    setupProgressListeners() {
+        // Escuchar cambios en el nombre del personaje
+        const nameInput = document.getElementById('character-name');
+        if (nameInput) {
+            nameInput.addEventListener('input', () => {
+                this.updateProgressBar();
+            });
+        }
+        
+        // Escuchar cambios en selecciones (raza, clase, background)
+        ['race', 'character-class', 'background', 'alignment'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('change', () => {
+                    this.updateProgressBar();
+                });
+            }
+        });
+        
+        // Escuchar cambios en atributos
+        ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].forEach(attr => {
+            const input = document.getElementById(attr);
+            if (input) {
+                input.addEventListener('change', () => {
+                    this.updateProgressBar();
+                });
+            }
+        });
+        
+        // Escuchar eventos de selección de habilidades, equipamiento, etc.
+        document.addEventListener('skillToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('equipmentToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('languageToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('proficiencyToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('spellToggled', () => {
+            this.updateProgressBar();
         });
     }
     
@@ -133,11 +187,8 @@ class NavigationManager {
             }
         });
         
-        // Actualizar progreso
-        if (this.progressFill) {
-            const progressPercent = (this.currentStep / this.totalSteps) * 100;
-            this.progressFill.style.width = `${progressPercent}%`;
-        }
+        // Actualizar progreso basado en completitud real
+        this.updateProgressBar();
         
         if (this.progressText) {
             this.progressText.textContent = `Paso ${this.currentStep} de ${this.totalSteps}`;
@@ -145,6 +196,62 @@ class NavigationManager {
         
         // Actualizar estado de los botones
         this.updateButtonStates();
+    }
+    
+    updateProgressBar() {
+        if (!this.progressFill) return;
+        
+        let completedSections = 0;
+        const totalSections = this.totalSteps;
+        
+        // Verificar completitud de cada sección
+        // Sección 1: Tipo de juego
+        if (window.gameTypeSelector?.isGameTypeSelected()) {
+            completedSections++;
+        }
+        
+        // Sección 2: Información básica (nombre, raza, clase)
+        const characterName = document.getElementById('character-name')?.value?.trim();
+        const raceId = document.getElementById('race')?.value;
+        const classId = document.getElementById('character-class')?.value;
+        if (characterName && raceId && classId) {
+            completedSections++;
+        }
+        
+        // Sección 3: Atributos (verificar que no sean todos 8)
+        const attributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+        const attributesSet = attributes.some(attr => {
+            const input = document.getElementById(attr);
+            return input && parseInt(input.value) > 8;
+        });
+        if (attributesSet) {
+            completedSections++;
+        }
+        
+        // Sección 4: Habilidades (al menos una seleccionada)
+        const selectedSkills = document.querySelectorAll('#skills-list .skill-item.selected');
+        if (selectedSkills.length > 0) {
+            completedSections++;
+        }
+        
+        // Sección 5: Equipamiento (al menos un item seleccionado)
+        const selectedEquipment = document.querySelectorAll('#equipment-list .equipment-item.selected');
+        if (selectedEquipment.length > 0) {
+            completedSections++;
+        }
+        
+        // Calcular porcentaje de progreso
+        const progressPercent = Math.max((completedSections / totalSections) * 100, (this.currentStep / totalSections) * 20);
+        this.progressFill.style.width = `${progressPercent}%`;
+        
+        // Cambiar color según el progreso
+        if (completedSections === totalSections) {
+            this.progressFill.style.backgroundColor = '#28a745'; // Verde para completado
+        } else if (completedSections >= totalSections * 0.6) {
+            this.progressFill.style.backgroundColor = '#ffc107'; // Amarillo para progreso medio
+        } else {
+            this.progressFill.style.backgroundColor = '#007bff'; // Azul para progreso inicial
+        }
     }
     
     goToNextStep() {
@@ -222,6 +329,25 @@ class NavigationManager {
             this.goToStep(1); // Ir al paso de selección de tipo de juego
             isValid = false;
             errors.push('Debe seleccionar un tipo de juego');
+        }
+        
+        // Validar campos obligatorios
+        const characterName = document.getElementById('character-name')?.value?.trim();
+        if (!characterName) {
+            isValid = false;
+            errors.push('El nombre del personaje es obligatorio');
+        }
+        
+        const raceId = document.getElementById('race')?.value;
+        if (!raceId) {
+            isValid = false;
+            errors.push('Debes seleccionar una raza para tu personaje');
+        }
+        
+        const classId = document.getElementById('character-class')?.value;
+        if (!classId) {
+            isValid = false;
+            errors.push('Debes seleccionar una clase para tu personaje');
         }
         
         // Validar límites de equipamiento

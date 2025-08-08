@@ -356,7 +356,7 @@ class DataManager {
     populateSkills(skills) {
         const container = this.containers.skillsList;
         if (!container || !skills) return;
-        
+
         skills.forEach(skill => {
             const skillItem = document.createElement('div');
             skillItem.classList.add('skill-item');
@@ -369,13 +369,8 @@ class DataManager {
             name.classList.add('skill-name');
             name.textContent = skill.name;
             
-            const attribute = document.createElement('span');
-            attribute.classList.add('skill-attribute');
-            attribute.textContent = `(${skill.attribute})`;
-            
             skillItem.appendChild(checkbox);
             skillItem.appendChild(name);
-            skillItem.appendChild(attribute);
             
             skillItem.addEventListener('click', () => {
                 const checked = checkbox.classList.contains('checked');
@@ -463,6 +458,14 @@ class DataManager {
             
             proficiencyItem.addEventListener('click', () => {
                 const checked = checkbox.classList.contains('checked');
+                const gameType = this.getSelectedGameType();
+                
+                // Si está intentando seleccionar (no deseleccionar) y ha alcanzado el límite
+                if (gameType === 'dnd5e' && !checked && !this.canSelectMoreProficiencies()) {
+                    this.showProficiencyLimitMessage();
+                    return;
+                }
+                
                 if (!checked) {
                     checkbox.classList.add('checked');
                     proficiencyItem.classList.add('selected');
@@ -1259,7 +1262,48 @@ class DataManager {
                    counter.classList.add('limit-warning');
                }
            }
-       }
+        }
+        
+        // Verificar si se pueden seleccionar más competencias
+        canSelectMoreProficiencies() {
+            const limit = this.getProficienciesLimits();
+            const selected = document.querySelectorAll('#proficiencies-list .proficiency-item.selected').length;
+            return selected < limit;
+        }
+        
+        // Mostrar mensaje de límite de competencias
+        showProficiencyLimitMessage() {
+            const limit = this.getProficienciesLimits();
+            
+            // Crear un mensaje temporal
+            const message = document.createElement('div');
+            message.className = 'proficiency-limit-message';
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #dc3545;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-weight: 600;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                animation: slideInFade 0.3s ease-out;
+            `;
+            
+            message.textContent = `Solo puedes seleccionar ${limit} competencias como máximo.`;
+            
+            document.body.appendChild(message);
+            
+            // Remover el mensaje después de 3 segundos
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 3000);
+        }
        
        // Actualizar la visualización de límites de hechizos
        updateSpellsLimitsDisplay() {
