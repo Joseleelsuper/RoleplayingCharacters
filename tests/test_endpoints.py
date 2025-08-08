@@ -23,13 +23,14 @@ class TestHomeEndpoints:
         assert response.status_code == 200
         assert "text/html" in response.headers["content-type"]
 
-    def test_home_page_contains_hello_world(self) -> None:
+    def test_home_page_has_hero_and_cta(self) -> None:
         """
-        Prueba que la página principal contiene el texto "Hola Mundo".
+        Prueba que la página principal contiene la sección hero y el CTA de crear personaje.
         """
         response = client.get("/")
-        assert "¡Hola Mundo!" in response.text
-        assert "Bienvenido al Gestor de Personajes de Rol" in response.text
+        assert response.status_code == 200
+        assert 'aria-label="welcome_section"' in response.text
+        assert "/create-character" in response.text
 
     def test_health_check_returns_healthy_status(self) -> None:
         """
