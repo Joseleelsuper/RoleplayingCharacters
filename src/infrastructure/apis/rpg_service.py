@@ -9,6 +9,7 @@ from typing import Dict, List, Any
 from .dnd5e_api import DnD5eApiClient
 from .pathfinder_api import PathfinderApiClient
 from .wod_api import WorldOfDarknessClient
+from src.infrastructure.cache.api_cache import cached_api_call
 
 class RPGGameType:
     """Tipos de juegos de rol soportados."""
@@ -200,7 +201,7 @@ class RPGDataService:
                 if hasattr(skills, 'results'):
                     return [{"id": s.index, 
                             "name": s.name, 
-                            "attribute": s.ability_score.index if hasattr(s, 'ability_score') else '', 
+                            "attribute": getattr(s, 'ability_score', {}).get('index', '') if hasattr(s, 'ability_score') else '', 
                             "source": "dnd5e"} 
                            for s in skills.results]
                 else:
@@ -281,7 +282,7 @@ class RPGDataService:
                 if hasattr(proficiencies, 'results'):
                     return [{"id": p.index, 
                             "name": p.name, 
-                            "type": p.type if hasattr(p, 'type') else '', 
+                            "type": getattr(p, 'type', ''), 
                             "source": "dnd5e"} 
                            for p in proficiencies.results]
                 else:
@@ -382,6 +383,7 @@ class RPGDataService:
             ]
     
     @staticmethod
+    @cached_api_call("rpg_all_game_data", ttl=1800)  # Cache por 30 minutos
     async def get_all_game_data(game_type: str) -> Dict[str, List[Dict[str, Any]]]:
         """
         Obtiene todos los datos disponibles para el tipo de juego especificado.
