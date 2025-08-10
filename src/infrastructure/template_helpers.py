@@ -13,7 +13,8 @@ from fastapi.templating import Jinja2Templates
 
 from src.infrastructure.translation_service import translation_service
 from src.infrastructure.i18n import I18nConfig
-from src.application.auth_service import auth_service, UserDto
+from src.infrastructure.dependencies import get_current_user_from_session
+from src.contracts import UserDto
 
 
 def create_translation_function(language: str, domain: str = "home") -> Callable[[str, str | None], str]:
@@ -67,7 +68,7 @@ def get_current_user_from_request(request: Request) -> Optional[UserDto]:
         if not session_token:
             return None
         
-        return auth_service.get_user_by_session(session_token)
+        return get_current_user_from_session(session_token)
     except Exception:
         return None
 

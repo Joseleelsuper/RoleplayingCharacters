@@ -6,58 +6,16 @@ siguiendo el patrón de arquitectura hexagonal donde los casos de uso están en 
 capa de aplicación y orquestan las operaciones del dominio.
 """
 
-from dataclasses import dataclass
 from typing import Optional
 from uuid import uuid4
 from datetime import datetime
 import bcrypt
 
-from src.domain.entities.user import User
-
-
-@dataclass
-class RegisterUserCommand:
-    """
-    Comando para registrar un nuevo usuario.
-    
-    Attributes:
-        username: Nombre de usuario único
-        email: Email del usuario
-        password: Contraseña del usuario
-    """
-    username: str
-    email: str
-    password: str
-
-
-@dataclass
-class LoginUserCommand:
-    """
-    Comando para autenticar un usuario.
-    
-    Attributes:
-        email: Email del usuario
-        password: Contraseña del usuario
-    """
-    email: str
-    password: str
-
-
-@dataclass
-class UserDto:
-    """
-    DTO para transferir datos de usuario sin información sensible.
-    
-    Attributes:
-        id: ID único del usuario
-        username: Nombre de usuario
-        email: Email del usuario
-        created_at: Fecha de creación de la cuenta
-    """
-    id: str
-    username: str
-    email: str
-    created_at: str
+from ..contracts import (
+    RegisterUserCommand,
+    LoginUserCommand,
+    UserDto
+)
 
 
 class AuthenticationService:
@@ -71,7 +29,7 @@ class AuthenticationService:
     def __init__(self):
         """Inicializa el servicio de autenticación."""
         # En una implementación real, aquí se inyectarían los repositorios
-        self._users_storage = []  # Simulación temporal
+        self._users_storage = []  # Simulación temporal usando diccionarios
         self._sessions_storage = {}  # Almacén temporal de sesiones: {token: user_dto}
 
     def hash_password(self, password: str) -> str:
@@ -113,31 +71,34 @@ class AuthenticationService:
         try:
             # Verificar si el email ya existe
             for existing_user in self._users_storage:
-                if existing_user.email == command.email:
+                if existing_user["email"] == command.email:
                     return False, "El email ya está registrado", None
-                if existing_user.username == command.username:
+                if existing_user["username"] == command.username:
                     return False, "El nombre de usuario ya está en uso", None
             
-            # Crear nuevo usuario
+            # Crear nuevo usuario como diccionario (sin usar entidad de dominio)
             password_hash = self.hash_password(command.password)
-            new_user = User(
-                id=uuid4(),
-                username=command.username,
-                email=command.email,
-                password_hash=password_hash,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
+            user_id = str(uuid4())
+            created_at = datetime.utcnow()
+            
+            new_user = {
+                "id": user_id,
+                "username": command.username,
+                "email": command.email,
+                "password_hash": password_hash,
+                "created_at": created_at,
+                "updated_at": created_at
+            }
             
             # Guardar usuario (simulación)
             self._users_storage.append(new_user)
             
             # Crear DTO de respuesta
             user_dto = UserDto(
-                id=str(new_user.id),
-                username=new_user.username,
-                email=new_user.email,
-                created_at=new_user.created_at.isoformat()
+                id=user_id,
+                username=new_user["username"],
+                email=new_user["email"],
+                created_at=new_user["created_at"].isoformat()
             )
             
             return True, "Usuario registrado exitosamente", user_dto
@@ -159,36 +120,37 @@ class AuthenticationService:
             # Buscar usuario por email
             user = None
             for stored_user in self._users_storage:
-                if stored_user.email == command.email:
+                if stored_user["email"] == command.email:
                     user = stored_user
                     break
             
             # También buscar en usuarios de prueba
             if not user and command.email == "test@example.com":
                 # Usuario de prueba para testing
-                test_user = User(
-                    id=uuid4(),
-                    username="testuser",
-                    email="test@example.com",
-                    password_hash=self.hash_password("testpass123"),
-                    created_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
-                )
-                user = test_user
+                user_id = str(uuid4())
+                created_at = datetime.utcnow()
+                user = {
+                    "id": user_id,
+                    "username": "testuser",
+                    "email": "test@example.com",
+                    "password_hash": self.hash_password("testpass123"),
+                    "created_at": created_at,
+                    "updated_at": created_at
+                }
             
             if not user:
                 return False, "Credenciales inválidas", None
             
             # Verificar contraseña
-            if not self.verify_password(command.password, user.password_hash):
+            if not self.verify_password(command.password, user["password_hash"]):
                 return False, "Credenciales inválidas", None
             
             # Crear DTO de respuesta
             user_dto = UserDto(
-                id=str(user.id),
-                username=user.username,
-                email=user.email,
-                created_at=user.created_at.isoformat()
+                id=user["id"],
+                username=user["username"],
+                email=user["email"],
+                created_at=user["created_at"].isoformat()
             )
             
             return True, "Login exitoso", user_dto

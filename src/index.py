@@ -94,6 +94,13 @@ def create_app() -> FastAPI:
     Returns:
         FastAPI: Aplicación configurada
     """
+    # Configurar dependencias
+    from src.infrastructure.dependencies import dependency_container
+    from src.application.auth_service import AuthenticationService
+    
+    # Configurar el servicio de autenticación
+    dependency_container.configure_auth_service(AuthenticationService())
+    
     # Inicializar base de datos
     initialize_database()
     

@@ -2,7 +2,8 @@
 Controlador de autenticación para endpoints de login y registro.
 
 Este módulo maneja las operaciones de autenticación de usuarios,
-utilizando los servicios de aplicación sin violar la arquitectura hexagonal.
+utilizando el contenedor de dependencias para acceder a los servicios
+sin violar la arquitectura hexagonal.
 """
 
 from fastapi import APIRouter, Request, status
@@ -17,11 +18,11 @@ from src.domain.schemas.auth import (
     AuthErrorResponse,
     UserResponse
 )
-from src.application.auth_service import (
-    auth_service,
+from src.contracts import (
     RegisterUserCommand,
     LoginUserCommand
 )
+from src.infrastructure.dependencies import get_auth_service
 
 router = APIRouter()
 
@@ -40,6 +41,7 @@ async def register_user(request: Request, user_data: UserRegisterRequest) -> JSO
     """
     try:
         # Usar el servicio de aplicación para registro
+        auth_service = get_auth_service()
         command = RegisterUserCommand(
             username=user_data.username,
             email=user_data.email,
@@ -134,6 +136,7 @@ async def login_user(request: Request, login_data: UserLoginRequest) -> JSONResp
     """
     try:
         # Usar el servicio de aplicación para autenticación
+        auth_service = get_auth_service()
         command = LoginUserCommand(
             email=login_data.email,
             password=login_data.password
@@ -234,6 +237,7 @@ async def logout_user(request: Request) -> JSONResponse:
     
     # Destruir sesión en el servicio si existe
     if session_token:
+        auth_service = get_auth_service()
         auth_service.destroy_session(session_token)
     
     # Eliminar cookie de sesión
@@ -264,6 +268,7 @@ async def get_current_user(request: Request) -> JSONResponse:
             )
         
         # Obtener usuario por token de sesión
+        auth_service = get_auth_service()
         user_dto = auth_service.get_user_by_session(session_token)
         
         if not user_dto:
