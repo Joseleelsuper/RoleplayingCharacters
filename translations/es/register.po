@@ -1,0 +1,63 @@
+# Spanish translations for register page
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-10 00:00+0000\n"
+"PO-Revision-Date: 2025-08-10 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Page metadata
+msgid "register.page.title"
+msgstr "Crear cuenta"
+
+msgid "register.page.description"
+msgstr "Crea tu cuenta para gestionar personajes de rol"
+
+# Headings
+msgid "register.title"
+msgstr "Crear cuenta"
+
+msgid "register.subtitle"
+msgstr "Únete para guardar y compartir tus personajes"
+
+# Fields
+msgid "register.username.label"
+msgstr "Nombre de usuario"
+
+msgid "register.username.placeholder"
+msgstr "Tu nombre de usuario"
+
+msgid "register.email.label"
+msgstr "Email"
+
+msgid "register.email.placeholder"
+msgstr "tu@email.com"
+
+msgid "register.password.label"
+msgstr "Contraseña"
+
+msgid "register.password.placeholder"
+msgstr "Mínimo 8 caracteres"
+
+msgid "register.password2.label"
+msgstr "Repite la contraseña"
+
+msgid "register.password2.placeholder"
+msgstr "Repite la contraseña"
+
+# Actions
+msgid "register.button.submit"
+msgstr "Crear cuenta"
+
+msgid "register.link.login"
+msgstr "Ya tengo cuenta"
+
+# Misc
+msgid "register.noscript"
+msgstr "Esta página requiere JavaScript para enviar el formulario de forma segura."
