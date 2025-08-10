@@ -4,8 +4,6 @@ Pruebas para los endpoints por categoría del API de personajes.
 Se usan game_type=custom para evitar dependencias externas.
 """
 
-from typing import Any
-
 from fastapi.testclient import TestClient
 
 from index import app
