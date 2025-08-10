@@ -763,13 +763,19 @@ class NavigationManager {
     }
     
     showValidationErrors(errors) {
-        let message = 'Se encontraron los siguientes errores de validación:\n\n';
-        errors.forEach((error, index) => {
-            message += `${index + 1}. ${error}\n`;
-        });
-        message += '\nPor favor, corrija estos errores antes de crear el personaje.';
-        
-        alert(message);
+        // Usar el nuevo popup de validación amigable
+        if (window.ValidationPopup) {
+            ValidationPopup.show(errors);
+        } else {
+            // Fallback al alert tradicional si el popup no está disponible
+            let message = 'Se encontraron los siguientes errores de validación:\n\n';
+            errors.forEach((error, index) => {
+                message += `${index + 1}. ${error}\n`;
+            });
+            message += '\nPor favor, corrija estos errores antes de crear el personaje.';
+            
+            alert(message);
+        }
     }
 }
 
