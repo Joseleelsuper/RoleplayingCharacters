@@ -96,6 +96,22 @@
     color: var(--text-secondary);
 }
 
+.form-feedback.success {
+    color: var(--success-600);
+    font-weight: 500;
+}
+
+.form-feedback.error {
+    color: var(--error-600);
+    font-weight: 500;
+}
+
+/* Estados de carga para botones */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* Responsivo */
 @media (max-width: 480px) {
     .form-card {

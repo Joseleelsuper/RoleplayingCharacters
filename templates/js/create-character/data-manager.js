@@ -228,26 +228,9 @@ class DataManager {
         // Limpiar datos existentes
         this.clearAll();
         
-        const endpoints = {
-            races: '/api/races',
-            classes: '/api/classes',
-            backgrounds: '/api/backgrounds',
-            alignments: '/api/alignments',
-            skills: '/api/skills',
-            languages: '/api/languages',
-            proficiencies: '/api/proficiencies',
-            spells: '/api/spells',
-            items: '/api/items'
-        };
-        
-        const data = {};
-        const promises = Object.entries(endpoints).map(async ([key, url]) => {
-            const urlWithGameType = `${url}?game_type=${gameType}`;
-            const response = await fetch(urlWithGameType);
-            data[key] = await response.json();
-        });
-        
-        await Promise.all(promises);
+        // Usar el endpoint consolidado para obtener todos los datos de una vez
+        const response = await fetch(`/api/game-data?game_type=${gameType}`);
+        const data = await response.json();
         
         // Guardar en caché
         this.dataCache.set(gameType, data);

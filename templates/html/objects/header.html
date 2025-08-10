@@ -32,9 +32,64 @@
                         </a>
                     </div>
                 </div>
+                
+                {% if user %}
+                <!-- Authenticated user menu -->
+                <div class="user-menu">
+                    <button class="btn btn-text btn-sm user-toggle" aria-label="{{ _header('header.user.menu_label') }}">
+                        <span class="user-icon">👤</span>
+                        <span class="user-text">{{ user.name }}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="/profile" class="user-option">
+                            <span class="option-icon">⚙️</span>
+                            {{ _header('header.user.profile') }}
+                        </a>
+                        <a href="/settings" class="user-option">
+                            <span class="option-icon">🔧</span>
+                            {{ _header('header.user.settings') }}
+                        </a>
+                        <div class="user-option-separator"></div>
+                        <button type="button" class="user-option logout-btn" onclick="handleLogout()">
+                            <span class="option-icon">🚪</span>
+                            {{ _header('header.user.logout') }}
+                        </button>
+                    </div>
+                </div>
+                {% else %}
+                <!-- Guest user actions -->
                 <a href="/login" class="btn btn-secondary btn-sm">{{ _header('header.auth.sign_in') }}</a>
                 <a href="/register" class="btn btn-primary btn-sm">{{ _header('header.auth.sign_up') }}</a>
+                {% endif %}
             </div>
         </nav>
     </div>
 </header>
+
+{% if user %}
+<script>
+async function handleLogout() {
+    try {
+        const response = await fetch('/auth/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            // Redirect to home page after successful logout
+            window.location.href = '/';
+        } else {
+            console.error('Logout failed:', response.statusText);
+            alert('{{ _header("header.user.logout_error") }}');
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('{{ _header("header.user.logout_error") }}');
+    }
+}
+</script>
+{% endif %}
