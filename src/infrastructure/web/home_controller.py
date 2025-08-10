@@ -45,3 +45,41 @@ async def get_home_page(request: Request) -> HTMLResponse:
         )
     
     return response
+
+
+@router.get("/login", response_class=HTMLResponse, tags=["Auth"])
+async def get_login_page(request: Request) -> HTMLResponse:
+    """
+    Endpoint que devuelve la página de inicio de sesión.
+
+    Args:
+        request: Objeto Request de FastAPI para detectar el idioma
+
+    Returns:
+        HTMLResponse: HTML con la página de login traducida
+    """
+    return render_template_with_translations(
+        templates=templates,
+        template_name="login.html",
+        request=request,
+        context={"_domain": "login"},
+    )
+
+
+@router.get("/register", response_class=HTMLResponse, tags=["Auth"])
+async def get_register_page(request: Request) -> HTMLResponse:
+    """
+    Endpoint que devuelve la página de registro.
+
+    Args:
+        request: Objeto Request de FastAPI para detectar el idioma
+
+    Returns:
+        HTMLResponse: HTML con la página de registro traducida
+    """
+    return render_template_with_translations(
+        templates=templates,
+        template_name="register.html",
+        request=request,
+        context={"_domain": "register"},
+    )
