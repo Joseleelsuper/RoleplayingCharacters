@@ -32,6 +32,23 @@ msgstr "Iniciar Sesión"
 msgid "header.auth.sign_up"
 msgstr "Registrarse"
 
+# User menu
+msgid "header.user.menu_label"
+msgstr "Menú de usuario"
+
+msgid "header.user.profile"
+msgstr "Perfil"
+
+msgid "header.user.settings"
+msgstr "Configuración"
+
+msgid "header.user.logout"
+msgstr "Cerrar Sesión"
+
+msgid "header.user.logout_error"
+msgstr "Error al cerrar sesión. Inténtalo de nuevo."
+
+# Language selector
 msgid "header.language.label"
 msgstr "Idioma"
 

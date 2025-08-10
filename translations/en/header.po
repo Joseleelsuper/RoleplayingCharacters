@@ -32,6 +32,23 @@ msgstr "Sign In"
 msgid "header.auth.sign_up"
 msgstr "Sign Up"
 
+# User menu
+msgid "header.user.menu_label"
+msgstr "User menu"
+
+msgid "header.user.profile"
+msgstr "Profile"
+
+msgid "header.user.settings"
+msgstr "Settings"
+
+msgid "header.user.logout"
+msgstr "Log Out"
+
+msgid "header.user.logout_error"
+msgstr "Error logging out. Please try again."
+
+# Language selector
 msgid "header.language.label"
 msgstr "Language"
 
