@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ _('login.page.title') }}</title>
+	<meta name="description" content="{{ _('login.page.description') }}">
+	<link rel="stylesheet" href="/templates/css/global/global.css">
+	<link rel="stylesheet" href="/templates/css/auth.css">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self';">
+</head>
+<body>
+	{% include 'objects/header.html' %}
+
+	<main class="auth-container" role="main">
+		<section class="form-card" aria-label="login_section">
+			<header class="form-header">
+				<h1 class="form-title">{{ _('login.title') }}</h1>
+				<p class="form-subtitle">{{ _('login.subtitle') }}</p>
+			</header>
+
+			<form id="login-form" class="auth-form" novalidate>
+				<div class="form-group-enhanced">
+					<label for="login-email" class="form-label-enhanced">{{ _('login.email.label') }}</label>
+					<input type="email" id="login-email" name="email" class="form-control-enhanced" placeholder="{{ _('login.email.placeholder') }}" required autocomplete="email">
+					<div class="form-error" id="login-email-error" role="alert" aria-live="polite"></div>
+				</div>
+
+				<div class="form-group-enhanced">
+					<label for="login-password" class="form-label-enhanced">{{ _('login.password.label') }}</label>
+					<input type="password" id="login-password" name="password" class="form-control-enhanced" placeholder="{{ _('login.password.placeholder') }}" required autocomplete="current-password" minlength="8">
+					<div class="form-error" id="login-password-error" role="alert" aria-live="polite"></div>
+				</div>
+
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary">{{ _('login.button.submit') }}</button>
+					<a href="/register" class="btn btn-secondary">{{ _('login.link.register') }}</a>
+				</div>
+
+				<div id="login-feedback" class="form-feedback" role="status" aria-live="polite"></div>
+			</form>
+		</section>
+	</main>
+
+	{% include 'objects/footer.html' %}
+
+	<script src="/templates/js/auth/login.js"></script>
+	<noscript>{{ _('login.noscript') }}</noscript>
+    
+</body>
+</html>

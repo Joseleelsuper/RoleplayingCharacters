@@ -11,7 +11,7 @@
 <body>
     {% include 'objects/header.html' %}
     
-    <main class="my-character-container" role="main">
+    <main class="my-character-container" role="main" data-character-id="{{ character.id }}">
         <div class="character-header">
             <div class="character-avatar">
                 <div class="avatar-placeholder">
@@ -52,8 +52,8 @@
             </div>
             
             <div class="character-actions">
-                <button type="button" class="btn btn-primary" onclick="downloadCharacter()">📥 Descargar</button>
-                <button type="button" class="btn btn-secondary" onclick="window.history.back()">← Volver</button>
+                <button type="button" class="btn btn-primary" id="download-character-btn">📥 Descargar</button>
+                <button type="button" class="btn btn-secondary" id="back-btn">← Volver</button>
             </div>
         </div>
         
@@ -202,47 +202,6 @@
         </div>
     </main>
     
-    <script>
-        function downloadCharacter() {
-            const characterData = {
-                id: {{ character.id }},
-                name: "{{ character.name }}",
-                player_name: "{{ character.player_name or '' }}",
-                level: {{ character.level }},
-                experience: {{ character.experience or 0 }},
-                race: "{{ character.race.name if character.race else '' }}",
-                character_class: "{{ character.character_class.name if character.character_class else '' }}",
-                background: "{{ character.background.name if character.background else '' }}",
-                alignment: "{{ character.alignment.name if character.alignment else '' }}",
-                {% if character.attributes %}
-                attributes: {
-                    strength: {{ character.attributes.strength }},
-                    dexterity: {{ character.attributes.dexterity }},
-                    constitution: {{ character.attributes.constitution }},
-                    intelligence: {{ character.attributes.intelligence }},
-                    wisdom: {{ character.attributes.wisdom }},
-                    charisma: {{ character.attributes.charisma }}
-                },
-                {% endif %}
-                skills: [{% for skill in character.skills %}"{{ skill.skill.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
-                languages: [{% for lang in character.languages %}"{{ lang.language.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
-                proficiencies: [{% for prof in character.proficiencies %}"{{ prof.proficiency.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
-                items: [{% for item in character.items %}{"name": "{{ item.item.name }}", "quantity": {{ item.quantity }}}{% if not loop.last %}, {% endif %}{% endfor %}],
-                spells: [{% for spell in character.spells %}{"name": "{{ spell.spell.name }}", "level": {{ spell.spell.level }}}{% if not loop.last %}, {% endif %}{% endfor %}]
-            };
-            
-            const dataStr = JSON.stringify(characterData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${characterData.name.replace(/[^a-zA-Z0-9]/g, '_')}_character.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-    </script>
+    <script src="/templates/js/my-character.js"></script>
 </body>
 </html>

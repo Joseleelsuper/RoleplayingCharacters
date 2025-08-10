@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ _('register.page.title') }}</title>
+	<meta name="description" content="{{ _('register.page.description') }}">
+	<link rel="stylesheet" href="/templates/css/global/global.css">
+	<link rel="stylesheet" href="/templates/css/auth.css">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self';">
+</head>
+<body>
+	{% include 'objects/header.html' %}
+
+	<main class="auth-container" role="main">
+		<section class="form-card" aria-label="register_section">
+			<header class="form-header">
+				<h1 class="form-title">{{ _('register.title') }}</h1>
+				<p class="form-subtitle">{{ _('register.subtitle') }}</p>
+			</header>
+
+			<form id="register-form" class="auth-form" novalidate>
+				<div class="form-group-enhanced">
+					<label for="reg-username" class="form-label-enhanced">{{ _('register.username.label') }}</label>
+					<input type="text" id="reg-username" name="username" class="form-control-enhanced" placeholder="{{ _('register.username.placeholder') }}" required autocomplete="username" minlength="3" maxlength="50">
+					<div class="form-error" id="reg-username-error" role="alert" aria-live="polite"></div>
+				</div>
+
+				<div class="form-group-enhanced">
+					<label for="reg-email" class="form-label-enhanced">{{ _('register.email.label') }}</label>
+					<input type="email" id="reg-email" name="email" class="form-control-enhanced" placeholder="{{ _('register.email.placeholder') }}" required autocomplete="email">
+					<div class="form-error" id="reg-email-error" role="alert" aria-live="polite"></div>
+				</div>
+
+				<div class="form-group-enhanced">
+					<label for="reg-password" class="form-label-enhanced">{{ _('register.password.label') }}</label>
+					<input type="password" id="reg-password" name="password" class="form-control-enhanced" placeholder="{{ _('register.password.placeholder') }}" required autocomplete="new-password" minlength="8">
+					<div class="form-error" id="reg-password-error" role="alert" aria-live="polite"></div>
+				</div>
+
+				<div class="form-group-enhanced">
+					<label for="reg-password2" class="form-label-enhanced">{{ _('register.password2.label') }}</label>
+					<input type="password" id="reg-password2" name="password2" class="form-control-enhanced" placeholder="{{ _('register.password2.placeholder') }}" required autocomplete="new-password" minlength="8">
+					<div class="form-error" id="reg-password2-error" role="alert" aria-live="polite"></div>
+				</div>
+
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary">{{ _('register.button.submit') }}</button>
+					<a href="/login" class="btn btn-secondary">{{ _('register.link.login') }}</a>
+				</div>
+
+				<div id="register-feedback" class="form-feedback" role="status" aria-live="polite"></div>
+			</form>
+		</section>
+	</main>
+
+	{% include 'objects/footer.html' %}
+
+	<script src="/templates/js/auth/register.js"></script>
+	<noscript>{{ _('register.noscript') }}</noscript>
+</body>
+</html>
