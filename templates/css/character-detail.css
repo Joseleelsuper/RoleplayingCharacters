@@ -1,4 +1,6 @@
-/* Estilos para la página de detalles del personaje */
+@import url(./global/global.css);
+@import url(./objects/header.css);
+@import url(./objects/footer.css);
 
 .my-character-container {
     max-width: 1200px;
