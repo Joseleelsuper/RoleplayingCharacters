@@ -27,6 +27,7 @@ from src.infrastructure.web.status_controller import router as status_router
 from src.infrastructure.web.not_found_controller import router as not_found_router
 from src.infrastructure.web.character_controller import router as character_router
 from src.infrastructure.web.game_controller import router as game_router
+from src.infrastructure.web.auth_controller import router as auth_router
 
 # Configurar logging
 logging.basicConfig(
@@ -122,6 +123,7 @@ def create_app() -> FastAPI:
     app.include_router(not_found_router, tags=["NotFound"])
     app.include_router(character_router, tags=["Characters"])
     app.include_router(game_router, tags=["Games"])
+    app.include_router(auth_router, tags=["Auth"])
 
     # Configurar archivos estáticos solo en desarrollo
     if not os.getenv("VERCEL"):
