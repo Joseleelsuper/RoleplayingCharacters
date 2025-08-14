@@ -56,6 +56,23 @@ class LoginUserCommand:
     password: str
 
 
+@dataclass
+class AuthResponse:
+    """
+    Respuesta de operaciones de autenticación.
+    
+    Attributes:
+        success: Indica si la operación fue exitosa
+        message: Mensaje descriptivo del resultado
+        token: Token de sesión (si es exitoso)
+        user: Datos del usuario (si es exitoso)
+    """
+    success: bool
+    message: str
+    token: Optional[str] = None
+    user: Optional[UserDto] = None
+
+
 # Interfaces/Protocolos para servicios
 class AuthenticationServiceInterface(Protocol):
     """

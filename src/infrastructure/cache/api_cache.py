@@ -17,7 +17,7 @@ class ApiCache:
     Sistema de caché en memoria con expiración por tiempo.
     """
     
-    def __init__(self, default_ttl: int = 300):
+    def __init__(self, default_ttl: int = 12000):
         """
         Inicializa el sistema de caché.
         
