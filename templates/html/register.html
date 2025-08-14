@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="/templates/css/global/global.css">
 	<link rel="stylesheet" href="/templates/css/auth.css">
 	<link rel="icon" href="/templates/img/favicon.ico" type="image/x-icon">
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self';">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com;">
 </head>
 <body>
 	{% include 'objects/header.html' %}
