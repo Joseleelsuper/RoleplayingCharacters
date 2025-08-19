@@ -71,7 +71,7 @@
 <script>
 async function handleLogout() {
     try {
-        const response = await fetch('/auth/logout', {
+    const response = await fetch('/api/auth/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +80,6 @@ async function handleLogout() {
         });
         
         if (response.ok) {
-            // Redirect to home page after successful logout
             window.location.href = '/';
         } else {
             console.error('Logout failed:', response.statusText);

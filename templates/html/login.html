@@ -21,6 +21,17 @@
 			</header>
 
 			<form id="login-form" class="auth-form" novalidate>
+				<!-- i18n data for login JS -->
+				<div id="login-i18n" hidden
+				     data-email-required="{{ _('login.error.email_required') }}"
+				     data-email-invalid="{{ _('login.error.email_invalid') }}"
+				     data-password-min-length="{{ _('login.error.password_min_length') }}"
+				     data-feedback-success="{{ _('login.feedback.login_success') }}"
+				     data-feedback-failed="{{ _('login.feedback.login_failed') }}"
+				     data-feedback-connection="{{ _('login.feedback.connection_error') }}"
+				     data-button-loading="{{ _('login.button.loading') }}"
+				     data-invalid-credentials="{{ _('login.error.invalid_credentials') }}"
+				></div>
 				<div class="form-group-enhanced">
 					<label for="login-email" class="form-label-enhanced">{{ _('login.email.label') }}</label>
 					<input type="email" id="login-email" name="email" class="form-control-enhanced" placeholder="{{ _('login.email.placeholder') }}" required autocomplete="email">

@@ -21,6 +21,21 @@
 			</header>
 
 			<form id="register-form" class="auth-form" novalidate>
+				<!-- i18n data for register JS -->
+				<div id="register-i18n" hidden
+				     data-username-min="{{ _('register.error.username_min') }}"
+				     data-username-format="{{ _('register.error.username_format') }}"
+				     data-email-required="{{ _('register.error.email_required') }}"
+				     data-email-invalid="{{ _('register.error.email_invalid') }}"
+				     data-password-min-length="{{ _('register.error.password_min_length') }}"
+				     data-password-letter="{{ _('register.error.password_letter') }}"
+				     data-password-number="{{ _('register.error.password_number') }}"
+				     data-password-mismatch="{{ _('register.error.password_mismatch') }}"
+				     data-feedback-success="{{ _('register.feedback.register_success') }}"
+				     data-feedback-failed="{{ _('register.feedback.register_failed') }}"
+				     data-feedback-connection="{{ _('register.feedback.connection_error') }}"
+				     data-button-loading="{{ _('register.button.loading') }}"
+				></div>
 				<div class="form-group-enhanced">
 					<label for="reg-username" class="form-label-enhanced">{{ _('register.username.label') }}</label>
 					<input type="text" id="reg-username" name="username" class="form-control-enhanced" placeholder="{{ _('register.username.placeholder') }}" required autocomplete="username" minlength="3" maxlength="50">
