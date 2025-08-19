@@ -29,6 +29,10 @@ from src.infrastructure.web.character_controller import router as character_rout
 from src.infrastructure.web.game_controller import router as game_router
 from src.infrastructure.web.auth_controller import router as auth_router
 
+from src.infrastructure.dependencies import dependency_container
+from src.application.auth_service import AuthenticationService
+from src.infrastructure.repositories.user_repository import UserRepository
+
 # Configurar logging
 logging.basicConfig(
     level=logging.INFO,
@@ -94,12 +98,11 @@ def create_app() -> FastAPI:
     Returns:
         FastAPI: Aplicación configurada
     """
-    # Configurar dependencias
-    from src.infrastructure.dependencies import dependency_container
-    from src.application.auth_service import AuthenticationService
     
-    # Configurar el servicio de autenticación
-    dependency_container.configure_auth_service(AuthenticationService())
+    # Configurar el servicio de autenticación con inyección del repositorio
+    dependency_container.set_auth_service_factory(
+        lambda: AuthenticationService(UserRepository())
+    )
     
     # Inicializar base de datos
     initialize_database()
