@@ -24,6 +24,27 @@
     const password2Error = document.getElementById('reg-password2-error');
 
     /**
+     * Obtiene cadenas i18n desde el DOM.
+     */
+    function t() {
+        const el = document.getElementById('register-i18n');
+        return {
+            usernameMin: el?.dataset.usernameMin || 'El nombre de usuario debe tener al menos 3 caracteres',
+            usernameFormat: el?.dataset.usernameFormat || 'Solo se permiten letras, números, guiones y guiones bajos',
+            emailRequired: el?.dataset.emailRequired || 'El email es requerido',
+            emailInvalid: el?.dataset.emailInvalid || 'Formato de email inválido',
+            passwordMinLength: el?.dataset.passwordMinLength || 'La contraseña debe tener al menos 8 caracteres',
+            passwordLetter: el?.dataset.passwordLetter || 'La contraseña debe contener al menos una letra',
+            passwordNumber: el?.dataset.passwordNumber || 'La contraseña debe contener al menos un número',
+            passwordMismatch: el?.dataset.passwordMismatch || 'Las contraseñas no coinciden',
+            feedbackSuccess: el?.dataset.feedbackSuccess || 'Cuenta creada exitosamente',
+            feedbackFailed: el?.dataset.feedbackFailed || 'Error al crear la cuenta',
+            connectionError: el?.dataset.feedbackConnection || 'Error de conexión. Por favor, inténtalo de nuevo.',
+            buttonLoading: el?.dataset.buttonLoading || 'Creando cuenta...'
+        };
+    }
+
+    /**
      * Limpia todos los mensajes de error del formulario.
      */
     function clearErrors() {
@@ -83,41 +104,42 @@
         clearErrors();
 
         // Validar username
+        const i18n = t();
         if (!username || username.trim().length < 3) {
-            if (usernameError) usernameError.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
+            if (usernameError) usernameError.textContent = i18n.usernameMin;
             isValid = false;
         } else if (!/^[a-zA-Z0-9_-]+$/.test(username.trim())) {
-            if (usernameError) usernameError.textContent = 'Solo se permiten letras, números, guiones y guiones bajos';
+            if (usernameError) usernameError.textContent = i18n.usernameFormat;
             isValid = false;
         }
 
         // Validar email
         if (!email || email.trim() === '') {
-            if (emailError) emailError.textContent = 'El email es requerido';
+            if (emailError) emailError.textContent = i18n.emailRequired;
             isValid = false;
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            if (emailError) emailError.textContent = 'Formato de email inválido';
+            if (emailError) emailError.textContent = i18n.emailInvalid;
             isValid = false;
         }
 
         // Validar contraseña
         if (!password || password.length < 8) {
-            if (passwordError) passwordError.textContent = 'La contraseña debe tener al menos 8 caracteres';
+            if (passwordError) passwordError.textContent = i18n.passwordMinLength;
             isValid = false;
         } else {
             // Validar fortaleza de contraseña
             if (!/[A-Za-z]/.test(password)) {
-                if (passwordError) passwordError.textContent = 'La contraseña debe contener al menos una letra';
+                if (passwordError) passwordError.textContent = i18n.passwordLetter;
                 isValid = false;
             } else if (!/\d/.test(password)) {
-                if (passwordError) passwordError.textContent = 'La contraseña debe contener al menos un número';
+                if (passwordError) passwordError.textContent = i18n.passwordNumber;
                 isValid = false;
             }
         }
 
         // Validar confirmación de contraseña
         if (!password2 || password2 !== password) {
-            if (password2Error) password2Error.textContent = 'Las contraseñas no coinciden';
+            if (password2Error) password2Error.textContent = i18n.passwordMismatch;
             isValid = false;
         }
 
@@ -133,7 +155,7 @@
         
         if (loading) {
             submitButton.disabled = true;
-            submitButton.textContent = 'Creando cuenta...';
+            submitButton.textContent = t().buttonLoading;
         } else {
             submitButton.disabled = false;
             submitButton.textContent = 'Crear cuenta';
@@ -169,9 +191,10 @@
 
             const result = await response.json();
 
+            const i18n = t();
             if (response.ok && result.success) {
                 // Registro exitoso
-                showFeedback(result.message || 'Cuenta creada exitosamente', 'success');
+                showFeedback(result.message || i18n.feedbackSuccess, 'success');
                 
                 // Redirigir después de un breve delay
                 setTimeout(() => {
@@ -182,11 +205,11 @@
                 if (result.errors) {
                     showFieldErrors(result.errors);
                 }
-                showFeedback(result.message || 'Error al crear la cuenta');
+                showFeedback(result.message || i18n.feedbackFailed);
             }
         } catch (error) {
             console.error('Error en registro:', error);
-            showFeedback('Error de conexión. Por favor, inténtalo de nuevo.');
+            showFeedback(t().connectionError);
         } finally {
             setLoading(false);
         }

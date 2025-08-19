@@ -20,6 +20,23 @@
     const passwordError = document.getElementById('login-password-error');
 
     /**
+     * Obtiene cadenas i18n desde el DOM.
+     */
+    function t() {
+        const el = document.getElementById('login-i18n');
+        return {
+            emailRequired: el?.dataset.emailRequired || 'El email es requerido',
+            emailInvalid: el?.dataset.emailInvalid || 'Formato de email inválido',
+            passwordMinLength: el?.dataset.passwordMinLength || 'La contraseña debe tener al menos 8 caracteres',
+            feedbackSuccess: el?.dataset.feedbackSuccess || 'Login exitoso',
+            feedbackFailed: el?.dataset.feedbackFailed || 'Error al iniciar sesión',
+            connectionError: el?.dataset.feedbackConnection || 'Error de conexión. Por favor, inténtalo de nuevo.',
+            buttonLoading: el?.dataset.buttonLoading || 'Iniciando sesión...',
+            invalidCredentials: el?.dataset.invalidCredentials || 'Email o contraseña incorrectos'
+        };
+    }
+
+    /**
      * Limpia todos los mensajes de error del formulario.
      */
     function clearErrors() {
@@ -69,17 +86,18 @@
         clearErrors();
 
         // Validar email
+        const i18n = t();
         if (!email || email.trim() === '') {
-            if (emailError) emailError.textContent = 'El email es requerido';
+            if (emailError) emailError.textContent = i18n.emailRequired;
             isValid = false;
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            if (emailError) emailError.textContent = 'Formato de email inválido';
+            if (emailError) emailError.textContent = i18n.emailInvalid;
             isValid = false;
         }
 
         // Validar contraseña
         if (!password || password.length < 8) {
-            if (passwordError) passwordError.textContent = 'La contraseña debe tener al menos 8 caracteres';
+            if (passwordError) passwordError.textContent = i18n.passwordMinLength;
             isValid = false;
         }
 
@@ -95,7 +113,7 @@
         
         if (loading) {
             submitButton.disabled = true;
-            submitButton.textContent = 'Iniciando sesión...';
+            submitButton.textContent = t().buttonLoading;
         } else {
             submitButton.disabled = false;
             submitButton.textContent = 'Entrar';
@@ -129,9 +147,10 @@
 
             const result = await response.json();
 
+            const i18n = t();
             if (response.ok && result.success) {
                 // Login exitoso
-                showFeedback(result.message || 'Login exitoso', 'success');
+                showFeedback(result.message || i18n.feedbackSuccess, 'success');
                 
                 // Redirigir después de un breve delay
                 setTimeout(() => {
@@ -139,14 +158,17 @@
                 }, 1500);
             } else {
                 // Manejar errores del servidor
+                if (result.message === 'Credenciales inválidas' && passwordError) {
+                    passwordError.textContent = i18n.invalidCredentials;
+                }
                 if (result.errors) {
                     showFieldErrors(result.errors);
                 }
-                showFeedback(result.message || 'Error al iniciar sesión');
+                showFeedback(result.message || i18n.feedbackFailed);
             }
         } catch (error) {
             console.error('Error en login:', error);
-            showFeedback('Error de conexión. Por favor, inténtalo de nuevo.');
+            showFeedback(t().connectionError);
         } finally {
             setLoading(false);
         }
