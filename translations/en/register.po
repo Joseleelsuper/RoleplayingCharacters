@@ -61,3 +61,40 @@ msgstr "I already have an account"
 # Misc
 msgid "register.noscript"
 msgstr "This page requires JavaScript to securely submit the form."
+
+# Client-side validation and feedback
+msgid "register.error.username_min"
+msgstr "Username must be at least 3 characters"
+
+msgid "register.error.username_format"
+msgstr "Only letters, numbers, hyphens and underscores are allowed"
+
+msgid "register.error.email_required"
+msgstr "Email is required"
+
+msgid "register.error.email_invalid"
+msgstr "Invalid email format"
+
+msgid "register.error.password_min_length"
+msgstr "Password must be at least 8 characters"
+
+msgid "register.error.password_letter"
+msgstr "Password must contain at least one letter"
+
+msgid "register.error.password_number"
+msgstr "Password must contain at least one number"
+
+msgid "register.error.password_mismatch"
+msgstr "Passwords do not match"
+
+msgid "register.feedback.register_success"
+msgstr "Account created successfully"
+
+msgid "register.feedback.register_failed"
+msgstr "Failed to create account"
+
+msgid "register.feedback.connection_error"
+msgstr "Connection error. Please try again."
+
+msgid "register.button.loading"
+msgstr "Creating account..."

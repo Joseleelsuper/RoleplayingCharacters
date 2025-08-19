@@ -61,3 +61,40 @@ msgstr "Ya tengo cuenta"
 # Misc
 msgid "register.noscript"
 msgstr "Esta página requiere JavaScript para enviar el formulario de forma segura."
+
+# Client-side validation and feedback
+msgid "register.error.username_min"
+msgstr "El nombre de usuario debe tener al menos 3 caracteres"
+
+msgid "register.error.username_format"
+msgstr "Solo se permiten letras, números, guiones y guiones bajos"
+
+msgid "register.error.email_required"
+msgstr "El email es requerido"
+
+msgid "register.error.email_invalid"
+msgstr "Formato de email inválido"
+
+msgid "register.error.password_min_length"
+msgstr "La contraseña debe tener al menos 8 caracteres"
+
+msgid "register.error.password_letter"
+msgstr "La contraseña debe contener al menos una letra"
+
+msgid "register.error.password_number"
+msgstr "La contraseña debe contener al menos un número"
+
+msgid "register.error.password_mismatch"
+msgstr "Las contraseñas no coinciden"
+
+msgid "register.feedback.register_success"
+msgstr "Cuenta creada exitosamente"
+
+msgid "register.feedback.register_failed"
+msgstr "Error al crear la cuenta"
+
+msgid "register.feedback.connection_error"
+msgstr "Error de conexión. Por favor, inténtalo de nuevo."
+
+msgid "register.button.loading"
+msgstr "Creando cuenta..."

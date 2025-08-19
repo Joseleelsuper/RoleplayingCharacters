@@ -49,3 +49,28 @@ msgstr "Crear cuenta"
 # Misc
 msgid "login.noscript"
 msgstr "Esta página requiere JavaScript para enviar el formulario de forma segura."
+
+# Client-side validation and feedback
+msgid "login.error.email_required"
+msgstr "El email es requerido"
+
+msgid "login.error.email_invalid"
+msgstr "Formato de email inválido"
+
+msgid "login.error.password_min_length"
+msgstr "La contraseña debe tener al menos 8 caracteres"
+
+msgid "login.feedback.login_success"
+msgstr "Login exitoso"
+
+msgid "login.feedback.login_failed"
+msgstr "Error al iniciar sesión"
+
+msgid "login.feedback.connection_error"
+msgstr "Error de conexión. Por favor, inténtalo de nuevo."
+
+msgid "login.button.loading"
+msgstr "Iniciando sesión..."
+
+msgid "login.error.invalid_credentials"
+msgstr "Email o contraseña incorrectos"
