@@ -28,7 +28,7 @@ router = APIRouter()
 
 
 @router.post("/api/auth/register", response_model=AuthResponse, tags=["Auth"])
-async def register_user(request: Request, user_data: UserRegisterRequest) -> JSONResponse:
+async def register_user(request: Request) -> JSONResponse:
     """
     Registra un nuevo usuario en el sistema.
     
@@ -40,6 +40,9 @@ async def register_user(request: Request, user_data: UserRegisterRequest) -> JSO
         JSONResponse: Respuesta con el resultado del registro
     """
     try:
+        # Validar entrada manualmente para controlar la respuesta 422
+        payload = await request.json()
+        user_data = UserRegisterRequest(**payload)
         # Usar el servicio de aplicación para registro
         auth_service = get_auth_service()
         command = RegisterUserCommand(
@@ -123,7 +126,7 @@ async def register_user(request: Request, user_data: UserRegisterRequest) -> JSO
 
 
 @router.post("/api/auth/login", response_model=AuthResponse, tags=["Auth"])
-async def login_user(request: Request, login_data: UserLoginRequest) -> JSONResponse:
+async def login_user(request: Request) -> JSONResponse:
     """
     Autentica un usuario existente.
     
@@ -135,6 +138,9 @@ async def login_user(request: Request, login_data: UserLoginRequest) -> JSONResp
         JSONResponse: Respuesta con el resultado del login
     """
     try:
+        # Validar entrada manualmente para controlar la respuesta 422
+        payload = await request.json()
+        login_data = UserLoginRequest(**payload)
         # Usar el servicio de aplicación para autenticación
         auth_service = get_auth_service()
         command = LoginUserCommand(

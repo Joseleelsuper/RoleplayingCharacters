@@ -7,188 +7,28 @@ capa de aplicación y orquestan las operaciones del dominio.
 """
 
 import logging
-from typing import Optional
-from uuid import uuid4, UUID
-from datetime import datetime
+from typing import Optional, Tuple, Protocol
+from uuid import uuid4
+from datetime import datetime, timezone
 
 import bcrypt
-from sqlalchemy import text, exists
 
 from ..contracts import (
     RegisterUserCommand,
     LoginUserCommand,
     UserDto,
-    AuthResponse
 )
-from ..infrastructure.db.database import SessionLocal
-from ..infrastructure.db.models.user import UserModel
 
 logger = logging.getLogger(__name__)
 
 
-class UserRepository:
-    """
-    Repositorio para operaciones de usuarios con PostgreSQL usando consultas preparadas.
-    
-    Utiliza SQLAlchemy ORM y consultas preparadas explícitas para máxima seguridad
-    y rendimiento, evitando inyección SQL y optimizando las consultas.
-    """
-    
-    def __init__(self):
-        pass
-    
-    def email_exists(self, email: str) -> bool:
-        """
-        Verifica si un email ya existe en la base de datos usando consulta preparada.
-        
-        Args:
-            email: Email a verificar
-            
-        Returns:
-            bool: True si el email existe, False en caso contrario
-        """
-        try:
-            with SessionLocal() as db:
-                # Usar exists() para optimizar la consulta - solo verifica existencia
-                result = db.query(
-                    exists().where(UserModel.email == email)
-                ).scalar()
-                return result
-        except Exception as e:
-            logger.error(f"Error verificando email: {e}")
-            return False
-    
-    def username_exists(self, username: str) -> bool:
-        """
-        Verifica si un nombre de usuario ya existe usando consulta preparada.
-        
-        Args:
-            username: Nombre de usuario a verificar
-            
-        Returns:
-            bool: True si el username existe, False en caso contrario
-        """
-        try:
-            with SessionLocal() as db:
-                # Usar exists() para optimizar la consulta - solo verifica existencia
-                result = db.query(
-                    exists().where(UserModel.username == username)
-                ).scalar()
-                return result
-        except Exception as e:
-            logger.error(f"Error verificando username: {e}")
-            return False
-    
-    def create_user(self, user_id: str, username: str, email: str, password_hash: str, created_at: datetime) -> bool:
-        """
-        Crea un nuevo usuario en la base de datos usando consulta preparada.
-        
-        Args:
-            user_id: ID único del usuario
-            username: Nombre de usuario
-            email: Email del usuario
-            password_hash: Hash de la contraseña
-            created_at: Fecha de creación
-            
-        Returns:
-            bool: True si se creó exitosamente, False en caso contrario
-        """
-        try:
-            with SessionLocal() as db:
-                # Convertir string UUID a UUID object
-                uuid_obj = UUID(user_id)
-                
-                # Usar consulta preparada con parámetros nombrados para inserción
-                insert_query = text("""
-                    INSERT INTO users (id, username, email, password_hash, created_at, updated_at)
-                    VALUES (:id, :username, :email, :password_hash, :created_at, :updated_at)
-                """)
-                
-                db.execute(insert_query, {
-                    'id': uuid_obj,
-                    'username': username,
-                    'email': email,
-                    'password_hash': password_hash,
-                    'created_at': created_at,
-                    'updated_at': created_at
-                })
-                
-                db.commit()
-                logger.info(f"Usuario creado exitosamente: {email}")
-                return True
-        except Exception as e:
-            logger.error(f"Error creando usuario: {e}")
-            return False
-    
-    def find_user_by_email(self, email: str) -> Optional[dict]:
-        """
-        Busca un usuario por email usando consulta preparada.
-        
-        Args:
-            email: Email del usuario a buscar
-            
-        Returns:
-            dict: Datos del usuario si existe, None en caso contrario
-        """
-        try:
-            with SessionLocal() as db:
-                # Usar consulta preparada con parámetros nombrados
-                select_query = text("""
-                    SELECT id, username, email, password_hash, created_at
-                    FROM users 
-                    WHERE email = :email
-                    LIMIT 1
-                """)
-                
-                result = db.execute(select_query, {'email': email}).fetchone()
-                
-                if result:
-                    return {
-                        "id": str(result.id),
-                        "username": result.username,
-                        "email": result.email,
-                        "password_hash": result.password_hash,
-                        "created_at": result.created_at.isoformat()
-                    }
-        except Exception as e:
-            logger.error(f"Error buscando usuario por email: {e}")
-            
-        return None
-    
-    def find_user_by_id(self, user_id: str) -> Optional[dict]:
-        """
-        Busca un usuario por ID usando consulta preparada.
-        
-        Args:
-            user_id: ID del usuario a buscar
-            
-        Returns:
-            dict: Datos del usuario si existe, None en caso contrario
-        """
-        try:
-            with SessionLocal() as db:
-                # Usar consulta preparada con parámetros nombrados
-                select_query = text("""
-                    SELECT id, username, email, created_at
-                    FROM users 
-                    WHERE id = :user_id
-                    LIMIT 1
-                """)
-                
-                uuid_obj = UUID(user_id)
-                result = db.execute(select_query, {'user_id': uuid_obj}).fetchone()
-                
-                if result:
-                    return {
-                        "id": str(result.id),
-                        "username": result.username,
-                        "email": result.email,
-                        "created_at": result.created_at.isoformat()
-                    }
-        except Exception as e:
-            logger.error(f"Error buscando usuario por ID: {e}")
-            
-        return None
+class UserRepositoryProtocol(Protocol):
+    """Protocolo mínimo del repositorio de usuarios usado por el servicio."""
+
+    def email_exists(self, email: str) -> bool: ...
+    def username_exists(self, username: str) -> bool: ...
+    def create_user(self, user_id: str, username: str, email: str, password_hash: str, created_at: datetime) -> bool: ...
+    def find_user_by_email(self, email: str) -> Optional[dict]: ...
 
 
 class AuthenticationService:
@@ -199,9 +39,9 @@ class AuthenticationService:
     del dominio usando PostgreSQL como persistencia.
     """
 
-    def __init__(self):
+    def __init__(self, user_repository: UserRepositoryProtocol):
         """Inicializa el servicio de autenticación."""
-        self._user_repository = UserRepository()
+        self._user_repository = user_repository
         self._sessions_storage = {}  # Almacén temporal de sesiones: {token: user_dto}
 
     def hash_password(self, password: str) -> str:
@@ -230,7 +70,7 @@ class AuthenticationService:
         """
         return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
 
-    def register_user(self, command: RegisterUserCommand) -> AuthResponse:
+    def register_user(self, command: RegisterUserCommand) -> Tuple[bool, str, Optional[UserDto]]:
         """
         Registra un nuevo usuario en el sistema usando PostgreSQL.
         
@@ -243,29 +83,20 @@ class AuthenticationService:
         try:
             # Verificar si el email ya existe
             if self._user_repository.email_exists(command.email):
-                return AuthResponse(
-                    success=False,
-                    message="El email ya está registrado"
-                )
+                return False, "El email ya está registrado", None
             
             # Verificar si el username ya existe
             if self._user_repository.username_exists(command.username):
-                return AuthResponse(
-                    success=False,
-                    message="El nombre de usuario ya está en uso"
-                )
+                return False, "El nombre de usuario ya está en uso", None
             
             # Crear nuevo usuario
             password_hash = self.hash_password(command.password)
             user_id = str(uuid4())
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
             
             # Guardar en base de datos
             if not self._user_repository.create_user(user_id, command.username, command.email, password_hash, now):
-                return AuthResponse(
-                    success=False,
-                    message="Error al crear el usuario"
-                )
+                return False, "Error al crear el usuario", None
             
             # Crear DTO de respuesta
             user_dto = UserDto(
@@ -279,20 +110,12 @@ class AuthenticationService:
             session_token = str(uuid4())
             self.create_session(session_token, user_dto)
             
-            return AuthResponse(
-                success=True,
-                message="Usuario registrado exitosamente",
-                token=session_token,
-                user=user_dto
-            )
+            return True, "Usuario registrado exitosamente", user_dto
             
-        except Exception as e:
-            return AuthResponse(
-                success=False,
-                message=f"Error interno: {str(e)}"
-            )
+        except Exception:
+            return False, "Error interno", None
 
-    def login_user(self, command: LoginUserCommand) -> AuthResponse:
+    def authenticate_user(self, command: LoginUserCommand) -> Tuple[bool, str, Optional[UserDto]]:
         """
         Autentica un usuario existente usando PostgreSQL.
         
@@ -307,17 +130,11 @@ class AuthenticationService:
             user_data = self._user_repository.find_user_by_email(command.email)
             
             if not user_data:
-                return AuthResponse(
-                    success=False,
-                    message="Credenciales inválidas"
-                )
+                return False, "Credenciales inválidas", None
             
             # Verificar contraseña
             if not self.verify_password(command.password, user_data['password_hash']):
-                return AuthResponse(
-                    success=False,
-                    message="Credenciales inválidas"
-                )
+                return False, "Credenciales inválidas", None
             
             # Crear DTO de respuesta
             user_dto = UserDto(
@@ -331,18 +148,10 @@ class AuthenticationService:
             session_token = str(uuid4())
             self.create_session(session_token, user_dto)
             
-            return AuthResponse(
-                success=True,
-                message="Login exitoso",
-                token=session_token,
-                user=user_dto
-            )
+            return True, "Login exitoso", user_dto
             
-        except Exception as e:
-            return AuthResponse(
-                success=False,
-                message=f"Error interno: {str(e)}"
-            )
+        except Exception:
+            return False, "Error interno", None
 
     def get_user_by_session(self, session_token: str) -> Optional[UserDto]:
         """
@@ -383,7 +192,3 @@ class AuthenticationService:
             del self._sessions_storage[session_token]
             return True
         return False
-
-
-# Instancia global del servicio de autenticación
-auth_service = AuthenticationService()
