@@ -23,6 +23,11 @@
      * Obtiene cadenas i18n desde el DOM.
      */
     function t() {
+        // Carga perezosa del util para no romper si falla import
+        try {
+            // eslint-disable-next-line no-undef
+            if (window.__getI18n) return window.__getI18n('login-i18n', {});
+        } catch {}
         const el = document.getElementById('login-i18n');
         return {
             emailRequired: el?.dataset.emailRequired || 'El email es requerido',
@@ -32,7 +37,8 @@
             feedbackFailed: el?.dataset.feedbackFailed || 'Error al iniciar sesión',
             connectionError: el?.dataset.feedbackConnection || 'Error de conexión. Por favor, inténtalo de nuevo.',
             buttonLoading: el?.dataset.buttonLoading || 'Iniciando sesión...',
-            invalidCredentials: el?.dataset.invalidCredentials || 'Email o contraseña incorrectos'
+            invalidCredentials: el?.dataset.invalidCredentials || 'Email o contraseña incorrectos',
+            buttonSubmit: document.querySelector('#login-form button[type="submit"]').textContent || 'Entrar'
         };
     }
 
@@ -111,12 +117,14 @@
     function setLoading(loading) {
         if (!submitButton) return;
         
+        const i18n = t();
         if (loading) {
             submitButton.disabled = true;
-            submitButton.textContent = t().buttonLoading;
+            submitButton.dataset.originalText = submitButton.textContent;
+            submitButton.textContent = i18n.buttonLoading;
         } else {
             submitButton.disabled = false;
-            submitButton.textContent = 'Entrar';
+            submitButton.textContent = submitButton.dataset.originalText || i18n.buttonSubmit || 'Entrar';
         }
     }
 

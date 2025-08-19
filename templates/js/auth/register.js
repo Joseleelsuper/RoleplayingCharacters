@@ -27,6 +27,10 @@
      * Obtiene cadenas i18n desde el DOM.
      */
     function t() {
+        try {
+            // eslint-disable-next-line no-undef
+            if (window.__getI18n) return window.__getI18n('register-i18n', {});
+        } catch {}
         const el = document.getElementById('register-i18n');
         return {
             usernameMin: el?.dataset.usernameMin || 'El nombre de usuario debe tener al menos 3 caracteres',
@@ -40,7 +44,8 @@
             feedbackSuccess: el?.dataset.feedbackSuccess || 'Cuenta creada exitosamente',
             feedbackFailed: el?.dataset.feedbackFailed || 'Error al crear la cuenta',
             connectionError: el?.dataset.feedbackConnection || 'Error de conexión. Por favor, inténtalo de nuevo.',
-            buttonLoading: el?.dataset.buttonLoading || 'Creando cuenta...'
+            buttonLoading: el?.dataset.buttonLoading || 'Creando cuenta...',
+            buttonSubmit: document.querySelector('#register-form button[type="submit"]').textContent || 'Crear cuenta'
         };
     }
 
@@ -153,12 +158,14 @@
     function setLoading(loading) {
         if (!submitButton) return;
         
+        const i18n = t();
         if (loading) {
             submitButton.disabled = true;
-            submitButton.textContent = t().buttonLoading;
+            submitButton.dataset.originalText = submitButton.textContent;
+            submitButton.textContent = i18n.buttonLoading;
         } else {
             submitButton.disabled = false;
-            submitButton.textContent = 'Crear cuenta';
+            submitButton.textContent = submitButton.dataset.originalText || i18n.buttonSubmit || 'Crear cuenta';
         }
     }
 
