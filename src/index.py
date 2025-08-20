@@ -7,6 +7,7 @@ de gestión de personajes de rol.
 """
 
 import os
+import logging
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,11 +21,24 @@ import uvicorn
 from src.infrastructure.translation_service import translation_service
 from src.infrastructure.i18n import I18nConfig
 from src.infrastructure.config import settings
+from src.infrastructure.db.database import create_tables, check_database_connection
 from src.infrastructure.web.home_controller import router as home_router
 from src.infrastructure.web.status_controller import router as status_router
 from src.infrastructure.web.not_found_controller import router as not_found_router
 from src.infrastructure.web.character_controller import router as character_router
 from src.infrastructure.web.game_controller import router as game_router
+from src.infrastructure.web.auth_controller import router as auth_router
+
+from src.infrastructure.dependencies import dependency_container
+from src.application.auth_service import AuthenticationService
+from src.infrastructure.repositories.user_repository import UserRepository
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 
 class I18nMiddleware(BaseHTTPMiddleware):
@@ -59,6 +73,24 @@ class I18nMiddleware(BaseHTTPMiddleware):
         return response
 
 
+def initialize_database():
+    """
+    Inicializa la base de datos creando las tablas si es necesario.
+    """
+    try:
+        logger.info("Verificando conexión a la base de datos...")
+        if check_database_connection():
+            logger.info("✅ Conexión a la base de datos establecida")
+            logger.info("Creando tablas si no existen...")
+            create_tables()
+            logger.info("✅ Base de datos inicializada correctamente")
+        else:
+            logger.warning("⚠️ No se pudo conectar a la base de datos. La aplicación funcionará sin persistencia.")
+    except Exception as e:
+        logger.error(f"❌ Error al inicializar la base de datos: {e}")
+        logger.warning("⚠️ La aplicación funcionará sin persistencia de datos.")
+
+
 def create_app() -> FastAPI:
     """
     Crea y configura la aplicación FastAPI.
@@ -66,6 +98,15 @@ def create_app() -> FastAPI:
     Returns:
         FastAPI: Aplicación configurada
     """
+    
+    # Configurar el servicio de autenticación con inyección del repositorio
+    dependency_container.set_auth_service_factory(
+        lambda: AuthenticationService(UserRepository())
+    )
+    
+    # Inicializar base de datos
+    initialize_database()
+    
     app = FastAPI(
         title=settings.app_name,
         description="Aplicación web para crear y gestionar personajes de rol",
@@ -92,6 +133,7 @@ def create_app() -> FastAPI:
     app.include_router(not_found_router, tags=["NotFound"])
     app.include_router(character_router, tags=["Characters"])
     app.include_router(game_router, tags=["Games"])
+    app.include_router(auth_router, tags=["Auth"])
 
     # Configurar archivos estáticos solo en desarrollo
     if not os.getenv("VERCEL"):

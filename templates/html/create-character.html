@@ -7,8 +7,9 @@
     <meta name="description" content="{{ _('create_character.page.description') }}">
     <meta name="keywords" content="{{ _('create_character.page.keywords') }}">
     <link rel="stylesheet" href="/templates/css/create-character.css">
+    <link rel="stylesheet" href="/templates/css/objects/validation-popup.css">
     <link rel="canonical" href="{{ url_for('create_character') }}">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/templates/img/favicon.ico" type="image/x-icon">
 </head>
 <body>
     {% include 'objects/header.html' %}
@@ -609,9 +610,14 @@
         <span id="spell-cantrips-title">{{ _('create_character.spells.cantrips') }}</span>
         <span id="spell-level-title">{{ _('create_character.spells.level') }}</span>
         <span id="spell-removed-message">{{ _('create_character.spells.removed_on_level_change') }}</span>
+        <span id="spell-limit-cantrips">{{ _('create_character.spells.limit_cantrips') }}</span>
+        <span id="spell-limit-level">{{ _('create_character.spells.limit_level') }}</span>
+        <span id="equipment-limit-starting">{{ _('create_character.equipment.limit_starting') }}</span>
+        <span id="equipment-limit-additional">{{ _('create_character.equipment.limit_additional') }}</span>
     </div>
     
     <!-- Componentes JS separados -->
+    <script src="/templates/js/create-character/validation-popup.js"></script>
     <script src="/templates/js/create-character/game-type-selector.js"></script>
     <script src="/templates/js/create-character/data-manager.js"></script>
     <script src="/templates/js/create-character/selection-overlay.js"></script>

@@ -345,6 +345,12 @@ msgstr "Search starting equipment..."
 msgid "create_character.equipment.additional_search_placeholder"
 msgstr "Search additional equipment..."
 
+msgid "create_character.equipment.limit_starting"
+msgstr "You have reached the starting equipment limit ({count} items)"
+
+msgid "create_character.equipment.limit_additional"
+msgstr "You have reached the additional equipment limit ({count} items)"
+
 # Character Preview
 msgid "create_character.preview.label"
 msgstr "Character preview"

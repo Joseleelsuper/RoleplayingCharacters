@@ -21,6 +21,8 @@ class GameTypeSelector {
         };
         
         this.currentGameType = 'custom';
+        this.gameDataCache = new Map(); // Caché para datos de juego
+        this.loadingPromises = new Map(); // Promesas de carga en progreso
     }
     
     init() {
@@ -145,6 +147,31 @@ class GameTypeSelector {
         return !!this.selectedGameType;
     }
     
+    /**
+     * Limpia el caché de datos de juego para un gameType específico o todo el caché
+     * @param {string} gameType - Tipo de juego específico a limpiar, o null para limpiar todo
+     */
+    clearGameDataCache(gameType = null) {
+        if (gameType) {
+            this.gameDataCache.delete(gameType);
+            this.loadingPromises.delete(gameType);
+            console.log(`Caché de datos de juego limpiado para ${gameType}`);
+        } else {
+            this.gameDataCache.clear();
+            this.loadingPromises.clear();
+            console.log('Caché de datos de juego completamente limpiado');
+        }
+    }
+    
+    /**
+     * Verifica si hay datos de juego en caché para un gameType
+     * @param {string} gameType - Tipo de juego a verificar
+     * @returns {boolean} - True si hay datos en caché
+     */
+    hasGameDataInCache(gameType) {
+        return this.gameDataCache.has(gameType);
+    }
+    
     showGameTypeError() {
         const errorElement = document.getElementById('game-type-error');
         if (errorElement) {
@@ -162,6 +189,55 @@ class GameTypeSelector {
      */
     async loadGameData() {
         try {
+            // Verificar si ya tenemos los datos en caché
+            if (this.gameDataCache.has(this.currentGameType)) {
+                console.log(`Usando datos de juego en caché para ${this.currentGameType}`);
+                const cachedData = this.gameDataCache.get(this.currentGameType);
+                
+                // Actualizar los selectores del formulario con los datos en caché
+                this.updateFormSelects(cachedData);
+                
+                // Notificar a otros módulos que se han cargado los datos de juego
+                document.dispatchEvent(new CustomEvent('gameDataLoaded', {
+                    detail: {
+                        gameType: this.currentGameType,
+                        gameData: cachedData,
+                        fromCache: true
+                    }
+                }));
+                return;
+            }
+            
+            // Verificar si ya hay una carga en progreso para este gameType
+            if (this.loadingPromises.has(this.currentGameType)) {
+                console.log(`Esperando carga de datos de juego en progreso para ${this.currentGameType}`);
+                await this.loadingPromises.get(this.currentGameType);
+                return;
+            }
+            
+            // Crear promesa de carga y almacenarla
+            const loadingPromise = this._loadGameDataFromAPI();
+            this.loadingPromises.set(this.currentGameType, loadingPromise);
+            
+            try {
+                await loadingPromise;
+            } finally {
+                // Limpiar la promesa de carga
+                this.loadingPromises.delete(this.currentGameType);
+            }
+            
+        } catch (error) {
+            console.error('Error al cargar los datos del juego:', error);
+        }
+    }
+    
+    /**
+     * Carga los datos del juego desde la API.
+     */
+    async _loadGameDataFromAPI() {
+        try {
+            console.log(`Cargando datos de juego desde API para ${this.currentGameType}`);
+            
             // Mostrar indicador de carga
             document.body.classList.add('loading');
             
@@ -173,6 +249,9 @@ class GameTypeSelector {
             
             const gameData = await response.json();
             
+            // Guardar en caché
+            this.gameDataCache.set(this.currentGameType, gameData);
+            
             // Actualizar los selectores del formulario con los nuevos datos
             this.updateFormSelects(gameData);
             
@@ -180,12 +259,11 @@ class GameTypeSelector {
             document.dispatchEvent(new CustomEvent('gameDataLoaded', {
                 detail: {
                     gameType: this.currentGameType,
-                    gameData: gameData
+                    gameData: gameData,
+                    fromCache: false
                 }
             }));
             
-        } catch (error) {
-            console.error('Error al cargar los datos del juego:', error);
         } finally {
             // Ocultar indicador de carga
             document.body.classList.remove('loading');

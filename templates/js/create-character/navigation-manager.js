@@ -8,6 +8,43 @@ class NavigationManager {
         this.dataPopulated = false;
     }
     
+    validateCharacterData(characterData) {
+        // Validar campos requeridos
+        if (!characterData.name || characterData.name.trim() === '') {
+            return 'El nombre del personaje es requerido';
+        }
+        
+        if (!characterData.race_id) {
+            return 'Debes seleccionar una raza para tu personaje';
+        }
+        
+        if (!characterData.class_id) {
+            return 'Debes seleccionar una clase para tu personaje';
+        }
+        
+        if (!characterData.background_id) {
+            return 'Debes seleccionar un trasfondo para tu personaje';
+        }
+        
+        if (!characterData.alignment_id) {
+            return 'Debes seleccionar un alineamiento para tu personaje';
+        }
+        
+        if (!characterData.level || characterData.level < 1 || characterData.level > 20) {
+            return 'El nivel debe estar entre 1 y 20';
+        }
+        
+        // Validar atributos
+        const requiredAttributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+        for (const attr of requiredAttributes) {
+            if (!characterData.attributes[attr] || characterData.attributes[attr] < 3 || characterData.attributes[attr] > 18) {
+                return `El atributo ${attr} debe estar entre 3 y 18`;
+            }
+        }
+        
+        return null; // No hay errores
+    }
+    
     init() {
         this.tabs = document.querySelectorAll('.tab-button');
         this.sections = document.querySelectorAll('.form-section');
@@ -26,6 +63,7 @@ class NavigationManager {
         this.setupNavigation();
         this.setupFormSubmission();
         this.setupErrorClearingListeners();
+        this.setupProgressListeners();
         
         // Escuchar eventos de cambio de tipo de juego
         document.addEventListener('gameTypeSelected', () => {
@@ -33,6 +71,8 @@ class NavigationManager {
             this.updateButtonStates();
             // Limpiar error si existe
             this.clearError('game-type-error');
+            // Actualizar progreso
+            this.updateProgressBar();
         });
     }
     
@@ -55,6 +95,57 @@ class NavigationManager {
             tab.addEventListener('click', () => {
                 this.goToStep(index + 1);
             });
+        });
+    }
+    
+    setupProgressListeners() {
+        // Escuchar cambios en el nombre del personaje
+        const nameInput = document.getElementById('character-name');
+        if (nameInput) {
+            nameInput.addEventListener('input', () => {
+                this.updateProgressBar();
+            });
+        }
+        
+        // Escuchar cambios en selecciones (raza, clase, background)
+        ['race', 'character-class', 'background', 'alignment'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('change', () => {
+                    this.updateProgressBar();
+                });
+            }
+        });
+        
+        // Escuchar cambios en atributos
+        ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].forEach(attr => {
+            const input = document.getElementById(attr);
+            if (input) {
+                input.addEventListener('change', () => {
+                    this.updateProgressBar();
+                });
+            }
+        });
+        
+        // Escuchar eventos de selección de habilidades, equipamiento, etc.
+        document.addEventListener('skillToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('equipmentToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('languageToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('proficiencyToggled', () => {
+            this.updateProgressBar();
+        });
+        
+        document.addEventListener('spellToggled', () => {
+            this.updateProgressBar();
         });
     }
     
@@ -96,11 +187,8 @@ class NavigationManager {
             }
         });
         
-        // Actualizar progreso
-        if (this.progressFill) {
-            const progressPercent = (this.currentStep / this.totalSteps) * 100;
-            this.progressFill.style.width = `${progressPercent}%`;
-        }
+        // Actualizar progreso basado en completitud real
+        this.updateProgressBar();
         
         if (this.progressText) {
             this.progressText.textContent = `Paso ${this.currentStep} de ${this.totalSteps}`;
@@ -108,6 +196,62 @@ class NavigationManager {
         
         // Actualizar estado de los botones
         this.updateButtonStates();
+    }
+    
+    updateProgressBar() {
+        if (!this.progressFill) return;
+        
+        let completedSections = 0;
+        const totalSections = this.totalSteps;
+        
+        // Verificar completitud de cada sección
+        // Sección 1: Tipo de juego
+        if (window.gameTypeSelector?.isGameTypeSelected()) {
+            completedSections++;
+        }
+        
+        // Sección 2: Información básica (nombre, raza, clase)
+        const characterName = document.getElementById('character-name')?.value?.trim();
+        const raceId = document.getElementById('race')?.value;
+        const classId = document.getElementById('character-class')?.value;
+        if (characterName && raceId && classId) {
+            completedSections++;
+        }
+        
+        // Sección 3: Atributos (verificar que no sean todos 8)
+        const attributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+        const attributesSet = attributes.some(attr => {
+            const input = document.getElementById(attr);
+            return input && parseInt(input.value) > 8;
+        });
+        if (attributesSet) {
+            completedSections++;
+        }
+        
+        // Sección 4: Habilidades (al menos una seleccionada)
+        const selectedSkills = document.querySelectorAll('#skills-list .skill-item.selected');
+        if (selectedSkills.length > 0) {
+            completedSections++;
+        }
+        
+        // Sección 5: Equipamiento (al menos un item seleccionado)
+        const selectedEquipment = document.querySelectorAll('#equipment-list .equipment-item.selected');
+        if (selectedEquipment.length > 0) {
+            completedSections++;
+        }
+        
+        // Calcular porcentaje de progreso
+        const progressPercent = Math.max((completedSections / totalSections) * 100, (this.currentStep / totalSections) * 20);
+        this.progressFill.style.width = `${progressPercent}%`;
+        
+        // Cambiar color según el progreso
+        if (completedSections === totalSections) {
+            this.progressFill.style.backgroundColor = '#28a745'; // Verde para completado
+        } else if (completedSections >= totalSections * 0.6) {
+            this.progressFill.style.backgroundColor = '#ffc107'; // Amarillo para progreso medio
+        } else {
+            this.progressFill.style.backgroundColor = '#007bff'; // Azul para progreso inicial
+        }
     }
     
     goToNextStep() {
@@ -187,6 +331,25 @@ class NavigationManager {
             errors.push('Debe seleccionar un tipo de juego');
         }
         
+        // Validar campos obligatorios
+        const characterName = document.getElementById('character-name')?.value?.trim();
+        if (!characterName) {
+            isValid = false;
+            errors.push('El nombre del personaje es obligatorio');
+        }
+        
+        const raceId = document.getElementById('race')?.value;
+        if (!raceId) {
+            isValid = false;
+            errors.push('Debes seleccionar una raza para tu personaje');
+        }
+        
+        const classId = document.getElementById('character-class')?.value;
+        if (!classId) {
+            isValid = false;
+            errors.push('Debes seleccionar una clase para tu personaje');
+        }
+        
         // Validar límites de equipamiento
         if (window.dataManager) {
             const equipmentValidation = this.validateEquipmentLimits();
@@ -257,13 +420,50 @@ class NavigationManager {
         // Obtener personaje de la vista previa
         const character = window.previewManager?.getCharacter();
         
-        // Combinar datos del formulario con datos del personaje
-        const combinedData = {
-            ...Object.fromEntries(formData),
-            skills: character?.skills || [],
-            equipment: character?.equipment || [],
-            spells: character?.spells || []
+        // Estructurar los datos según el esquema esperado por la API
+        const characterData = {
+            name: formData.get('character_name') || '',
+            player_name: formData.get('player_name') || '',
+            level: parseInt(formData.get('level')) || 1,
+            experience: parseInt(formData.get('experience')) || 0,
+            alignment_id: formData.get('alignment_id') ? parseInt(formData.get('alignment_id')) : null,
+            race_id: formData.get('race_id') ? parseInt(formData.get('race_id')) : null,
+            class_id: formData.get('class_id') ? parseInt(formData.get('class_id')) : null,
+            background_id: formData.get('background_id') ? parseInt(formData.get('background_id')) : null,
+            is_anonymous: true, // Por defecto, los personajes son anónimos
+            
+            // Atributos
+            attributes: {
+                strength: parseInt(formData.get('strength')) || 10,
+                dexterity: parseInt(formData.get('dexterity')) || 10,
+                constitution: parseInt(formData.get('constitution')) || 10,
+                intelligence: parseInt(formData.get('intelligence')) || 10,
+                wisdom: parseInt(formData.get('wisdom')) || 10,
+                charisma: parseInt(formData.get('charisma')) || 10
+            },
+            
+            // Habilidades seleccionadas
+            skills: this.getSelectedSkills(),
+            
+            // Idiomas seleccionados
+            languages: this.getSelectedLanguages(),
+            
+            // Competencias seleccionadas
+            proficiencies: this.getSelectedProficiencies(),
+            
+            // Equipamiento seleccionado
+            items: this.getSelectedItems(),
+            
+            // Hechizos seleccionados
+            spells: this.getSelectedSpells()
         };
+        
+        // Validar datos antes de enviar
+        const validationError = this.validateCharacterData(characterData);
+        if (validationError) {
+            this.showError(validationError);
+            return;
+        }
         
         // Mostrar cargando
         this.showLoading();
@@ -274,22 +474,49 @@ class NavigationManager {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(combinedData)
+            body: JSON.stringify(characterData)
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error al crear el personaje');
+                return response.json().then(errorData => {
+                    // Manejar diferentes tipos de errores
+                    let errorMessage = 'Error al crear el personaje';
+                    
+                    if (errorData && typeof errorData === 'object') {
+                        if (errorData.detail) {
+                            errorMessage = errorData.detail;
+                        } else if (errorData.message) {
+                            errorMessage = errorData.message;
+                        } else if (Array.isArray(errorData)) {
+                            // Manejar errores de validación de FastAPI
+                            errorMessage = errorData.map(err => err.msg || err.message || 'Error de validación').join(', ');
+                        }
+                    }
+                    
+                    throw new Error(errorMessage);
+                }).catch(jsonError => {
+                    // Si no se puede parsear como JSON, usar el status text
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                });
             }
             return response.json();
         })
         .then((data) => {
-            // Redirigir a la página del personaje creado
-            window.location.href = `/characters/${data.id}`;
+            // Limpiar borrador guardado
+            localStorage.removeItem('character-draft');
+            
+            // Mostrar mensaje de éxito
+            this.showSuccess('¡Personaje creado exitosamente!');
+            
+            // Redirigir después de un breve delay
+            setTimeout(() => {
+                window.location.href = `/characters/${data.id}`;
+            }, 1500);
         })
         .catch(error => {
             console.error('Error:', error);
             this.hideLoading();
-            this.showError('Error al crear el personaje. Por favor, inténtalo de nuevo.');
+            this.showError(error.message || 'Error al crear el personaje. Por favor, inténtalo de nuevo.');
         });
     }
     
@@ -310,7 +537,138 @@ class NavigationManager {
     }
     
     showError(message) {
-        alert(message);
+        // Implementar mostrar error
+        console.error(message);
+        
+        // Crear o actualizar elemento de error
+        let errorElement = document.getElementById('form-error-message');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.id = 'form-error-message';
+            errorElement.className = 'alert alert-error';
+            errorElement.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #f44336;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 10000;
+                max-width: 400px;
+                word-wrap: break-word;
+            `;
+            document.body.appendChild(errorElement);
+        }
+        
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+        
+        // Auto-ocultar después de 5 segundos
+        setTimeout(() => {
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+        }, 5000);
+    }
+    
+    showSuccess(message) {
+        // Crear elemento de éxito
+        let successElement = document.getElementById('form-success-message');
+        if (!successElement) {
+            successElement = document.createElement('div');
+            successElement.id = 'form-success-message';
+            successElement.className = 'alert alert-success';
+            successElement.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 10000;
+                max-width: 400px;
+                word-wrap: break-word;
+            `;
+            document.body.appendChild(successElement);
+        }
+        
+        successElement.textContent = message;
+        successElement.style.display = 'block';
+        
+        // Auto-ocultar después de 3 segundos
+        setTimeout(() => {
+            if (successElement) {
+                successElement.style.display = 'none';
+            }
+        }, 3000);
+    }
+    
+    getSelectedSkills() {
+        const skills = [];
+        const skillCheckboxes = document.querySelectorAll('#skills-list input[type="checkbox"]:checked');
+        skillCheckboxes.forEach(checkbox => {
+            const skillId = parseInt(checkbox.value);
+            if (skillId) {
+                skills.push({ skill_id: skillId });
+            }
+        });
+        return skills;
+    }
+    
+    getSelectedLanguages() {
+        const languages = [];
+        const languageCheckboxes = document.querySelectorAll('#languages-list input[type="checkbox"]:checked');
+        languageCheckboxes.forEach(checkbox => {
+            const languageId = parseInt(checkbox.value);
+            if (languageId) {
+                languages.push({ language_id: languageId });
+            }
+        });
+        return languages;
+    }
+    
+    getSelectedProficiencies() {
+        const proficiencies = [];
+        const proficiencyCheckboxes = document.querySelectorAll('#proficiencies-list input[type="checkbox"]:checked');
+        proficiencyCheckboxes.forEach(checkbox => {
+            const proficiencyId = parseInt(checkbox.value);
+            if (proficiencyId) {
+                proficiencies.push({ proficiency_id: proficiencyId });
+            }
+        });
+        return proficiencies;
+    }
+    
+    getSelectedItems() {
+        const items = [];
+        const itemCheckboxes = document.querySelectorAll('#starting-equipment-list input[type="checkbox"]:checked, #additional-equipment-list input[type="checkbox"]:checked');
+        itemCheckboxes.forEach(checkbox => {
+            const itemId = parseInt(checkbox.value);
+            const quantity = parseInt(checkbox.dataset.quantity) || 1;
+            if (itemId) {
+                items.push({ 
+                    item_id: itemId,
+                    quantity: quantity
+                });
+            }
+        });
+        return items;
+    }
+    
+    getSelectedSpells() {
+        const spells = [];
+        const spellCheckboxes = document.querySelectorAll('#spells-list input[type="checkbox"]:checked');
+        spellCheckboxes.forEach(checkbox => {
+            const spellId = parseInt(checkbox.value);
+            if (spellId) {
+                spells.push({ spell_id: spellId });
+            }
+        });
+        return spells;
     }
     
     validateEquipmentLimits() {
@@ -405,13 +763,19 @@ class NavigationManager {
     }
     
     showValidationErrors(errors) {
-        let message = 'Se encontraron los siguientes errores de validación:\n\n';
-        errors.forEach((error, index) => {
-            message += `${index + 1}. ${error}\n`;
-        });
-        message += '\nPor favor, corrija estos errores antes de crear el personaje.';
-        
-        alert(message);
+        // Usar el nuevo popup de validación amigable
+        if (window.ValidationPopup) {
+            ValidationPopup.show(errors);
+        } else {
+            // Fallback al alert tradicional si el popup no está disponible
+            let message = 'Se encontraron los siguientes errores de validación:\n\n';
+            errors.forEach((error, index) => {
+                message += `${index + 1}. ${error}\n`;
+            });
+            message += '\nPor favor, corrija estos errores antes de crear el personaje.';
+            
+            alert(message);
+        }
     }
 }
 

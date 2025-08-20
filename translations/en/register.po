@@ -1,0 +1,100 @@
+# English translations for register page
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-10 00:00+0000\n"
+"PO-Revision-Date: 2025-08-10 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Page metadata
+msgid "register.page.title"
+msgstr "Create account"
+
+msgid "register.page.description"
+msgstr "Create your account to manage roleplaying characters"
+
+# Headings
+msgid "register.title"
+msgstr "Create account"
+
+msgid "register.subtitle"
+msgstr "Join to save and share your characters"
+
+# Fields
+msgid "register.username.label"
+msgstr "Username"
+
+msgid "register.username.placeholder"
+msgstr "Your username"
+
+msgid "register.email.label"
+msgstr "Email"
+
+msgid "register.email.placeholder"
+msgstr "you@example.com"
+
+msgid "register.password.label"
+msgstr "Password"
+
+msgid "register.password.placeholder"
+msgstr "Minimum 8 characters"
+
+msgid "register.password2.label"
+msgstr "Repeat password"
+
+msgid "register.password2.placeholder"
+msgstr "Repeat your password"
+
+# Actions
+msgid "register.button.submit"
+msgstr "Create account"
+
+msgid "register.link.login"
+msgstr "I already have an account"
+
+# Misc
+msgid "register.noscript"
+msgstr "This page requires JavaScript to securely submit the form."
+
+# Client-side validation and feedback
+msgid "register.error.username_min"
+msgstr "Username must be at least 3 characters"
+
+msgid "register.error.username_format"
+msgstr "Only letters, numbers, hyphens and underscores are allowed"
+
+msgid "register.error.email_required"
+msgstr "Email is required"
+
+msgid "register.error.email_invalid"
+msgstr "Invalid email format"
+
+msgid "register.error.password_min_length"
+msgstr "Password must be at least 8 characters"
+
+msgid "register.error.password_letter"
+msgstr "Password must contain at least one letter"
+
+msgid "register.error.password_number"
+msgstr "Password must contain at least one number"
+
+msgid "register.error.password_mismatch"
+msgstr "Passwords do not match"
+
+msgid "register.feedback.register_success"
+msgstr "Account created successfully"
+
+msgid "register.feedback.register_failed"
+msgstr "Failed to create account"
+
+msgid "register.feedback.connection_error"
+msgstr "Connection error. Please try again."
+
+msgid "register.button.loading"
+msgstr "Creating account..."

@@ -1,14 +1,23 @@
 """
 Interfaces para la capa de aplicación.
 
-Este módulo contiene las interfaces que utiliza la capa de aplicación
-para interactuar con las entidades del dominio.
+Este módulo contiene las interfaces específicas de la capa de aplicación
+para interactuar con las entidades del dominio de personajes.
 """
 
 from typing import Optional
 from dataclasses import dataclass
 
+# Re-exportar contratos compartidos para compatibilidad
+from ..contracts import (
+    UserDto,
+    RegisterUserCommand,
+    LoginUserCommand,
+    AuthenticationServiceInterface
+)
 
+
+# DTOs para entidades del dominio de personajes
 @dataclass
 class CharacterInterface:
     """Interfaz para la entidad Character."""

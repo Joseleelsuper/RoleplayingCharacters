@@ -1,0 +1,235 @@
+/* Popup de validación amigable */
+.validation-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.validation-popup-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.validation-popup {
+    background: #000;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: scale(0.9) translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.validation-popup-overlay.show .validation-popup {
+    transform: scale(1) translateY(0);
+}
+
+.validation-popup-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px 24px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.validation-popup-header .icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+}
+
+.validation-popup-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.validation-popup-content {
+    padding: 24px;
+}
+
+.validation-popup-description {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.validation-errors-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.validation-error-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border-left: 4px solid var(--danger-color);
+    transition: background-color 0.2s ease;
+}
+
+.validation-error-item:hover {
+    background: var(--bg-hover);
+}
+
+.validation-error-icon {
+    color: var(--danger-color);
+    font-size: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.validation-error-content {
+    flex: 1;
+}
+
+.validation-error-message {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.validation-error-help {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.validation-error-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.validation-error-step:hover {
+    background: var(--primary-hover);
+}
+
+.validation-popup-actions {
+    padding: 20px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.validation-popup-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.validation-popup-btn.primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.validation-popup-btn.primary:hover {
+    background: var(--primary-hover);
+}
+
+.validation-popup-btn.secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.validation-popup-btn.secondary:hover {
+    background: var(--bg-hover);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .validation-popup {
+        width: 95%;
+        margin: 20px;
+        max-height: 90vh;
+    }
+    
+    .validation-popup-header {
+        padding: 16px 20px;
+    }
+    
+    .validation-popup-content {
+        padding: 20px;
+    }
+    
+    .validation-popup-actions {
+        padding: 16px 20px;
+        flex-direction: column;
+    }
+    
+    .validation-popup-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animaciones para iconos */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+.validation-error-icon {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Indicador de paso */
+.step-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-left: auto;
+}
+
+.step-indicator .step-number {
+    background: var(--primary-color);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+}

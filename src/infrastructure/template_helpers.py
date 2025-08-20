@@ -6,13 +6,15 @@ en los templates de Jinja2 para simplificar tareas comunes.
 """
 
 import os
-from typing import Callable
+from typing import Callable, Optional
 from functools import wraps
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
 from src.infrastructure.translation_service import translation_service
 from src.infrastructure.i18n import I18nConfig
+from src.infrastructure.dependencies import get_current_user_from_session
+from src.contracts import UserDto
 
 
 def create_translation_function(language: str, domain: str = "home") -> Callable[[str, str | None], str]:
@@ -51,6 +53,26 @@ def create_translation_function(language: str, domain: str = "home") -> Callable
     return translate
 
 
+def get_current_user_from_request(request: Request) -> Optional[UserDto]:
+    """
+    Obtiene el usuario autenticado actual de la request.
+    
+    Args:
+        request: Objeto Request de FastAPI
+        
+    Returns:
+        UserDto o None si no hay usuario autenticado
+    """
+    try:
+        session_token = request.cookies.get("session_token")
+        if not session_token:
+            return None
+        
+        return get_current_user_from_session(session_token)
+    except Exception:
+        return None
+
+
 def get_translation_context(language: str, domain: str = "home") -> dict:
     """
     Obtiene el contexto de traducción para usar en templates.
@@ -85,6 +107,8 @@ def get_translation_context(language: str, domain: str = "home") -> dict:
             "feedback": "/feedback",
             "privacy": "/privacy",
             "terms": "/terms",
+            "login": "/login",
+            "register": "/register",
         }
         
         if name not in route_map:
@@ -156,15 +180,23 @@ def render_template_with_translations(
     domain = context.get("_domain", "home") if context else "home"
     # Guardar el parámetro lang para enlaces
     lang_query = get_lang_query(request)
+    # Obtener usuario actual si está autenticado
+    current_user = get_current_user_from_request(request)
     # Preparar contexto base
-    base_context = {"request": request, **get_translation_context(language, domain), "lang_query": lang_query, "current_lang": language}
+    base_context = {
+        "request": request, 
+        **get_translation_context(language, domain), 
+        "lang_query": lang_query, 
+        "current_lang": language,
+        "user": current_user
+    }
 
     # Combinar con el contexto adicional
     if context:
         base_context.update(context)
 
-    # Generar la respuesta con el template
-    response = templates.TemplateResponse(template_name, base_context)
+    # Generar la respuesta con el template (nueva firma: request primero)
+    response = templates.TemplateResponse(request, template_name, base_context)
 
     return response
 

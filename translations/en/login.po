@@ -1,0 +1,76 @@
+# English translations for login page
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-10 00:00+0000\n"
+"PO-Revision-Date: 2025-08-10 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Page metadata
+msgid "login.page.title"
+msgstr "Sign in"
+
+msgid "login.page.description"
+msgstr "Sign in to manage your roleplaying characters"
+
+# Headings
+msgid "login.title"
+msgstr "Sign in"
+
+msgid "login.subtitle"
+msgstr "Sign in to continue creating and managing your characters"
+
+# Fields
+msgid "login.email.label"
+msgstr "Email"
+
+msgid "login.email.placeholder"
+msgstr "you@example.com"
+
+msgid "login.password.label"
+msgstr "Password"
+
+msgid "login.password.placeholder"
+msgstr "Your password"
+
+# Actions
+msgid "login.button.submit"
+msgstr "Sign in"
+
+msgid "login.link.register"
+msgstr "Create account"
+
+# Misc
+msgid "login.noscript"
+msgstr "This page requires JavaScript to securely submit the form."
+
+# Client-side validation and feedback
+msgid "login.error.email_required"
+msgstr "Email is required"
+
+msgid "login.error.email_invalid"
+msgstr "Invalid email format"
+
+msgid "login.error.password_min_length"
+msgstr "Password must be at least 8 characters"
+
+msgid "login.feedback.login_success"
+msgstr "Login successful"
+
+msgid "login.feedback.login_failed"
+msgstr "Failed to sign in"
+
+msgid "login.feedback.connection_error"
+msgstr "Connection error. Please try again."
+
+msgid "login.button.loading"
+msgstr "Signing in..."
+
+msgid "login.error.invalid_credentials"
+msgstr "Incorrect email or password"
