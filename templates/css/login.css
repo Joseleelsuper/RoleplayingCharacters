@@ -1,0 +1,19 @@
+@import url(./auth.css);
+
+/* Estilos específicos para la página de Login */
+.form-title {
+    background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.form-card {
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+}
+
+.form-actions .btn-primary {
+    background-color: var(--primary-600);
+    border-color: var(--primary-600);
+}

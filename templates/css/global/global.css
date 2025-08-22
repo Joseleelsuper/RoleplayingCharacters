@@ -373,7 +373,6 @@ a:hover, a:focus {
     z-index: 2;
 }
 
-/* Eliminar flechas de los campos de entrada numérica en todos los navegadores */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;

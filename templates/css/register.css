@@ -1,0 +1,19 @@
+@import url(./auth.css);
+
+/* Estilos específicos para la página de Registro */
+.form-title {
+    background: linear-gradient(135deg, var(--secondary-600), var(--primary-600));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.form-card {
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+}
+
+.form-actions .btn-primary {
+    background-color: var(--secondary-600);
+    border-color: var(--secondary-600);
+}
