@@ -1,0 +1,56 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: my-characters\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+msgid "my_characters.page.title"
+msgstr "Mis personajes"
+
+msgid "my_characters.page.site_name"
+msgstr "Roleplaying Characters"
+
+msgid "my_characters.page.description"
+msgstr "Lista de personajes creados por el usuario"
+
+msgid "my_characters.title"
+msgstr "Mis personajes"
+
+msgid "my_characters.subtitle"
+msgstr "Gestiona tus personajes, edítalos y descarga su ficha en PDF"
+
+msgid "my_characters.search_placeholder"
+msgstr "Buscar por nombre..."
+
+msgid "my_characters.all_types"
+msgstr "Todos los sistemas"
+
+msgid "my_characters.custom"
+msgstr "Personalizado"
+
+msgid "my_characters.loading"
+msgstr "Cargando personajes..."
+
+msgid "my_characters.error_loading"
+msgstr "No se pudieron cargar tus personajes."
+
+msgid "my_characters.empty"
+msgstr "Aún no tienes personajes. Crea tu primero desde Crear personaje."
+
+msgid "my_characters.level"
+msgstr "Nivel"
+
+msgid "my_characters.race"
+msgstr "Raza"
+
+msgid "my_characters.class"
+msgstr "Clase"
+
+msgid "my_characters.alignment"
+msgstr "Alineación"
+
+msgid "my_characters.view"
+msgstr "Ver"
+
+msgid "my_characters.download_pdf"
+msgstr "Descargar PDF"
