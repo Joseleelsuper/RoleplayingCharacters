@@ -590,6 +590,26 @@
         </div>
     </div>
 
+    <!-- Auth Choice Overlay -->
+    <div id="auth-choice-overlay" class="selection-overlay hidden" aria-modal="true" role="dialog">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h3 id="auth-overlay-title">{{ _('create_character.auth_overlay.title') if _('create_character.auth_overlay.title') else '¿Cómo quieres guardar el personaje?' }}</h3>
+                <button type="button" class="overlay-close" id="auth-overlay-close">&times;</button>
+            </div>
+            <div class="overlay-body">
+                <div class="overlay-info">
+                    <span class="info-text">{{ _('create_character.auth_overlay.description') if _('create_character.auth_overlay.description') else 'Puedes registrarte o iniciar sesión para guardarlo en tu cuenta, o continuar como Anónimo.' }}</span>
+                </div>
+                <div class="overlay-actions" style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <a class="btn btn-primary" href="/login">{{ _('create_character.auth_overlay.login') if _('create_character.auth_overlay.login') else 'Iniciar sesión' }}</a>
+                    <a class="btn btn-secondary" href="/register">{{ _('create_character.auth_overlay.register') if _('create_character.auth_overlay.register') else 'Registrarse' }}</a>
+                    <button class="btn btn-success" id="continue-anonymous-btn">{{ _('create_character.auth_overlay.anonymous') if _('create_character.auth_overlay.anonymous') else 'Guardar como Anónimo' }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% include 'objects/footer.html' %}
     
     <!-- Hidden translation elements for JavaScript -->
@@ -627,5 +647,45 @@
     <script src="/templates/js/create-character/skill-manager.js"></script>
     <script src="/templates/js/create-character/search-manager.js"></script>
     <script src="/templates/js/create-character/create-character.js"></script>
+        <script>
+            // Hook into submit to check session and offer auth choice
+              (function(){
+                const form = document.getElementById('character-form');
+                const createBtn = document.getElementById('create-character-btn');
+                const overlay = document.getElementById('auth-choice-overlay');
+                const overlayClose = document.getElementById('auth-overlay-close');
+                const continueAnon = document.getElementById('continue-anonymous-btn');
+                if (!form || !createBtn) return;
+
+                function showOverlay(){ overlay.classList.remove('hidden'); }
+                function hideOverlay(){ overlay.classList.add('hidden'); }
+
+                overlayClose?.addEventListener('click', hideOverlay);
+                continueAnon?.addEventListener('click', (e)=>{
+                    e.preventDefault(); hideOverlay();
+                  // Ensure a one-time bypass to proceed as anonymous
+                  window.__forceAnonymousOnce = true;
+                  // Re-trigger submit programmatically
+                  try { form.requestSubmit?.(); } catch(_) { form.submit(); }
+                });
+
+                form.addEventListener('submit', async (e) => {
+                    // Only intercept when create button is visible (final step)
+                    const isFinal = !createBtn.classList.contains('hidden');
+                    if (!isFinal) return;
+                  if (window.__forceAnonymousOnce) { delete window.__forceAnonymousOnce; return; }
+                    // Check session
+                    try {
+                        const res = await fetch('/api/auth/user', { credentials: 'include' });
+                        if (res.ok) return; // logged in, proceed
+                        // not logged in -> show overlay and stop
+                        e.preventDefault(); e.stopPropagation(); showOverlay();
+                    } catch {
+                        // network issue -> default to overlay to avoid losing data
+                        e.preventDefault(); e.stopPropagation(); showOverlay();
+                    }
+                }, true);
+            })();
+        </script>
 </body>
 </html>
