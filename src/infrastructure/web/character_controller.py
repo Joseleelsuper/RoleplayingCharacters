@@ -34,6 +34,23 @@ templates_dir = Path(__file__).parent.parent.parent.parent / "templates" / "html
 templates = Jinja2Templates(directory=str(templates_dir))
 
 
+@router.get("/my-characters", response_class=HTMLResponse, tags=["Characters"])
+async def get_my_characters_page(request: Request) -> HTMLResponse:
+    """
+    Endpoint que devuelve la página "Mis personajes".
+
+    Args:
+        request: Objeto Request de FastAPI para detectar el idioma
+
+    Returns:
+        HTMLResponse: HTML con la página de lista de personajes del usuario
+    """
+    return render_template_with_translations(
+        templates=templates, template_name="my-characters.html", request=request,
+        context={"_domain": "my-characters"}
+    )
+
+
 @router.get("/create-character", response_class=HTMLResponse, tags=["Characters"])
 async def get_create_character_page(request: Request) -> HTMLResponse:
     """

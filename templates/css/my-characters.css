@@ -1,0 +1,113 @@
+@import url(./global/global.css);
+@import url(./objects/header.css);
+@import url(./objects/footer.css);
+
+.my-characters-page {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: var(--spacing-2xl) var(--spacing-md);
+}
+
+main[role="main"] {
+	flex: 1 0 auto;
+}
+
+.page-header {
+	margin-bottom: var(--spacing-xl);
+}
+
+.page-header .subtitle {
+	color: var(--text-secondary);
+}
+
+.controls {
+	margin-bottom: var(--spacing-lg);
+}
+
+.search-filter {
+	display: grid;
+	grid-template-columns: 1fr minmax(200px, 240px);
+	gap: var(--spacing-md);
+}
+
+#search-input,
+#game-type-filter {
+	display: block;
+	width: 100%;
+	padding: var(--spacing-sm) var(--spacing-md);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background-color: var(--surface);
+	color: var(--text-primary);
+	font-size: var(--font-size-sm);
+	min-height: 2.5rem;
+}
+
+#search-input:focus,
+#game-type-filter:focus {
+	border-color: var(--primary-500);
+	box-shadow: 0 0 0 3px rgb(14 165 233 / 0.1);
+}
+
+.cards-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--spacing-lg);
+}
+
+@media (max-width: 1024px) {
+	.cards-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 640px) {
+	.cards-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.card-title {
+	font-size: var(--font-size-lg);
+}
+
+.badge {
+	display: inline-block;
+	padding: 0 var(--spacing-sm);
+	height: 1.75rem;
+	line-height: 1.75rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-full);
+	color: var(--text-secondary);
+}
+
+.meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--spacing-sm);
+	color: var(--text-secondary);
+}
+
+.meta-item::before {
+	content: "• ";
+	color: var(--neutral-400);
+}
+
+.card-actions {
+	display: flex;
+	gap: var(--spacing-sm);
+	padding: var(--spacing-lg);
+	border-top: 1px solid var(--border);
+	background: var(--surface-secondary);
+}
+
+.card-actions .btn {
+	min-width: 9rem;
+}
+
+#characters-container[aria-busy="true"] {
+	text-align: center;
+	color: var(--text-secondary);
+}
+
