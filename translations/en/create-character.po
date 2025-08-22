@@ -117,6 +117,22 @@ msgstr "Select an option from the list"
 msgid "create_character.overlay.search_placeholder"
 msgstr "Search..."
 
+# Auth choice overlay
+msgid "create_character.auth_overlay.title"
+msgstr "How do you want to save the character?"
+
+msgid "create_character.auth_overlay.description"
+msgstr "You can register or log in to save it to your account, or continue as Anonymous."
+
+msgid "create_character.auth_overlay.login"
+msgstr "Sign in"
+
+msgid "create_character.auth_overlay.register"
+msgstr "Register"
+
+msgid "create_character.auth_overlay.anonymous"
+msgstr "Save as Anonymous"
+
 # Basic Information Section
 msgid "create_character.basic.title"
 msgstr "Basic Information"

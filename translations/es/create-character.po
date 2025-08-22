@@ -456,3 +456,19 @@ msgstr "Selecciona una opción de la lista"
 
 msgid "create_character.overlay.search_placeholder"
 msgstr "Buscar..."
+
+# Auth choice overlay
+msgid "create_character.auth_overlay.title"
+msgstr "¿Cómo quieres guardar el personaje?"
+
+msgid "create_character.auth_overlay.description"
+msgstr "Puedes registrarte o iniciar sesión para guardarlo en tu cuenta, o continuar como Anónimo."
+
+msgid "create_character.auth_overlay.login"
+msgstr "Iniciar sesión"
+
+msgid "create_character.auth_overlay.register"
+msgstr "Registrarse"
+
+msgid "create_character.auth_overlay.anonymous"
+msgstr "Guardar como Anónimo"
