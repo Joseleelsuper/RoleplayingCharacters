@@ -7,6 +7,13 @@ class NavigationManager {
         this.totalSteps = 0;
         this.dataPopulated = false;
     }
+
+    // Convierte un valor de id a número si es numérico, si no devuelve la cadena original
+    toNumberOrString(value) {
+        if (value === null || value === undefined) return null;
+        const n = Number(value);
+        return Number.isFinite(n) && String(n) === String(value) ? n : String(value);
+    }
     
     validateCharacterData(characterData) {
         // Validar campos requeridos
@@ -234,9 +241,11 @@ class NavigationManager {
             completedSections++;
         }
         
-        // Sección 5: Equipamiento (al menos un item seleccionado)
-        const selectedEquipment = document.querySelectorAll('#equipment-list .equipment-item.selected');
-        if (selectedEquipment.length > 0) {
+        // Sección 5: Equipamiento (al menos un item seleccionado entre inicial y adicional)
+        const selectedEquipmentCount =
+            document.querySelectorAll('#starting-equipment-list .equipment-item.selected').length +
+            document.querySelectorAll('#additional-equipment-list .equipment-item.selected').length;
+        if (selectedEquipmentCount > 0) {
             completedSections++;
         }
         
@@ -609,10 +618,11 @@ class NavigationManager {
     
     getSelectedSkills() {
         const skills = [];
-        const skillCheckboxes = document.querySelectorAll('#skills-list input[type="checkbox"]:checked');
-        skillCheckboxes.forEach(checkbox => {
-            const skillId = parseInt(checkbox.value);
-            if (skillId) {
+        const selected = document.querySelectorAll('#skills-list .skill-item.selected');
+        selected.forEach(item => {
+            const rawId = item.dataset.id;
+            const skillId = this.toNumberOrString(rawId);
+            if (skillId !== null) {
                 skills.push({ skill_id: skillId });
             }
         });
@@ -621,10 +631,11 @@ class NavigationManager {
     
     getSelectedLanguages() {
         const languages = [];
-        const languageCheckboxes = document.querySelectorAll('#languages-list input[type="checkbox"]:checked');
-        languageCheckboxes.forEach(checkbox => {
-            const languageId = parseInt(checkbox.value);
-            if (languageId) {
+        const selected = document.querySelectorAll('#languages-list .language-item.selected');
+        selected.forEach(item => {
+            const rawId = item.dataset.id;
+            const languageId = this.toNumberOrString(rawId);
+            if (languageId !== null) {
                 languages.push({ language_id: languageId });
             }
         });
@@ -633,10 +644,11 @@ class NavigationManager {
     
     getSelectedProficiencies() {
         const proficiencies = [];
-        const proficiencyCheckboxes = document.querySelectorAll('#proficiencies-list input[type="checkbox"]:checked');
-        proficiencyCheckboxes.forEach(checkbox => {
-            const proficiencyId = parseInt(checkbox.value);
-            if (proficiencyId) {
+        const selected = document.querySelectorAll('#proficiencies-list .proficiency-item.selected');
+        selected.forEach(item => {
+            const rawId = item.dataset.id;
+            const proficiencyId = this.toNumberOrString(rawId);
+            if (proficiencyId !== null) {
                 proficiencies.push({ proficiency_id: proficiencyId });
             }
         });
@@ -645,12 +657,14 @@ class NavigationManager {
     
     getSelectedItems() {
         const items = [];
-        const itemCheckboxes = document.querySelectorAll('#starting-equipment-list input[type="checkbox"]:checked, #additional-equipment-list input[type="checkbox"]:checked');
-        itemCheckboxes.forEach(checkbox => {
-            const itemId = parseInt(checkbox.value);
-            const quantity = parseInt(checkbox.dataset.quantity) || 1;
-            if (itemId) {
-                items.push({ 
+        const selected = document.querySelectorAll('#starting-equipment-list .equipment-item.selected, #additional-equipment-list .equipment-item.selected');
+        selected.forEach(item => {
+            const rawId = item.dataset.id;
+            const itemId = this.toNumberOrString(rawId);
+            const quantityAttr = item.dataset.quantity;
+            const quantity = Number.isFinite(Number(quantityAttr)) ? Number(quantityAttr) : 1;
+            if (itemId !== null) {
+                items.push({
                     item_id: itemId,
                     quantity: quantity
                 });
@@ -661,10 +675,11 @@ class NavigationManager {
     
     getSelectedSpells() {
         const spells = [];
-        const spellCheckboxes = document.querySelectorAll('#spells-list input[type="checkbox"]:checked');
-        spellCheckboxes.forEach(checkbox => {
-            const spellId = parseInt(checkbox.value);
-            if (spellId) {
+        const selected = document.querySelectorAll('#spells-list .spell-item.selected');
+        selected.forEach(item => {
+            const rawId = item.dataset.id;
+            const spellId = this.toNumberOrString(rawId);
+            if (spellId !== null) {
                 spells.push({ spell_id: spellId });
             }
         });
@@ -678,8 +693,8 @@ class NavigationManager {
         if (!window.dataManager) return { isValid: true, errors: [] };
         
         const limits = window.dataManager.getEquipmentLimits();
-        const selectedStarting = document.querySelectorAll('#starting-equipment-list .equipment-item input[type="checkbox"]:checked').length;
-        const selectedAdditional = document.querySelectorAll('#additional-equipment-list .equipment-item input[type="checkbox"]:checked').length;
+    const selectedStarting = document.querySelectorAll('#starting-equipment-list .equipment-item.selected').length;
+    const selectedAdditional = document.querySelectorAll('#additional-equipment-list .equipment-item.selected').length;
         
         if (selectedStarting > limits.starting) {
             isValid = false;
@@ -701,7 +716,7 @@ class NavigationManager {
         if (!window.dataManager) return { isValid: true, errors: [] };
         
         const limits = window.dataManager.getSkillsLimits();
-        const selected = document.querySelectorAll('#skills-list .skill-item input[type="checkbox"]:checked').length;
+    const selected = document.querySelectorAll('#skills-list .skill-item.selected').length;
         
         if (selected > limits) {
             isValid = false;
@@ -718,7 +733,7 @@ class NavigationManager {
         if (!window.dataManager) return { isValid: true, errors: [] };
         
         const limits = window.dataManager.getLanguagesLimits();
-        const selected = document.querySelectorAll('#languages-list .language-item input[type="checkbox"]:checked').length;
+    const selected = document.querySelectorAll('#languages-list .language-item.selected').length;
         
         if (selected > limits) {
             isValid = false;
@@ -735,7 +750,7 @@ class NavigationManager {
         if (!window.dataManager) return { isValid: true, errors: [] };
         
         const limits = window.dataManager.getProficienciesLimits();
-        const selected = document.querySelectorAll('#proficiencies-list .proficiency-item input[type="checkbox"]:checked').length;
+    const selected = document.querySelectorAll('#proficiencies-list .proficiency-item.selected').length;
         
         if (selected > limits) {
             isValid = false;
@@ -752,7 +767,7 @@ class NavigationManager {
         if (!window.dataManager) return { isValid: true, errors: [] };
         
         const limits = window.dataManager.getSpellsLimits();
-        const selected = document.querySelectorAll('#spells-list .spell-item input[type="checkbox"]:checked').length;
+    const selected = document.querySelectorAll('#spells-list .spell-item.selected').length;
         
         if (selected > limits) {
             isValid = false;
