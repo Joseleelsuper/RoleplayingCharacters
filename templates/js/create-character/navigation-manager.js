@@ -435,10 +435,10 @@ class NavigationManager {
             player_name: formData.get('player_name') || '',
             level: parseInt(formData.get('level')) || 1,
             experience: parseInt(formData.get('experience')) || 0,
-            alignment_id: formData.get('alignment_id') ? parseInt(formData.get('alignment_id')) : null,
-            race_id: formData.get('race_id') ? parseInt(formData.get('race_id')) : null,
-            class_id: formData.get('class_id') ? parseInt(formData.get('class_id')) : null,
-            background_id: formData.get('background_id') ? parseInt(formData.get('background_id')) : null,
+            alignment_id: this.toNumberOrString(formData.get('alignment_id')),
+            race_id: this.toNumberOrString(formData.get('race_id')),
+            class_id: this.toNumberOrString(formData.get('class_id')),
+            background_id: this.toNumberOrString(formData.get('background_id')),
             is_anonymous: true, // Por defecto, los personajes son anónimos
             
             // Atributos
