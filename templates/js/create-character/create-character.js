@@ -710,11 +710,14 @@ function saveDraft() {
     
     // Guardar en localStorage
     try {
-        localStorage.setItem('characterDraft', JSON.stringify(draftData));
-        alert('Draft saved successfully.');
+    localStorage.setItem('characterDraft', JSON.stringify(draftData));
+    console.info('[Toast]', 'Draft saved successfully.', { savedAt: draftData.savedAt });
+    alert('Draft saved successfully.');
     } catch (e) {
-        console.error('Error saving draft:', e);
-        alert('Error saving draft. Your browser might have local storage disabled.');
+    const err = e instanceof Error ? e : new Error(String(e));
+    console.error('[Toast Error] Error saving draft', err);
+    console.debug('Stack trace:', err.stack || new Error('Stack').stack);
+    alert('Error saving draft. Your browser might have local storage disabled.');
     }
 }
 

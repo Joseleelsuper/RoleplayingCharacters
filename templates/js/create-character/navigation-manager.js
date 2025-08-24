@@ -14,6 +14,19 @@ class NavigationManager {
         const n = Number(value);
         return Number.isFinite(n) && String(n) === String(value) ? n : String(value);
     }
+
+    // Valida si una cadena es UUID v4
+    isUuid(value) {
+        if (!value) return false;
+        const s = String(value).trim();
+        return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(s);
+    }
+
+    // Devuelve UUID válido o null
+    maybeUuid(value) {
+        const s = value == null ? '' : String(value).trim();
+        return this.isUuid(s) ? s : null;
+    }
     
     // Obtiene cadenas i18n desde el DOM
     t() {
@@ -479,10 +492,10 @@ class NavigationManager {
             player_name: formData.get('player_name') || '',
             level: parseInt(formData.get('level')) || 1,
             experience: parseInt(formData.get('experience')) || 0,
-            alignment_id: this.toNumberOrString(formData.get('alignment_id')),
-            race_id: this.toNumberOrString(formData.get('race_id')),
-            class_id: this.toNumberOrString(formData.get('class_id')),
-            background_id: this.toNumberOrString(formData.get('background_id')),
+            alignment_id: this.maybeUuid(formData.get('alignment_id')),
+            race_id: this.maybeUuid(formData.get('race_id')),
+            class_id: this.maybeUuid(formData.get('class_id')),
+            background_id: this.maybeUuid(formData.get('background_id')),
             is_anonymous: true, // Por defecto, los personajes son anónimos
             
             // Atributos
@@ -511,6 +524,13 @@ class NavigationManager {
             spells: this.getSelectedSpells()
         };
         
+        // Limpiar campos opcionales no válidos
+        ['alignment_id','race_id','class_id','background_id'].forEach(k=>{
+            if (characterData[k] === null || characterData[k] === undefined || characterData[k] === '') {
+                delete characterData[k];
+            }
+        });
+
         // Validar datos antes de enviar
         const validationError = this.validateCharacterData(characterData);
         if (validationError) {
@@ -590,8 +610,9 @@ class NavigationManager {
     }
     
     showError(message) {
-        // Implementar mostrar error
-        console.error(message);
+        // Log a consola con traza
+        const err = message instanceof Error ? message : new Error(String(message));
+        console.error('[UI Error]', err);
         
         // Crear o actualizar elemento de error
         let errorElement = document.getElementById('form-error-message');
@@ -665,9 +686,9 @@ class NavigationManager {
         const selected = document.querySelectorAll('#skills-list .skill-item.selected');
         selected.forEach(item => {
             const rawId = item.dataset.id;
-            const skillId = this.toNumberOrString(rawId);
+            const skillId = this.maybeUuid(rawId);
             if (skillId !== null) {
-                skills.push({ skill_id: skillId });
+                skills.push({ skill_id: skillId, proficiency_bonus: 0 });
             }
         });
         return skills;
@@ -722,9 +743,10 @@ class NavigationManager {
         const selected = document.querySelectorAll('#spells-list .spell-item.selected');
         selected.forEach(item => {
             const rawId = item.dataset.id;
-            const spellId = this.toNumberOrString(rawId);
+            const spellId = this.maybeUuid(rawId);
+            const lvl = Number.parseInt(item.dataset.level);
             if (spellId !== null) {
-                spells.push({ spell_id: spellId });
+                spells.push({ spell_id: spellId, level_slot: Number.isFinite(lvl) ? lvl : 0, prepared_flag: false });
             }
         });
         return spells;
@@ -824,10 +846,18 @@ class NavigationManager {
     showValidationErrors(errors) {
         // Usar el nuevo popup de validación amigable
         if (window.ValidationPopup) {
+            console.groupCollapsed('[Validation Errors]');
+            console.table(errors.map((e, i) => ({ index: i + 1, message: e })));
+            console.debug('Stack trace:', new Error('Validation stack').stack);
+            console.groupEnd();
             ValidationPopup.show(errors);
         } else {
             // Fallback al alert tradicional si el popup no está disponible
             let message = this.t().validationHeader;
+            console.groupCollapsed('[Validation Errors - Fallback]');
+            console.table(errors.map((e, i) => ({ index: i + 1, message: e })));
+            console.debug('Stack trace:', new Error('Validation stack').stack);
+            console.groupEnd();
             errors.forEach((error, index) => {
                 message += `${index + 1}. ${error}\n`;
             });
