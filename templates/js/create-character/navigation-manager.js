@@ -15,37 +15,81 @@ class NavigationManager {
         return Number.isFinite(n) && String(n) === String(value) ? n : String(value);
     }
     
+    // Obtiene cadenas i18n desde el DOM
+    t() {
+        if (!this.i18n) {
+            try {
+                if (window.__getI18n) {
+                    this.i18n = window.__getI18n('create-character-i18n', {});
+                }
+            } catch {}
+            if (!this.i18n) {
+                const el = document.getElementById('create-character-i18n');
+                this.i18n = {
+                    nameRequired: el?.dataset.nameRequired || 'El nombre del personaje es requerido',
+                    raceRequired: el?.dataset.raceRequired || 'Debes seleccionar una raza para tu personaje',
+                    classRequired: el?.dataset.classRequired || 'Debes seleccionar una clase para tu personaje',
+                    backgroundRequired: el?.dataset.backgroundRequired || 'Debes seleccionar un trasfondo para tu personaje',
+                    alignmentRequired: el?.dataset.alignmentRequired || 'Debes seleccionar un alineamiento para tu personaje',
+                    levelRange: el?.dataset.levelRange || 'El nivel debe estar entre 1 y 20',
+                    attrRangeTemplate: el?.dataset.attrRangeTemplate || 'El atributo {attr} debe estar entre {min} y {max}',
+                    gameTypeRequired: el?.dataset.gameTypeRequired || 'Debe seleccionar un tipo de juego',
+                    nameRequiredForm: el?.dataset.nameRequiredForm || 'El nombre del personaje es obligatorio',
+                    limitEquipmentInitialTemplate: el?.dataset.limitEquipmentInitialTemplate || 'Equipamiento inicial: {selected}/{limit} (excede el límite)',
+                    limitEquipmentAdditionalTemplate: el?.dataset.limitEquipmentAdditionalTemplate || 'Equipamiento adicional: {selected}/{limit} (excede el límite)',
+                    limitSkillsTemplate: el?.dataset.limitSkillsTemplate || 'Habilidades: {selected}/{limit} (excede el límite)',
+                    limitLanguagesTemplate: el?.dataset.limitLanguagesTemplate || 'Idiomas: {selected}/{limit} (excede el límite)',
+                    limitProficienciesTemplate: el?.dataset.limitProficienciesTemplate || 'Competencias: {selected}/{limit} (excede el límite)',
+                    limitSpellsTemplate: el?.dataset.limitSpellsTemplate || 'Hechizos: {selected}/{limit} (excede el límite)',
+                    validationHeader: el?.dataset.validationHeader || 'Se encontraron los siguientes errores de validación:\n\n',
+                    validationFooter: el?.dataset.validationFooter || '\nPor favor, corrija estos errores antes de crear el personaje.',
+                    buttonCreating: el?.dataset.buttonCreating || 'Creando...',
+                    buttonCreateText: el?.dataset.buttonCreateText || 'Crear Personaje',
+                    feedbackSuccess: el?.dataset.feedbackSuccess || '¡Personaje creado exitosamente!',
+                    feedbackCreateErrorDefault: el?.dataset.feedbackCreateErrorDefault || 'Error al crear el personaje',
+                    feedbackCreateErrorRetry: el?.dataset.feedbackCreateErrorRetry || 'Error al crear el personaje. Por favor, inténtalo de nuevo.',
+                    progressStepTemplate: el?.dataset.progressStepTemplate || 'Paso {current} de {total}',
+                };
+            }
+        }
+        return this.i18n;
+    }
+
+    fmt(template, vars) {
+        return String(template).replace(/\{(\w+)\}/g, (_, k) => (vars?.[k] ?? `{${k}}`));
+    }
+    
     validateCharacterData(characterData) {
         // Validar campos requeridos
         if (!characterData.name || characterData.name.trim() === '') {
-            return 'El nombre del personaje es requerido';
+            return this.t().nameRequired;
         }
         
         if (!characterData.race_id) {
-            return 'Debes seleccionar una raza para tu personaje';
+            return this.t().raceRequired;
         }
         
         if (!characterData.class_id) {
-            return 'Debes seleccionar una clase para tu personaje';
+            return this.t().classRequired;
         }
         
         if (!characterData.background_id) {
-            return 'Debes seleccionar un trasfondo para tu personaje';
+            return this.t().backgroundRequired;
         }
         
         if (!characterData.alignment_id) {
-            return 'Debes seleccionar un alineamiento para tu personaje';
+            return this.t().alignmentRequired;
         }
         
         if (!characterData.level || characterData.level < 1 || characterData.level > 20) {
-            return 'El nivel debe estar entre 1 y 20';
+            return this.t().levelRange;
         }
         
         // Validar atributos
         const requiredAttributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
         for (const attr of requiredAttributes) {
             if (!characterData.attributes[attr] || characterData.attributes[attr] < 3 || characterData.attributes[attr] > 18) {
-                return `El atributo ${attr} debe estar entre 3 y 18`;
+                return this.fmt(this.t().attrRangeTemplate, { attr, min: 3, max: 18 });
             }
         }
         
@@ -198,7 +242,7 @@ class NavigationManager {
         this.updateProgressBar();
         
         if (this.progressText) {
-            this.progressText.textContent = `Paso ${this.currentStep} de ${this.totalSteps}`;
+            this.progressText.textContent = this.fmt(this.t().progressStepTemplate, { current: this.currentStep, total: this.totalSteps });
         }
         
         // Actualizar estado de los botones
@@ -337,26 +381,26 @@ class NavigationManager {
             window.gameTypeSelector?.showGameTypeError();
             this.goToStep(1); // Ir al paso de selección de tipo de juego
             isValid = false;
-            errors.push('Debe seleccionar un tipo de juego');
+            errors.push(this.t().gameTypeRequired);
         }
         
         // Validar campos obligatorios
         const characterName = document.getElementById('character-name')?.value?.trim();
         if (!characterName) {
             isValid = false;
-            errors.push('El nombre del personaje es obligatorio');
+            errors.push(this.t().nameRequiredForm);
         }
         
         const raceId = document.getElementById('race')?.value;
         if (!raceId) {
             isValid = false;
-            errors.push('Debes seleccionar una raza para tu personaje');
+            errors.push(this.t().raceRequired);
         }
         
         const classId = document.getElementById('character-class')?.value;
         if (!classId) {
             isValid = false;
-            errors.push('Debes seleccionar una clase para tu personaje');
+            errors.push(this.t().classRequired);
         }
         
         // Validar límites de equipamiento
@@ -489,7 +533,7 @@ class NavigationManager {
             if (!response.ok) {
                 return response.json().then(errorData => {
                     // Manejar diferentes tipos de errores
-                    let errorMessage = 'Error al crear el personaje';
+                    let errorMessage = this.t().feedbackCreateErrorDefault;
                     
                     if (errorData && typeof errorData === 'object') {
                         if (errorData.detail) {
@@ -515,7 +559,7 @@ class NavigationManager {
             localStorage.removeItem('character-draft');
             
             // Mostrar mensaje de éxito
-            this.showSuccess('¡Personaje creado exitosamente!');
+            this.showSuccess(this.t().feedbackSuccess);
             
             // Redirigir después de un breve delay
             setTimeout(() => {
@@ -525,7 +569,7 @@ class NavigationManager {
         .catch(error => {
             console.error('Error:', error);
             this.hideLoading();
-            this.showError(error.message || 'Error al crear el personaje. Por favor, inténtalo de nuevo.');
+            this.showError(error.message || this.t().feedbackCreateErrorRetry);
         });
     }
     
@@ -533,7 +577,7 @@ class NavigationManager {
         if (this.createBtn) {
             this.createBtn.disabled = true;
             this.createBtn.classList.add('loading');
-            this.createBtn.innerHTML = 'Creando...';
+            this.createBtn.innerHTML = this.t().buttonCreating;
         }
     }
     
@@ -541,7 +585,7 @@ class NavigationManager {
         if (this.createBtn) {
             this.createBtn.disabled = false;
             this.createBtn.classList.remove('loading');
-            this.createBtn.innerHTML = '✅ Crear Personaje';
+            this.createBtn.innerHTML = `✅ ${this.t().buttonCreateText}`;
         }
     }
     
@@ -698,12 +742,12 @@ class NavigationManager {
         
         if (selectedStarting > limits.starting) {
             isValid = false;
-            errors.push(`Equipamiento inicial: ${selectedStarting}/${limits.starting} (excede el límite)`);
+            errors.push(this.fmt(this.t().limitEquipmentInitialTemplate, { selected: selectedStarting, limit: limits.starting }));
         }
         
         if (selectedAdditional > limits.additional) {
             isValid = false;
-            errors.push(`Equipamiento adicional: ${selectedAdditional}/${limits.additional} (excede el límite)`);
+            errors.push(this.fmt(this.t().limitEquipmentAdditionalTemplate, { selected: selectedAdditional, limit: limits.additional }));
         }
         
         return { isValid, errors };
@@ -720,7 +764,7 @@ class NavigationManager {
         
         if (selected > limits) {
             isValid = false;
-            errors.push(`Habilidades: ${selected}/${limits} (excede el límite)`);
+            errors.push(this.fmt(this.t().limitSkillsTemplate, { selected, limit: limits }));
         }
         
         return { isValid, errors };
@@ -737,7 +781,7 @@ class NavigationManager {
         
         if (selected > limits) {
             isValid = false;
-            errors.push(`Idiomas: ${selected}/${limits} (excede el límite)`);
+            errors.push(this.fmt(this.t().limitLanguagesTemplate, { selected, limit: limits }));
         }
         
         return { isValid, errors };
@@ -754,7 +798,7 @@ class NavigationManager {
         
         if (selected > limits) {
             isValid = false;
-            errors.push(`Competencias: ${selected}/${limits} (excede el límite)`);
+            errors.push(this.fmt(this.t().limitProficienciesTemplate, { selected, limit: limits }));
         }
         
         return { isValid, errors };
@@ -771,7 +815,7 @@ class NavigationManager {
         
         if (selected > limits) {
             isValid = false;
-            errors.push(`Hechizos: ${selected}/${limits} (excede el límite)`);
+            errors.push(this.fmt(this.t().limitSpellsTemplate, { selected, limit: limits }));
         }
         
         return { isValid, errors };
@@ -783,11 +827,11 @@ class NavigationManager {
             ValidationPopup.show(errors);
         } else {
             // Fallback al alert tradicional si el popup no está disponible
-            let message = 'Se encontraron los siguientes errores de validación:\n\n';
+            let message = this.t().validationHeader;
             errors.forEach((error, index) => {
                 message += `${index + 1}. ${error}\n`;
             });
-            message += '\nPor favor, corrija estos errores antes de crear el personaje.';
+            message += this.t().validationFooter;
             
             alert(message);
         }

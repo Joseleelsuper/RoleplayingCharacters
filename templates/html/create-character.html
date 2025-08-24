@@ -636,6 +636,33 @@
         <span id="equipment-limit-additional">{{ _('create_character.equipment.limit_additional') }}</span>
     </div>
     
+    <!-- i18n data for create-character JS (validation, feedback, buttons) -->
+    <div id="create-character-i18n" hidden
+        data-name-required="{{ _('create_character.validation.name_required') if _('create_character.validation.name_required') else 'El nombre del personaje es requerido' }}"
+        data-race-required="{{ _('create_character.validation.race_required') if _('create_character.validation.race_required') else 'Debes seleccionar una raza para tu personaje' }}"
+        data-class-required="{{ _('create_character.validation.class_required') if _('create_character.validation.class_required') else 'Debes seleccionar una clase para tu personaje' }}"
+        data-background-required="{{ _('create_character.validation.background_required') if _('create_character.validation.background_required') else 'Debes seleccionar un trasfondo para tu personaje' }}"
+        data-alignment-required="{{ _('create_character.validation.alignment_required') if _('create_character.validation.alignment_required') else 'Debes seleccionar un alineamiento para tu personaje' }}"
+        data-level-range="{{ _('create_character.validation.level_range') if _('create_character.validation.level_range') else 'El nivel debe estar entre 1 y 20' }}"
+        data-attr-range-template="{{ _('create_character.validation.attr_range_template') if _('create_character.validation.attr_range_template') else 'El atributo {attr} debe estar entre {min} y {max}' }}"
+        data-game-type-required="{{ _('create_character.validation.game_type_required') if _('create_character.validation.game_type_required') else 'Debe seleccionar un tipo de juego' }}"
+        data-name-required-form="{{ _('create_character.validation.name_required_form') if _('create_character.validation.name_required_form') else 'El nombre del personaje es obligatorio' }}"
+        data-limit-equipment-initial-template="{{ _('create_character.validation.limit_equipment_initial') if _('create_character.validation.limit_equipment_initial') else 'Equipamiento inicial: {selected}/{limit} (excede el límite)' }}"
+        data-limit-equipment-additional-template="{{ _('create_character.validation.limit_equipment_additional') if _('create_character.validation.limit_equipment_additional') else 'Equipamiento adicional: {selected}/{limit} (excede el límite)' }}"
+        data-limit-skills-template="{{ _('create_character.validation.limit_skills') if _('create_character.validation.limit_skills') else 'Habilidades: {selected}/{limit} (excede el límite)' }}"
+        data-limit-languages-template="{{ _('create_character.validation.limit_languages') if _('create_character.validation.limit_languages') else 'Idiomas: {selected}/{limit} (excede el límite)' }}"
+        data-limit-proficiencies-template="{{ _('create_character.validation.limit_proficiencies') if _('create_character.validation.limit_proficiencies') else 'Competencias: {selected}/{limit} (excede el límite)' }}"
+        data-limit-spells-template="{{ _('create_character.validation.limit_spells') if _('create_character.validation.limit_spells') else 'Hechizos: {selected}/{limit} (excede el límite)' }}"
+        data-validation-header="{{ _('create_character.validation.header') if _('create_character.validation.header') else 'Se encontraron los siguientes errores de validación:\n\n' }}"
+        data-validation-footer="{{ _('create_character.validation.footer') if _('create_character.validation.footer') else '\nPor favor, corrija estos errores antes de crear el personaje.' }}"
+        data-button-creating="{{ _('create_character.buttons.creating') if _('create_character.buttons.creating') else 'Creando...' }}"
+        data-button-create-text="{{ _('create_character.buttons.create') if _('create_character.buttons.create') else 'Crear Personaje' }}"
+        data-feedback-success="{{ _('create_character.feedback.created_success') if _('create_character.feedback.created_success') else '¡Personaje creado exitosamente!' }}"
+        data-feedback-create-error-default="{{ _('create_character.feedback.create_error_default') if _('create_character.feedback.create_error_default') else 'Error al crear el personaje' }}"
+        data-feedback-create-error-retry="{{ _('create_character.feedback.create_error_retry') if _('create_character.feedback.create_error_retry') else 'Error al crear el personaje. Por favor, inténtalo de nuevo.' }}"
+        data-progress-step-template="{{ _('create_character.progress.step_template') if _('create_character.progress.step_template') else 'Paso {current} de {total}' }}"
+    ></div>
+    
     <!-- Componentes JS separados -->
     <script src="/templates/js/create-character/validation-popup.js"></script>
     <script src="/templates/js/create-character/game-type-selector.js"></script>
