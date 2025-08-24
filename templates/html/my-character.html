@@ -52,8 +52,9 @@
             </div>
             
             <div class="character-actions">
-                <button type="button" class="btn btn-primary" id="download-character-btn">📥 Descargar</button>
-                <button type="button" class="btn btn-secondary" id="back-btn">← Volver</button>
+                <a class="btn btn-primary" id="download-character-btn" href="/api/characters/{{ character.id }}/pdf">📥 Descargar PDF</a>
+                <button type="button" class="btn btn-secondary" id="store-pdf-btn">💾 Guardar PDF (CDN)</button>
+                <button type="button" class="btn btn-tertiary" id="back-btn">← Volver</button>
             </div>
         </div>
         
@@ -202,6 +203,35 @@
         </div>
     </main>
     
-    <script src="/templates/js/my-character.js"></script>
+        <script src="/templates/js/my-character.js"></script>
+        <script>
+            (function(){
+                const btn = document.getElementById('store-pdf-btn');
+                const container = document.querySelector('.character-actions');
+                const id = document.querySelector('main[data-character-id]')?.getAttribute('data-character-id');
+                if (!btn || !id) return;
+                const result = document.createElement('div');
+                result.style.marginTop = '8px';
+                container.appendChild(result);
+                btn.addEventListener('click', async () => {
+                    const prev = btn.textContent;
+                    btn.disabled = true; btn.textContent = 'Guardando...';
+                    try {
+                        const res = await fetch(`/api/characters/${id}/pdf/store`, { method: 'POST' });
+                        if (!res.ok) throw new Error(await res.text());
+                        const data = await res.json();
+                        if (data.cdn_url) {
+                            result.innerHTML = `<a href="${data.cdn_url}" target="_blank">${data.cdn_url}</a>`;
+                        } else {
+                            result.textContent = 'Guardado local. Sube y publica en main para CDN.';
+                        }
+                    } catch (e) {
+                        result.textContent = 'Error guardando PDF';
+                    } finally {
+                        btn.disabled = false; btn.textContent = prev;
+                    }
+                });
+            })();
+        </script>
 </body>
 </html>

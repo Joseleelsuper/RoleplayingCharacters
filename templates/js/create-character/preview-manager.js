@@ -263,14 +263,14 @@ class PreviewManager {
     }
     
     getOptionName(dataType, optionId) {
-        if (!optionId || !window.dataManager || !window.dataManager.allData) {
+        if ((!optionId && optionId !== 0) || !window.dataManager || !window.dataManager.allData) {
             return 'No definido';
         }
         
         const data = window.dataManager.allData[dataType];
         if (!data) return 'No definido';
-        
-        const option = data.find(item => (item.id || item.index) === optionId);
+        const optionIdStr = String(optionId);
+        const option = data.find(item => String(item.id ?? item.index) === optionIdStr);
         return option ? option.name : 'No definido';
     }
     

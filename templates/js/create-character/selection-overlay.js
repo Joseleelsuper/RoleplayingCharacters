@@ -42,6 +42,10 @@ class SelectionOverlay {
                 const type = e.currentTarget.dataset.selectionType;
                 this.openSelection(type);
             });
+            const hidden = document.getElementById(this.getHiddenInputId(button.dataset.selectionType));
+            if (hidden && hidden.value) {
+                button.classList.add('selected');
+            }
         });
     }
 

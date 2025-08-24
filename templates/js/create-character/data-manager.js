@@ -339,6 +339,8 @@ class DataManager {
     populateSkills(skills) {
         const container = this.containers.skillsList;
         if (!container || !skills) return;
+    // Limpiar contenedor para evitar duplicados
+    container.innerHTML = '';
 
         skills.forEach(skill => {
             const skillItem = document.createElement('div');
@@ -381,6 +383,8 @@ class DataManager {
     populateLanguages(languages) {
         const container = this.containers.languagesList;
         if (!container || !languages) return;
+    // Limpiar contenedor para evitar duplicados
+    container.innerHTML = '';
         
         languages.forEach(language => {
             const languageItem = document.createElement('div');
@@ -423,6 +427,8 @@ class DataManager {
     populateProficiencies(proficiencies) {
         const container = this.containers.proficienciesList;
         if (!container || !proficiencies) return;
+    // Limpiar contenedor para evitar duplicados
+    container.innerHTML = '';
         
         proficiencies.forEach(proficiency => {
             const proficiencyItem = document.createElement('div');

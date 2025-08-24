@@ -456,3 +456,86 @@ msgstr "Selecciona una opción de la lista"
 
 msgid "create_character.overlay.search_placeholder"
 msgstr "Buscar..."
+
+# Auth choice overlay
+msgid "create_character.auth_overlay.title"
+msgstr "¿Cómo quieres guardar el personaje?"
+
+msgid "create_character.auth_overlay.description"
+msgstr "Puedes registrarte o iniciar sesión para guardarlo en tu cuenta, o continuar como Anónimo."
+
+msgid "create_character.auth_overlay.login"
+msgstr "Iniciar sesión"
+
+msgid "create_character.auth_overlay.register"
+msgstr "Registrarse"
+
+msgid "create_character.auth_overlay.anonymous"
+msgstr "Guardar como Anónimo"
+
+# Mensajes de validación y cadenas de UI para JS
+msgid "create_character.validation.name_required"
+msgstr "El nombre del personaje es requerido"
+
+msgid "create_character.validation.race_required"
+msgstr "Debes seleccionar una raza para tu personaje"
+
+msgid "create_character.validation.class_required"
+msgstr "Debes seleccionar una clase para tu personaje"
+
+msgid "create_character.validation.background_required"
+msgstr "Debes seleccionar un trasfondo para tu personaje"
+
+msgid "create_character.validation.alignment_required"
+msgstr "Debes seleccionar un alineamiento para tu personaje"
+
+msgid "create_character.validation.level_range"
+msgstr "El nivel debe estar entre 1 y 20"
+
+msgid "create_character.validation.attr_range_template"
+msgstr "El atributo {attr} debe estar entre {min} y {max}"
+
+msgid "create_character.validation.game_type_required"
+msgstr "Debe seleccionar un tipo de juego"
+
+msgid "create_character.validation.name_required_form"
+msgstr "El nombre del personaje es obligatorio"
+
+msgid "create_character.validation.limit_equipment_initial"
+msgstr "Equipamiento inicial: {selected}/{limit} (excede el límite)"
+
+msgid "create_character.validation.limit_equipment_additional"
+msgstr "Equipamiento adicional: {selected}/{limit} (excede el límite)"
+
+msgid "create_character.validation.limit_skills"
+msgstr "Habilidades: {selected}/{limit} (excede el límite)"
+
+msgid "create_character.validation.limit_languages"
+msgstr "Idiomas: {selected}/{limit} (excede el límite)"
+
+msgid "create_character.validation.limit_proficiencies"
+msgstr "Competencias: {selected}/{limit} (excede el límite)"
+
+msgid "create_character.validation.limit_spells"
+msgstr "Hechizos: {selected}/{limit} (excede el límite)"
+
+msgid "create_character.validation.header"
+msgstr "Se encontraron los siguientes errores de validación:\n\n"
+
+msgid "create_character.validation.footer"
+msgstr "\nPor favor, corrija estos errores antes de crear el personaje."
+
+msgid "create_character.buttons.creating"
+msgstr "Creando..."
+
+msgid "create_character.feedback.created_success"
+msgstr "¡Personaje creado exitosamente!"
+
+msgid "create_character.feedback.create_error_default"
+msgstr "Error al crear el personaje"
+
+msgid "create_character.feedback.create_error_retry"
+msgstr "Error al crear el personaje. Por favor, inténtalo de nuevo."
+
+msgid "create_character.progress.step_template"
+msgstr "Paso {current} de {total}"

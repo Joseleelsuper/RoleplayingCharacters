@@ -175,7 +175,8 @@ class GameTypeSelector {
     showGameTypeError() {
         const errorElement = document.getElementById('game-type-error');
         if (errorElement) {
-            errorElement.textContent = 'Por favor, selecciona un tipo de juego para continuar.';
+            const i18n = (window.navigationManager && window.navigationManager.t) ? window.navigationManager.t() : null;
+            errorElement.textContent = (i18n && i18n.gameTypeRequired) || 'Por favor, selecciona un tipo de juego para continuar.';
             errorElement.classList.add('active');
         }
     }

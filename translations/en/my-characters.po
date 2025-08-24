@@ -1,0 +1,56 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: my-characters\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "my_characters.page.title"
+msgstr "My Characters"
+
+msgid "my_characters.page.site_name"
+msgstr "Roleplaying Characters"
+
+msgid "my_characters.page.description"
+msgstr "List of characters created by the user"
+
+msgid "my_characters.title"
+msgstr "My Characters"
+
+msgid "my_characters.subtitle"
+msgstr "Manage your characters, edit them and download their PDF sheet"
+
+msgid "my_characters.search_placeholder"
+msgstr "Search by name..."
+
+msgid "my_characters.all_types"
+msgstr "All systems"
+
+msgid "my_characters.custom"
+msgstr "Custom"
+
+msgid "my_characters.loading"
+msgstr "Loading characters..."
+
+msgid "my_characters.error_loading"
+msgstr "Could not load your characters."
+
+msgid "my_characters.empty"
+msgstr "You don't have any characters yet. Create your first one from Create character."
+
+msgid "my_characters.level"
+msgstr "Level"
+
+msgid "my_characters.race"
+msgstr "Race"
+
+msgid "my_characters.class"
+msgstr "Class"
+
+msgid "my_characters.alignment"
+msgstr "Alignment"
+
+msgid "my_characters.view"
+msgstr "View"
+
+msgid "my_characters.download_pdf"
+msgstr "Download PDF"

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _('my_characters.page.title') }} | {{ _('my_characters.page.site_name') }}</title>
+    <meta name="description" content="{{ _('my_characters.page.description') }}">
+    <link rel="stylesheet" href="/templates/css/my-characters.css">
+    <link rel="icon" href="/templates/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    {% include 'objects/header.html' %}
+
+    <main class="my-characters-page" role="main">
+        <header class="page-header">
+            <h1>{{ _('my_characters.title') }}</h1>
+            <p class="subtitle">{{ _('my_characters.subtitle') }}</p>
+        </header>
+
+        <section id="auth-guard" class="hidden" aria-live="polite"></section>
+
+        <section class="controls">
+            <div class="search-filter">
+                <input type="text" id="search-input" placeholder="{{ _('my_characters.search_placeholder') }}" autocomplete="off">
+                <select id="game-type-filter">
+                    <option value="">{{ _('my_characters.all_types') }}</option>
+                    <option value="dnd5e">D&D 5e</option>
+                    <option value="pathfinder">Pathfinder</option>
+                    <option value="wod">World of Darkness</option>
+                    <option value="custom">{{ _('my_characters.custom') }}</option>
+                </select>
+            </div>
+        </section>
+
+        <section id="characters-container" class="cards-grid" aria-busy="true" aria-live="polite"></section>
+    </main>
+
+    {% include 'objects/footer.html' %}
+
+    
+    <script>
+    (function(){
+        const container = document.getElementById('characters-container');
+        const guard = document.getElementById('auth-guard');
+        const searchInput = document.getElementById('search-input');
+        const filter = document.getElementById('game-type-filter');
+        const T = {
+            loading: "{{ _('my_characters.loading') }}",
+            error_loading: "{{ _('my_characters.error_loading') }}",
+            empty: "{{ _('my_characters.empty') }}",
+            level: "{{ _('my_characters.level') }}",
+            race: "{{ _('my_characters.race') }}",
+            clazz: "{{ _('my_characters.class') }}",
+            alignment: "{{ _('my_characters.alignment') }}",
+            view: "{{ _('my_characters.view') }}",
+            download_pdf: "{{ _('my_characters.download_pdf') }}"
+        };
+
+    function showLoading(){ container.setAttribute('aria-busy','true'); container.innerHTML = '<p>'+T.loading+'</p>'; }
+        function hideLoading(){ container.removeAttribute('aria-busy'); }
+
+        async function requireAuth(){
+            try {
+                const res = await fetch('/api/auth/user', { credentials: 'include' });
+                if (!res.ok) {
+                    window.location.href = '/login?next='+encodeURIComponent('/my-characters');
+                    return null;
+                }
+                const user = await res.json();
+                return user;
+            } catch {
+                window.location.href = '/login?next='+encodeURIComponent('/my-characters');
+                return null;
+            }
+        }
+
+        function createCard(c){
+            const el = document.createElement('article');
+            el.className = 'card';
+            el.innerHTML = `
+                <div class="card-header">
+                    <h3 class="card-title">${c.name}</h3>
+                    <span class="badge">${T.level} ${c.level}</span>
+                </div>
+                <div class="card-body">
+                    <div class="meta">
+                        ${c.race_id ? `<span class="meta-item">${T.race}: ${c.race_id}</span>` : ''}
+                        ${c.class_id ? `<span class="meta-item">${T.clazz}: ${c.class_id}</span>` : ''}
+                        ${c.alignment_id ? `<span class="meta-item">${T.alignment}: ${c.alignment_id}</span>` : ''}
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a class="btn btn-primary" href="/characters/${c.id}">${T.view}</a>
+                    <a class="btn btn-secondary" href="/api/characters/${c.id}/pdf">${T.download_pdf}</a>
+                </div>
+            `;
+            return el;
+        }
+
+        async function loadCharacters(user){
+            showLoading();
+            try {
+                const url = `/api/users/${user.id}/characters?page=1&page_size=50`;
+                const res = await fetch(url, { credentials: 'include' });
+                if (!res.ok) throw new Error('HTTP '+res.status);
+                const data = await res.json();
+                const list = Array.isArray(data.characters) ? data.characters : [];
+                render(list);
+                bindSearch(list);
+            } catch (e){
+                container.innerHTML = '<p>'+T.error_loading+'</p>';
+            } finally { hideLoading(); }
+        }
+
+        function render(list){
+            if (!list.length){ container.innerHTML = '<p>'+T.empty+'</p>'; return; }
+            container.innerHTML = '';
+            list.forEach(c => container.appendChild(createCard(c)));
+        }
+
+        function bindSearch(list){
+            function apply(){
+                const term = (searchInput.value||'').toLowerCase().trim();
+                const gt = (filter.value||'').toLowerCase().trim();
+                const filtered = list.filter(c => {
+                    const name = (c.name||'').toLowerCase();
+                    const matchName = !term || name.includes(term);
+                    const matchType = !gt || (c.game_type && String(c.game_type).toLowerCase()===gt);
+                    return matchName && matchType;
+                });
+                render(filtered);
+            }
+            searchInput.addEventListener('input', apply);
+            filter.addEventListener('change', apply);
+        }
+
+        (async function(){
+            const user = await requireAuth();
+            if (!user) return;
+            await loadCharacters(user);
+        })();
+    })();
+    </script>
+</body>
+</html>

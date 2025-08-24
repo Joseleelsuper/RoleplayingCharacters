@@ -162,7 +162,12 @@
                 
                 // Redirigir después de un breve delay
                 setTimeout(() => {
-                    window.location.href = result.redirect_url || '/';
+                    // Respetar parámetro ?next= si es una ruta local segura
+                    const params = new URLSearchParams(window.location.search);
+                    const next = params.get('next');
+                    const isSafeLocalPath = (p) => typeof p === 'string' && p.startsWith('/') && !p.startsWith('//');
+                    const target = isSafeLocalPath(next) ? next : (result.redirect_url || '/');
+                    window.location.assign(target);
                 }, 1500);
             } else {
                 // Manejar errores del servidor

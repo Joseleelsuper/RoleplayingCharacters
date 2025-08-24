@@ -101,7 +101,7 @@ def get_translation_context(language: str, domain: str = "home") -> dict:
             "create_character": "/create-character",
             "character_detail": "/character/{character_id}",
             "browse_characters": "/browse",
-            "user_characters": "/characters",
+            "user_characters": "/my-characters",
             "help": "/help",
             "contact": "/contact",
             "feedback": "/feedback",

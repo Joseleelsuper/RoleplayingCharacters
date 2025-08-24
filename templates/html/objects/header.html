@@ -10,7 +10,7 @@
             <div class="nav-menu">
                 <a href="/" class="nav-link {% if request.url.path == '/' or request.url.path == '' %}nav-link-active{% endif %}">{{ _header('header.nav.home') }}</a>
                 <a href="/create-character" class="nav-link {% if '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _header('header.nav.create_character') }}</a>
-                <a href="/characters" class="nav-link {% if '/characters' in request.url.path and not '/create-character' in request.url.path %}nav-link-active{% endif %}">{{ _header('header.nav.my_characters') }}</a>
+                <a href="/my-characters" class="nav-link {% if '/my-characters' in request.url.path %}nav-link-active{% endif %}">{{ _header('header.nav.my_characters') }}</a>
                 <a href="/browse" class="nav-link {% if '/browse' in request.url.path %}nav-link-active{% endif %}">{{ _header('header.nav.browse') }}</a>
             </div>
             

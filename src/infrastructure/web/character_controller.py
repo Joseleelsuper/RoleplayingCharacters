@@ -6,8 +6,8 @@ incluyendo creación, edición y visualización de personajes.
 """
 
 from pathlib import Path
-from fastapi import APIRouter, Request, Body, HTTPException, Depends, Query
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Request, HTTPException, Depends, Query
+from fastapi.responses import HTMLResponse, StreamingResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from src.infrastructure.template_helpers import render_template_with_translations
@@ -22,6 +22,8 @@ from src.domain.schemas.character import (
 from typing import Dict, List, Any, Optional
 from uuid import UUID
 import logging
+from io import BytesIO
+from src.application.services.pdf_service import CharacterPDFService
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +32,23 @@ router = APIRouter()
 # Configurar el directorio de templates
 templates_dir = Path(__file__).parent.parent.parent.parent / "templates" / "html"
 templates = Jinja2Templates(directory=str(templates_dir))
+
+
+@router.get("/my-characters", response_class=HTMLResponse, tags=["Characters"])
+async def get_my_characters_page(request: Request) -> HTMLResponse:
+    """
+    Endpoint que devuelve la página "Mis personajes".
+
+    Args:
+        request: Objeto Request de FastAPI para detectar el idioma
+
+    Returns:
+        HTMLResponse: HTML con la página de lista de personajes del usuario
+    """
+    return render_template_with_translations(
+        templates=templates, template_name="my-characters.html", request=request,
+        context={"_domain": "my-characters"}
+    )
 
 
 @router.get("/create-character", response_class=HTMLResponse, tags=["Characters"])
@@ -51,7 +70,7 @@ async def get_create_character_page(request: Request) -> HTMLResponse:
 
 @router.get("/characters/{character_id}", response_class=HTMLResponse, tags=["Characters"])
 async def get_character_detail_page(
-    character_id: int,
+    character_id: str,
     request: Request,
     db: Session = Depends(get_db)
 ) -> HTMLResponse:
@@ -68,7 +87,11 @@ async def get_character_detail_page(
     """
     try:
         service = CharacterService(db)
-        character = service.get_character_by_id(character_id)
+        try:
+            character_uuid = UUID(str(character_id))
+        except Exception:
+            character_uuid = None
+        character = service.get_character(character_uuid) if character_uuid else None
         
         if not character:
             raise HTTPException(status_code=404, detail="Personaje no encontrado")
@@ -402,3 +425,115 @@ async def delete_character(
     except Exception as e:
         logger.error(f"Error al eliminar personaje {character_id}: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
+
+
+@router.get("/api/characters/{character_id}/pdf", tags=["Characters API"])
+async def download_character_pdf(
+    character_id: UUID,
+    db: Session = Depends(get_db)
+):
+    """
+    Genera y devuelve el PDF de la hoja de personaje desde la plantilla.
+    """
+    try:
+        service = CharacterService(db)
+        character = service.get_character(character_id)
+        if not character:
+            raise HTTPException(status_code=404, detail="Personaje no encontrado")
+
+        project_root = Path(__file__).parents[3]
+        pdf_service = CharacterPDFService(project_root)
+
+        # Mapear datos básicos para el PDF
+        character_map = {
+            "name": character.name,
+            "player_name": character.player_name or "",
+            "level": character.level,
+            "experience": character.experience,
+            "race_name": str(character.race_id or ""),
+            "class_name": str(character.class_id or ""),
+            "alignment_name": str(character.alignment_id or ""),
+            "attributes": {
+                "strength": getattr(character.attributes, 'strength', '' ) if getattr(character, 'attributes', None) else '',
+                "dexterity": getattr(character.attributes, 'dexterity', '' ) if getattr(character, 'attributes', None) else '',
+                "constitution": getattr(character.attributes, 'constitution', '' ) if getattr(character, 'attributes', None) else '',
+                "intelligence": getattr(character.attributes, 'intelligence', '' ) if getattr(character, 'attributes', None) else '',
+                "wisdom": getattr(character.attributes, 'wisdom', '' ) if getattr(character, 'attributes', None) else '',
+                "charisma": getattr(character.attributes, 'charisma', '' ) if getattr(character, 'attributes', None) else '',
+            }
+        }
+
+        pdf_bytes = pdf_service.generate_pdf(character_map)
+
+        file_like = BytesIO(pdf_bytes)
+        headers = {
+            "Content-Disposition": f"attachment; filename=character-{character_id}.pdf"
+        }
+        return StreamingResponse(file_like, media_type="application/pdf", headers=headers)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al generar PDF para {character_id}: {e}")
+        raise HTTPException(status_code=500, detail="Error interno al generar PDF")
+
+
+@router.post("/api/characters/{character_id}/pdf/store", tags=["Characters API"])
+async def generate_and_store_character_pdf(
+    character_id: UUID,
+    db: Session = Depends(get_db)
+):
+    """
+    Genera el PDF y lo guarda en una ruta versionada del repo (para LFS/JSDelivr).
+    Devuelve la URL de descarga vía jsDelivr.
+    """
+    try:
+        service = CharacterService(db)
+        character = service.get_character(character_id)
+        if not character:
+            raise HTTPException(status_code=404, detail="Personaje no encontrado")
+
+        project_root = Path(__file__).parents[3]
+        pdf_service = CharacterPDFService(project_root)
+
+        character_map = {
+            "name": character.name,
+            "player_name": character.player_name or "",
+            "level": character.level,
+            "experience": character.experience,
+            "race_name": str(character.race_id or ""),
+            "class_name": str(character.class_id or ""),
+            "alignment_name": str(character.alignment_id or ""),
+            "attributes": {
+                "strength": getattr(character.attributes, 'strength', '' ) if getattr(character, 'attributes', None) else '',
+                "dexterity": getattr(character.attributes, 'dexterity', '' ) if getattr(character, 'attributes', None) else '',
+                "constitution": getattr(character.attributes, 'constitution', '' ) if getattr(character, 'attributes', None) else '',
+                "intelligence": getattr(character.attributes, 'intelligence', '' ) if getattr(character, 'attributes', None) else '',
+                "wisdom": getattr(character.attributes, 'wisdom', '' ) if getattr(character, 'attributes', None) else '',
+                "charisma": getattr(character.attributes, 'charisma', '' ) if getattr(character, 'attributes', None) else '',
+            }
+        }
+
+        pdf_bytes = pdf_service.generate_pdf(character_map)
+
+        # Store under repo root characterSheets to be served via JSDelivr when pushed to main
+        rel_path = Path("characterSheets") / f"{character_id}.pdf"
+        abs_path = pdf_service.save_pdf(pdf_bytes, rel_path)
+
+        # Compose jsDelivr URL (user should ensure LFS and pushing to main)
+        owner = "joseleelsuper"
+        repo = "RoleplayingCharacters"
+        branch = "main"
+        jsdelivr_url = f"https://cdn.jsdelivr.net/gh/{owner}/{repo}@{branch}/{rel_path.as_posix()}"
+
+        return JSONResponse({
+            "success": True,
+            "path": str(abs_path),
+            "cdn_url": jsdelivr_url
+        })
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al generar/guardar PDF para {character_id}: {e}")
+        raise HTTPException(status_code=500, detail="Error interno al guardar PDF")
