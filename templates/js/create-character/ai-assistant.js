@@ -25,18 +25,46 @@
       sidebar.append(panel);
     }
 
+    // simple in-memory conversation
+    const history = [];
+
+    function buildCurrentState() {
+      const getSelected = (selector, itemClass, nameClass) => Array.from(document.querySelectorAll(`${selector} .${itemClass}.selected`)).map(el => el.querySelector(`.${nameClass}`)?.textContent?.trim()).filter(Boolean);
+      const attrs = ['strength','dexterity','constitution','intelligence','wisdom','charisma'].reduce((acc,id)=>{ const v = parseInt(document.getElementById(id)?.value||''); if(!isNaN(v)) acc[id]=v; return acc; }, {});
+      return {
+        name: document.getElementById('character-name')?.value?.trim() || null,
+        player_name: document.getElementById('player-name')?.value?.trim() || null,
+        game_type: document.getElementById('selected-game-type')?.value || 'custom',
+        level: parseInt(document.getElementById('level')?.value || '1') || 1,
+        race: document.querySelector('[data-selection-type="race"] .selection-text')?.textContent?.trim() || null,
+        class: document.querySelector('[data-selection-type="class"] .selection-text')?.textContent?.trim() || null,
+        background: document.querySelector('[data-selection-type="background"] .selection-text')?.textContent?.trim() || null,
+        alignment: document.querySelector('[data-selection-type="alignment"] .selection-text')?.textContent?.trim() || null,
+        attributes: attrs,
+        skills: getSelected('#skills-list','skill-item','skill-name'),
+        languages: getSelected('#languages-list','language-item','language-name'),
+        proficiencies: getSelected('#proficiencies-list','proficiency-item','proficiency-name'),
+        items: getSelected('#starting-equipment-list','equipment-item','equipment-name'),
+        spells: getSelected('#spells-list','spell-item','spell-name')
+      };
+    }
+
     askBtn.addEventListener('click', async () => {
       const gameType = document.getElementById('selected-game-type')?.value || 'custom';
       const text = prompt.value.trim();
       if (!text) return;
       out.innerText = 'Consultando IA...';
       try {
+        history.push({ role: 'user', content: text });
+        const payload = { game_type: gameType, prompt: text, history: history.slice(-10), current_state: buildCurrentState() };
         const res = await fetch('/api/ai/advice', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ game_type: gameType, prompt: text })
+          body: JSON.stringify(payload)
         });
         const data = await res.json();
-        out.innerText = data.message || JSON.stringify(data);
+        const message = data.message || JSON.stringify(data);
+        out.innerText = message;
+        history.push({ role: 'assistant', content: message });
       } catch (e) {
         out.innerText = 'Error al consultar IA';
       }
@@ -50,13 +78,15 @@
       const prefs = { game_type: gameType, name, player_name: player, level: isNaN(lvl) ? 1 : lvl, note: prompt.value.trim() };
       out.innerText = 'Creando plan con IA...';
       try {
+        history.push({ role: 'user', content: prompt.value.trim() || 'auto-build' });
         const res = await fetch('/api/ai/auto-build', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ game_type: gameType, preferences: prefs })
+          body: JSON.stringify({ game_type: gameType, preferences: prefs, history: history.slice(-10), current_state: buildCurrentState() })
         });
         const plan = await res.json();
         out.innerText = plan.rationale ? plan.rationale : 'Plan recibido. Aplicando...';
         applyPlan(plan);
+        if (plan.rationale) history.push({ role: 'assistant', content: plan.rationale });
       } catch (e) {
         out.innerText = 'Error al crear plan con IA';
       }
@@ -103,24 +133,41 @@
         ids.forEach(id => { if (typeof attrs[id] === 'number') { const input = document.getElementById(id); if (input) { input.value = String(attrs[id]); input.dispatchEvent(new Event('input', { bubbles: true })); } } });
       }
 
-      // lists: skills, languages, proficiencies, items, spells by names
-      function toggleList(containerSel, itemClass, names) {
+      // lists: skills, languages, proficiencies, items, spells by names (respetando límites)
+      function toggleList(containerSel, itemClass, names, limitGetter) {
         if (!Array.isArray(names) || names.length === 0) return;
         const map = new Map();
-        document.querySelectorAll(`${containerSel} .${itemClass}`).forEach(el => { const name = el.querySelector(`.${itemClass.replace('-item','-name')}`)?.textContent?.trim(); if (name) map.set(name.toLowerCase(), el); });
-        names.forEach(n => {
-          const el = map.get(String(n).toLowerCase());
-          if (el && !el.classList.contains('selected')) el.click();
+        document.querySelectorAll(`${containerSel} .${itemClass}`).forEach(el => {
+          const nameEl = el.querySelector(`.${itemClass.replace('-item','-name')}`);
+          const name = nameEl?.textContent?.trim();
+          if (name) map.set(name.toLowerCase(), el);
         });
+        let max = Number.POSITIVE_INFINITY;
+        let current = document.querySelectorAll(`${containerSel} .${itemClass}.selected`).length;
+        if (typeof limitGetter === 'function' && window.dataManager) {
+          try { max = limitGetter.call(window.dataManager); } catch (_) {}
+        }
+        for (const n of names) {
+          if (current >= max) break;
+          const el = map.get(String(n).toLowerCase());
+          if (el && !el.classList.contains('selected')) { el.click(); current++; }
+        }
       }
 
-      toggleList('#skills-list', 'skill-item', plan.skills);
-      toggleList('#languages-list', 'language-item', plan.languages);
-      toggleList('#proficiencies-list', 'proficiency-item', plan.proficiencies);
-      toggleList('#starting-equipment-list', 'equipment-item', plan.items); // best-effort
+      const applyLists = () => {
+        toggleList('#skills-list', 'skill-item', plan.skills, window.dataManager?.getSkillsLimits);
+        toggleList('#languages-list', 'language-item', plan.languages, window.dataManager?.getLanguagesLimits);
+        toggleList('#proficiencies-list', 'proficiency-item', plan.proficiencies, window.dataManager?.getProficienciesLimits);
+        toggleList('#starting-equipment-list', 'equipment-item', plan.items);
+        toggleList('#spells-list', 'spell-item', plan.spells, function() { return window.dataManager?.getSpellsLimits?.() ?? Number.POSITIVE_INFINITY; });
+      };
 
-      // spells: group across levels by name
-      toggleList('#spells-list', 'spell-item', plan.spells);
+      if (!window.dataManager?.dataPopulated) {
+        const once = () => { document.removeEventListener('dataLoaded', once); setTimeout(applyLists, 50); };
+        document.addEventListener('dataLoaded', once);
+      } else {
+        applyLists();
+      }
 
       if (window.previewManager) window.previewManager.updatePreview();
     } catch (e) {
