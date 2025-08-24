@@ -95,41 +95,91 @@ class AIService:
     def build_system_prompt() -> str:
         return (
             "Eres un asistente experto en creación de personajes de rol. "
-            "Sigue estrictamente el esquema JSON indicado cuando se solicite salida estructurada. "
-            "Usa sólo opciones válidas del juego indicado. Sé consistente y útil."
+            "Por defecto responde SOLO con texto plano, sin tablas ni listas extensas, y sin bloques de código. "
+            "Sé directo y conciso: un único párrafo es preferible, con la información suficiente para entender el concepto. "
+            "Cuando explícitamente se te pida salida estructurada, sigue estrictamente el esquema JSON indicado y devuelve exclusivamente JSON. "
+            "Usa únicamente opciones válidas del juego indicado. "
+            "Detecta la intención del usuario: si pide CAMBIAR datos del personaje (p. ej., seleccionar raza/clase/skills, ajustar atributos, añadir conjuros), deja claro que es una solicitud de cambio; "
+            "si es una CONSULTA, ofrece consejo. En el flujo de consejo no generes JSON ni órdenes de UI; describe brevemente qué harías y por qué."
         )
 
-    async def advise(self, game_type: str, user_prompt: str, options_snapshot: dict[str, Any]) -> dict[str, Any]:
-        messages = [
+    async def advise(
+        self,
+        game_type: str,
+        user_prompt: str,
+        options_snapshot: dict[str, Any],
+        *,
+        history: Optional[list[dict[str, str]]] = None,
+        current_state: Optional[dict[str, Any]] = None,
+    ) -> dict[str, Any]:
+        messages: list[dict[str, str]] = [
             {"role": "system", "content": self.build_system_prompt()},
+        ]
+        if history:
+            for m in history:
+                role = m.get("role") or "user"
+                content = str(m.get("content", ""))
+                if role in {"user", "assistant", "system"} and content:
+                    messages.append({"role": role, "content": content})
+        state_text = json.dumps(current_state)[:4000] if current_state else "{}"
+        messages.append(
             {
                 "role": "user",
                 "content": (
                     "Juego: {game}.\n"
+                    "Estado actual (si existe): {state}.\n"
                     "Opciones disponibles (resumen): {opts}.\n"
                     "Petición del usuario: {prompt}.\n"
-                    "Responde con sugerencias y motivos en texto (no JSON)."
-                ).format(game=game_type, opts=json.dumps(options_snapshot)[:6000], prompt=user_prompt),
-            },
-        ]
+                    "Primero identifica la intención (CONSULTA vs CAMBIOS). Si detectas CAMBIOS, explica en una frase qué cambiarías y por qué, y aclara que para aplicar cambios debe usarse la opción de autocompletar con IA. "
+                    "Si es CONSULTA, da un consejo breve. No generes tablas, ni JSON, ni pasos detallados; un solo párrafo."
+                ).format(
+                    game=game_type,
+                    state=state_text,
+                    opts=json.dumps(options_snapshot)[:6000],
+                    prompt=user_prompt,
+                ),
+            }
+        )
         data = await self._post_chat(messages, response_format=None, temperature=0.4, max_tokens=900)
         content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
         return {"message": content}
 
-    async def auto_build(self, preferences: dict[str, Any], options_snapshot: dict[str, Any]) -> dict[str, Any]:
+    async def auto_build(
+        self,
+        preferences: dict[str, Any],
+        options_snapshot: dict[str, Any],
+        *,
+        history: Optional[list[dict[str, str]]] = None,
+        current_state: Optional[dict[str, Any]] = None,
+    ) -> dict[str, Any]:
         game_type = preferences.get("game_type", "custom")
-        messages = [
+        messages: list[dict[str, str]] = [
             {"role": "system", "content": self.build_system_prompt()},
+        ]
+        if history:
+            for m in history:
+                role = m.get("role") or "user"
+                content = str(m.get("content", ""))
+                if role in {"user", "assistant", "system"} and content:
+                    messages.append({"role": role, "content": content})
+        state_text = json.dumps(current_state)[:4000] if current_state else "{}"
+        messages.append(
             {
                 "role": "user",
                 "content": (
                     "Crea un personaje completo para el juego '{game}'.\n"
                     "Ten en cuenta estas preferencias (pueden estar vacías): {prefs}.\n"
+                    "Estado actual aportado por el usuario (si existe): {state}.\n"
                     "Estas son las opciones válidas actuales (ids o nombres): {opts}.\n"
                     "Devuelve exclusivamente JSON que siga el esquema."
-                ).format(game=game_type, prefs=json.dumps(preferences), opts=json.dumps(options_snapshot)[:6000]),
-            },
-        ]
+                ).format(
+                    game=game_type,
+                    prefs=json.dumps(preferences),
+                    state=state_text,
+                    opts=json.dumps(options_snapshot)[:6000],
+                ),
+            }
+        )
         # Primer intento: JSON Schema estructurado
         try:
             data = await self._post_chat(messages, response_format=self.character_json_schema(), temperature=0.2, max_tokens=1200)

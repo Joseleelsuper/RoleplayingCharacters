@@ -18,11 +18,15 @@ router = APIRouter()
 class AdviceRequest(BaseModel):
     game_type: str = Field(default="custom")
     prompt: str
+    history: list[dict[str, str]] = Field(default_factory=list)
+    current_state: Dict[str, Any] = Field(default_factory=dict)
 
 
 class AutoBuildRequest(BaseModel):
     game_type: str = Field(default="custom")
     preferences: Dict[str, Any] = Field(default_factory=dict)
+    history: list[dict[str, str]] = Field(default_factory=list)
+    current_state: Dict[str, Any] = Field(default_factory=dict)
 
 
 async def _options_snapshot(game_type: str) -> Dict[str, Any]:
@@ -47,10 +51,12 @@ async def ai_advice(body: AdviceRequest):
     if not settings.groq_api_key:
         raise HTTPException(status_code=503, detail="IA no configurada (GROQ_API_KEY ausente)")
     try:
-        ai = AIService()
-        snapshot = await _options_snapshot(body.game_type)
-        res = await ai.advise(body.game_type, body.prompt, snapshot)
-        return res
+            ai = AIService()
+            snapshot = await _options_snapshot(body.game_type)
+            # Limitar historial a los últimos 10 mensajes
+            history = body.history[-10:] if body.history else []
+            res = await ai.advise(body.game_type, body.prompt, snapshot, history=history, current_state=body.current_state)
+            return res
     except AIServiceError as e:
         raise HTTPException(status_code=502, detail=f"Proveedor IA: {e}")
     except Exception as e:
@@ -62,15 +68,16 @@ async def ai_auto_build(body: AutoBuildRequest):
     if not settings.groq_api_key:
         raise HTTPException(status_code=503, detail="IA no configurada (GROQ_API_KEY ausente)")
     try:
-        ai = AIService()
-        prefs = {**body.preferences, "game_type": body.game_type}
-        snapshot = await _options_snapshot(body.game_type)
-        plan = await ai.auto_build(prefs, snapshot)
+            ai = AIService()
+            prefs = {**body.preferences, "game_type": body.game_type}
+            snapshot = await _options_snapshot(body.game_type)
+            history = body.history[-10:] if body.history else []
+            plan = await ai.auto_build(prefs, snapshot, history=history, current_state=body.current_state)
         # Validación mínima
-        if not isinstance(plan, dict):
-            return {"error": "Formato de respuesta no válido", "raw": plan}
-        plan.setdefault("game_type", body.game_type)
-        return plan
+            if not isinstance(plan, dict):
+                return {"error": "Formato de respuesta no válido", "raw": plan}
+            plan.setdefault("game_type", body.game_type)
+            return plan
     except AIServiceError as e:
         raise HTTPException(status_code=502, detail=f"Proveedor IA: {e}")
     except Exception as e:
