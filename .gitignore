@@ -208,3 +208,4 @@ __marimo__/
 # Dev-specific files
 /.env.production
 /db
+/characterSheets
